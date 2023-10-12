@@ -1,6 +1,8 @@
+from map import Map
+
 class Game:
     def __init__(self):
-        pass
+        self.map = Map()
 
     def update(self, action1, action2):
         pass
