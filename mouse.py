@@ -11,6 +11,10 @@ class Mouse:
         self.__right_switch = False
 
     def update(self):
+        '''Update mouse pos and buttons state.
+
+        Buttons states are active for max one frame time. 
+        '''
 
         x, y = get_pos()
         scale_x = DRAW_SCREEN_SIZE_X / SCREEN_SIZE_X

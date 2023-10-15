@@ -27,9 +27,7 @@ class Main:
         self.game = Game()
         self.engine = Engine()
         
-
         self.game.map.generate_path()
-        self.game.map.print_path()
 
         self.bot1 = self.plugin_loader.load("example_bot1.py")
         self.bot2 = self.plugin_loader.load("example_bot1.py")
@@ -39,19 +37,21 @@ class Main:
 
         while self.is_running:
             self.check_events()
-            self.check_keys()
             self.game.update()
             self.screen_update()
 
-    def check_keys(self):
-        pass
-
     def check_events(self):
+        '''Check pygame build-in events
+        '''
+
         for e in get_event():
             if e.type == WINDOWCLOSE:
                 self.is_running = False
 
     def screen_update(self):
+        '''Refreshes screen and update frame clock.
+        '''
+
         self.dt = self.clock.tick(FRAMERATE) * STANDARD_FRAMERATE / 1000
         self.screen.blit(scale(self.engine.render(self.game), SCREEN_SIZE), (0, 0))
         display_update()

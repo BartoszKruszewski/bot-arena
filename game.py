@@ -14,6 +14,11 @@ class Game:
         self.mouse = Mouse()
 
     def update(self):
+        '''Main update function.
+
+        Refereshes once per frame.
+        '''
+        
         self.mouse.update()
         self.update_camera_offset()
 
