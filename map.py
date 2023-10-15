@@ -83,7 +83,7 @@ class Map():
         path = [self.start]
         while path[-1] != self.end:
             next = list(path[-1])
-            where = choice(Vector2(0, 1), Vector2(1, 0))
+            where = choice((Vector2(0, 1), Vector2(1, 0)))
             next += where
 
             if next.x < MAP_SIZE_X and next.y < MAP_SIZE_Y:
