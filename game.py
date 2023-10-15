@@ -9,6 +9,8 @@ class Game:
     def __init__(self):
         self.map = Map()
         self.camera_offset = Vector2(0, 0)
+        self.__dest_camera_offset = Vector2(0, 0)
+        self.__real_camera_offset = Vector2(0, 0)
         self.mouse = Mouse()
 
     def update(self):
@@ -23,21 +25,22 @@ class Game:
     def update_camera_offset(self):
         
         if self.mouse.pos.x > DRAW_SCREEN_SIZE_X - CAMERA_OFFSET_MOVE_AREA:
-            self.camera_offset.x -= CAMERA_OFFSET_SPEED
+            self.__dest_camera_offset.x -= CAMERA_OFFSET_SPEED
         elif self.mouse.pos.x < CAMERA_OFFSET_MOVE_AREA:
-            self.camera_offset.x += CAMERA_OFFSET_SPEED
+            self.__dest_camera_offset.x += CAMERA_OFFSET_SPEED
 
         if self.mouse.pos.y > DRAW_SCREEN_SIZE_Y - CAMERA_OFFSET_MOVE_AREA:
-            self.camera_offset.y -= CAMERA_OFFSET_SPEED
+            self.__dest_camera_offset.y -= CAMERA_OFFSET_SPEED
         elif self.mouse.pos.y < CAMERA_OFFSET_MOVE_AREA:
-            self.camera_offset.y += CAMERA_OFFSET_SPEED
+            self.__dest_camera_offset.y += CAMERA_OFFSET_SPEED
 
-        self.camera_offset.x = max(self.camera_offset.x, -(MAP_SIZE_PX_X - DRAW_SCREEN_SIZE_X))
-        self.camera_offset.y = max(self.camera_offset.y, -(MAP_SIZE_PX_Y - DRAW_SCREEN_SIZE_Y))
-        self.camera_offset.x = min(self.camera_offset.x, 0)
-        self.camera_offset.y = min(self.camera_offset.y, 0)
+        self.__dest_camera_offset.x = max(
+            self.__dest_camera_offset.x, -(MAP_SIZE_PX_X - DRAW_SCREEN_SIZE_X))
+        self.__dest_camera_offset.y = max(
+            self.__dest_camera_offset.y, -(MAP_SIZE_PX_Y - DRAW_SCREEN_SIZE_Y))
+        self.__dest_camera_offset.x = min(self.__dest_camera_offset.x, 0)
+        self.__dest_camera_offset.y = min(self.__dest_camera_offset.y, 0)
 
-
-        
-
-        
+        self.__real_camera_offset += (self.__dest_camera_offset - self.__real_camera_offset) / 20
+        self.camera_offset = Vector2(
+            int(self.__real_camera_offset.x), int(self.__real_camera_offset.y)) 
