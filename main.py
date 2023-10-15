@@ -26,6 +26,7 @@ class Main:
         self.interpreter = Interpreter()
         self.game = Game()
         self.engine = Engine()
+        
 
         self.game.map.generate_path()
         self.game.map.print_path()
@@ -39,10 +40,7 @@ class Main:
         while self.is_running:
             self.check_events()
             self.check_keys()
-            self.game.update(
-                self.interpreter.get_action(self.plugin_loader.tick(self.bot1)),
-                self.interpreter.get_action(self.plugin_loader.tick(self.bot2))
-            )
+            self.game.update()
             self.screen_update()
 
     def check_keys(self):
