@@ -11,6 +11,7 @@ from engine import Engine
 from game import Game
 from interpreter import Interpreter
 
+
 class Main:
     def __init__(self):
         init()
@@ -21,9 +22,13 @@ class Main:
 
         self.serializer = Serializer()
         self.plugin_loader = PluginLoader()
+        
         self.interpreter = Interpreter()
         self.game = Game()
         self.engine = Engine()
+
+        self.game.map.generate_path()
+        self.game.map.print_path()
 
         self.bot1 = self.plugin_loader.load("example_bot1.py")
         self.bot2 = self.plugin_loader.load("example_bot1.py")

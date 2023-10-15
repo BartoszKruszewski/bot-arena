@@ -1,4 +1,4 @@
-from const import MAP_SiZE
+from const import MAP_SIZE, MAP_SIZE_X, MAP_SIZE_Y
 from random import choice
 
 placable_ids = ("S", "T", "F")
@@ -7,7 +7,7 @@ placable_ids = ("S", "T", "F")
 def are_in_board(cords) -> bool:
     if cords[0] < 0 or cords[1] < 0:
         return False
-    if cords[0] >= MAP_SiZE or cords[1] >= MAP_SiZE:
+    if cords[0] >= MAP_SIZE_X or cords[1] >= MAP_SIZE_Y:
         return False
     return True
 
@@ -15,7 +15,7 @@ def are_in_board(cords) -> bool:
 class Map():
     def __init__(self) -> None:
         self.start = (0, 0)
-        self.end = (MAP_SiZE - 1, MAP_SiZE - 1)
+        self.end = (MAP_SIZE_X - 1, MAP_SIZE_Y - 1)
 
         self.structures = {
             "S": [],            # spawn
@@ -47,13 +47,13 @@ class Map():
         return True
 
     def print_path(self) -> None:
-        map = [["_" for i in range(MAP_SiZE)] for j in range(MAP_SiZE)]
+        map = [["_" for i in range(MAP_SIZE_X)] for j in range(MAP_SIZE_Y)]
 
         for key, items in self.structures.items():
             for x, y in items:
-                map[x][y] = key
+                map[y][x] = key
                 if key == "P":
-                    map[x][y] = "#"
+                    map[y][x] = "#"
 
         for row in map:
             print(" ".join(row))
@@ -73,11 +73,19 @@ class Map():
             next[1] += where[1]
             next = tuple(next)
 
-            if next[0] < MAP_SiZE and next[1] < MAP_SiZE:
+            if next[0] < MAP_SIZE_X and next[1] < MAP_SIZE_Y:
                 path.append(next)
 
         self.structures["P"] = path
 
+    def get_struct(self, code):
+        TILE_TYPES = {
+            'S': 'spawn',
+            'T': 'turret',
+            'F': 'farm',
+            'P': 'path',
+        }
+        return TILE_TYPES[code]
 
 if __name__ == "__main__":
     map = Map()
