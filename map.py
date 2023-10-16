@@ -1,8 +1,8 @@
-from const import MAP_SIZE, MAP_SIZE_X, MAP_SIZE_Y
+from const import MAP_SIZE, MAP_SIZE_X, MAP_SIZE_Y, TREES_AMOUNT
 from random import choice
 from pygame import Vector2
 
-placable_ids = ("S", "T", "F")
+placable_ids = ('spawn', 'turret', 'farm')
 
 
 def are_in_board(cords: Vector2) -> bool:
@@ -21,10 +21,12 @@ class Map():
         self.end = Vector2(MAP_SIZE_X - 1, MAP_SIZE_Y - 1)
 
         self.structures = {
-            "S": [],            # spawn
-            "T": [],            # turret
-            "F": [],            # farm
-            "P": [self.start]   # path
+            "spawn":  [],           # spawn
+            "turret": [],           # turret
+            "farm":   [],           # farm
+            "path":   [self.start], # path
+            "grass":  [],           # grass
+            "trees":  []            # trees
         }
 
     def can_be_placed(self, cords: Vector2, structure_id: str) -> bool:
@@ -63,23 +65,26 @@ class Map():
         for key, items in self.structures.items():
             for pos in items:
                 map[pos.y][pos.x] = key
-                if key == "P":
+                if key == "path":
                     map[pos.y][pos.x] = "#"
 
         for row in map:
             print(" ".join(row))
 
-    def load_path(self, path: str) -> None:
+    def load_map(self, path: str) -> None:
         '''Loads path from file.
         '''
         # TODO: load path from file
         pass
 
-    def generate_path(self) -> None:
+    def generate_map(self) -> None:
         '''Generate random path.
         '''
+
         # TODO: generate from seed
         # TODO: make better generator
+        # TODO: genereate trees and grass
+
         path = [self.start]
         while path[-1] != self.end:
             next = list(path[-1])
@@ -89,30 +94,31 @@ class Map():
             if next.x < MAP_SIZE_X and next.y < MAP_SIZE_Y:
                 path.append(next)
 
-        self.structures["P"] = path
+        grass = []
+        for y in range(MAP_SIZE_Y):
+            for x in range(MAP_SIZE_X):
+                tile = Vector2(x, y)
+                if tile not in path:
+                    grass.append(tile)
 
-    def get_struct(self, structure_id: str) -> str:
-        '''Gets full name of structure with structure_id.
-        '''
-        TILE_TYPES = {
-            'S': 'spawn',
-            'T': 'turret',
-            'F': 'farm',
-            'P': 'path',
-        }
-        if structure_id not in TILE_TYPES.keys():
-            return None
-        
-        return TILE_TYPES[structure_id]
+        trees = []
+        for _ in range(TREES_AMOUNT):
+            tile = choice(grass)
+            trees.append(tile)
+            grass.remove(tile)
+
+        self.structures["path"] = path
+        self.structures["grass"] = grass
+        self.structures["trees"] = trees
 
 if __name__ == "__main__":
     map = Map()
-    map.generate_path()
+    map.generate_map()
     map.print_path()
 
     print()
 
-    map.place_structure((0, 5), "S")
-    map.place_structure((-1, 0), "T")
-    map.place_structure((3, 3), "T")
+    map.place_structure((0, 5), "spawn")
+    map.place_structure((-1, 0), "tree")
+    map.place_structure((3, 3), "tree")
     map.print_path()

@@ -26,8 +26,6 @@ class Main:
         self.interpreter = Interpreter()
         self.game = Game()
         self.engine = Engine()
-        
-        self.game.map.generate_path()
 
         self.bot1 = self.plugin_loader.load("example_bot1.py")
         self.bot2 = self.plugin_loader.load("example_bot1.py")

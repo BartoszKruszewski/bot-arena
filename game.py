@@ -13,6 +13,8 @@ class Game:
         self.__real_camera_offset = Vector2(0, 0)
         self.mouse = Mouse()
 
+        self.map.generate_map()
+
     def update(self):
         '''Main update function.
 

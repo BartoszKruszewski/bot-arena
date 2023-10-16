@@ -35,15 +35,17 @@ class Engine():
         '''Drawing map tiles.
         '''
 
-        TILE_NAMES = {
-            'path': 'tile_path'
+        TEXTURE_NAMES = {
+            'path':  'tile_path',
+            'grass': 'tile_grass',
+            'trees': 'tile_tree' 
         }
         
         for tile_code, cords in map.structures.items():
-            for x, y in cords:
+            for pos in cords:
                 self.draw(
-                    self.assets['tiles'][TILE_NAMES[map.get_struct(tile_code)]], 
-                    Vector2(x, y) * TILE_SIZE)
+                    self.assets['tiles'][TEXTURE_NAMES[tile_code]], 
+                    pos * TILE_SIZE)
                 
     def draw(self, texture: Surface, pos: Vector2) -> None:
         '''Draw texture with camera offset.
