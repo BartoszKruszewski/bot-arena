@@ -102,10 +102,24 @@ class Map():
                     grass.append(tile)
 
         trees = []
+        good_places = []
+        
+        for v in grass:
+            surr = [Vector2(v.x + x, v.y + y) for x in range(-1, 2) for y in range(-1, 2)]
+            good = True
+            for u in surr:
+                if u in path:
+                    good = False
+                    break
+            if good:    
+                good_places.append(v)
+
+
         for _ in range(TREES_AMOUNT):
-            tile = choice(grass)
+            tile = choice(good_places)
             trees.append(tile)
             grass.remove(tile)
+            good_places.remove(tile)
 
         self.structures["path"] = path
         self.structures["grass"] = grass
