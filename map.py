@@ -25,20 +25,17 @@ class Map():
             "turret": [],           # turret
             "farm":   [],           # farm
             "path":   [self.start], # path
-            "grass":  [],           # grass
             "trees":  []            # trees
         }
 
     def can_be_placed(self, cords: Vector2, structure_id: str) -> bool:
         '''Returns True if in cords structure can be placed.
         '''
-        if type(cords) != tuple:
-            raise Exception
 
         if not are_in_board(cords):
             return False
 
-        if cords in sum(self.structures.items()):
+        if any(cords in structure_list for structure_list in self.structures.values()):
             return False
 
         if structure_id not in placable_ids:
@@ -122,7 +119,6 @@ class Map():
             good_places.remove(tile)
 
         self.structures["path"] = path
-        self.structures["grass"] = grass
         self.structures["trees"] = trees
 
 if __name__ == "__main__":

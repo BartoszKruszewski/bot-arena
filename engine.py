@@ -38,7 +38,7 @@ class Engine():
 
         return self.draw_screen
 
-    def draw(self, texture: Surface, pos: Vector2) -> None:
+    def __draw(self, texture: Surface, pos: Vector2) -> None:
         '''Draw texture with camera offset.
 
         Function only draw objects, which are visible on the screen.
