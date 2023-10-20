@@ -1,4 +1,4 @@
-from const import MAP_SIZE, MAP_SIZE_X, MAP_SIZE_Y, TREES_AMOUNT
+from const import MAP_SIZE, MAP_SIZE_X, MAP_SIZE_Y, OBSTACLES_AMOUNT
 from random import choice
 from pygame import Vector2
 
@@ -21,11 +21,11 @@ class Map():
         self.end = Vector2(MAP_SIZE_X - 1, MAP_SIZE_Y - 1)
 
         self.structures = {
-            "spawn":  [],           # spawn
-            "turret": [],           # turret
-            "farm":   [],           # farm
-            "path":   [self.start], # path
-            "trees":  []            # trees
+            "spawn":        [],           # spawn
+            "turret":       [],           # turret
+            "farm":         [],           # farm
+            "path":         [self.start], # path
+            "obstacles":    []            # trees
         }
 
     def can_be_placed(self, cords: Vector2, structure_id: str) -> bool:
@@ -98,7 +98,7 @@ class Map():
                 if tile not in path:
                     grass.append(tile)
 
-        trees = []
+        obstacles = []
         good_places = []
         
         for v in grass:
@@ -112,14 +112,14 @@ class Map():
                 good_places.append(v)
 
 
-        for _ in range(TREES_AMOUNT):
+        for _ in range(OBSTACLES_AMOUNT):
             tile = choice(good_places)
-            trees.append(tile)
+            obstacles.append(tile)
             grass.remove(tile)
             good_places.remove(tile)
 
         self.structures["path"] = path
-        self.structures["trees"] = trees
+        self.structures["obstacles"] = obstacles
 
 if __name__ == "__main__":
     map = Map()

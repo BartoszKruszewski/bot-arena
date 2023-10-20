@@ -1,5 +1,7 @@
 from pygame import Surface
 from pygame import Vector2
+from random import choice
+
 from const import MAP_SIZE_PX, TILE_SIZE, MAP_SIZE_X, MAP_SIZE_Y
 
 from map import Map
@@ -15,17 +17,17 @@ class MapRenderer:
         TEXTURE_NAMES = {
             'path':  'tile_path',
             'grass': 'tile_grass_mid',
-            'trees': 'tile_tree',
             'farm': 'tile_farm'
         }
 
         filled_pos = []
 
         for tile_code, cords in map.structures.items():
-            for pos in cords:
-                self.map_texture.blit(
-                    assets['tiles'][TEXTURE_NAMES[tile_code]], pos * TILE_SIZE)
-                filled_pos.append(pos)
+            if tile_code != 'obstacles':
+                for pos in cords:
+                    self.map_texture.blit(
+                        assets['tiles'][TEXTURE_NAMES[tile_code]], pos * TILE_SIZE)
+                    filled_pos.append(pos)
 
         grass_pos = [
             Vector2(x, y) 
@@ -38,8 +40,19 @@ class MapRenderer:
             self.map_texture.blit(
                 assets['tiles'][self.__get_grass_turn(map, pos)], pos * TILE_SIZE)
 
+        for cord in sorted(map.structures['obstacles'], key = lambda v: v.y):
+            self.__render_obstacle(cord, choice(list(assets['obstacles'].values())))
+
         return self.map_texture
     
+    def __render_obstacle(self, cord: Vector2, texture: Surface) -> None:
+        size_x, size_y = texture.get_size()
+        render_pos = Vector2(
+            cord.x * TILE_SIZE - size_x // 2 + TILE_SIZE // 2,
+            cord.y * TILE_SIZE - size_y + TILE_SIZE
+        )
+        self.map_texture.blit(texture, render_pos)
+
     def __get_grass_turn(self, map: Map, cord: Vector2) -> str:
         '''Returns name of grass turn based on neighboring tiles.
         '''
