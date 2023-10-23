@@ -1,4 +1,4 @@
-from pygame import Surface
+from pygame import Surface, SRCALPHA
 from pygame import Vector2
 from pygame import Color
 from random import choice
@@ -10,8 +10,11 @@ from map import Map
 class MapRenderer:
     def __init__(self) -> None:
         self.map_texture = Surface(MAP_SIZE_PX)
-
-    def render(self, assets: dict, map: Map) -> Surface:
+        self.__ground_texture = Surface(MAP_SIZE_PX)
+        self.__obstacles_texture = Surface(MAP_SIZE_PX, SRCALPHA)
+        self.__assigned_obstacles = []
+    
+    def __render_ground(self, map: Map, assets: dict):
         '''Drawing map tiles.
         '''
 
@@ -25,7 +28,7 @@ class MapRenderer:
         for tile_code, cords in map.structures.items():
             if tile_code != 'obstacles':
                 for cord in cords:
-                    self.map_texture.blit(
+                    self.__ground_texture.blit(
                         assets['tiles'][TEXTURE_NAMES[tile_code]], cord * TILE_SIZE)
                     filled_cords.append(cord)
 
@@ -37,20 +40,32 @@ class MapRenderer:
         ]
         
         for cord in grass_cords:
-            self.map_texture.blit(
+            self.__ground_texture.blit(
                 assets['tiles']['tile_grass_' + self.__get_grass_turn(cord, map)], cord * TILE_SIZE)
 
-        obstacle_cords = list(sorted(map.structures['obstacles'], key = lambda v: v.y))
-        obstacles_to_render = []
+    def __render_obstacles(self, assets: dict) -> None:
+        for render_cord, texture_name in sorted(self.__assigned_obstacles, key = lambda x: x[0].y):
+            self.__obstacles_texture.blit(assets['obstacles'][texture_name], render_cord)
 
+    def __assign_obstacles(self, cords: list[Vector2], assets: dict):
+        obstacle_cords = cords.copy()
+        self.__assigned_obstacles = []
         while obstacle_cords:
             render_cord, texture_name, covered_cords = self.__render_obstacle(obstacle_cords[0], assets, obstacle_cords)
-            obstacles_to_render.append((render_cord, texture_name))
+            self.__assigned_obstacles.append((render_cord, texture_name))
             for cord in covered_cords:
                 obstacle_cords.remove(cord)
-        
-        for render_cord, texture_name in sorted(obstacles_to_render, key = lambda x: x[0].y):
-            self.map_texture.blit(assets['obstacles'][texture_name], render_cord)
+    
+    def re_render():
+        pass
+
+    def render(self, assets: dict, map: Map) -> Surface:
+        self.map_texture = Surface(MAP_SIZE_PX)
+        self.__render_ground(map, assets)
+        self.__assign_obstacles(map.structures['obstacles'], assets)
+        self.__render_obstacles(assets)
+        self.map_texture.blit(self.__ground_texture, Vector2(0, 0))
+        self.map_texture.blit(self.__obstacles_texture, Vector2(0, 0))
 
         return self.map_texture
     
@@ -102,8 +117,8 @@ class MapRenderer:
 
         covered_cords = [
             cord for cord in tiles if 
-                covered_top_left.x // TILE_SIZE - 3 <= cord.x <= covered_bottom_right.x // TILE_SIZE + 3 and \
-                covered_top_left.y // TILE_SIZE - 3 <= cord.y <= covered_bottom_right.y // TILE_SIZE + 3
+                covered_top_left.x // TILE_SIZE <= cord.x <= covered_bottom_right.x // TILE_SIZE and \
+                covered_top_left.y // TILE_SIZE <= cord.y <= covered_bottom_right.y // TILE_SIZE
         ]
 
         return render_pos, name, covered_cords if covered_cords else tiles
