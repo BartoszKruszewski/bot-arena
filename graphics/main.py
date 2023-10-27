@@ -6,7 +6,6 @@ from pygame.transform import scale
 
 from const import SCREEN_SIZE, FRAMERATE, STANDARD_FRAMERATE
 from serializer import Serializer
-from plugin_loader import PluginLoader
 from engine import Engine
 from game import Game
 from interpreter import Interpreter, Action
@@ -20,8 +19,7 @@ class Main:
         self.clock = Clock()
 
         self.serializer = Serializer()
-        self.plugin_loader = PluginLoader()
-        
+
         self.interpreter = Interpreter()
         self.game = Game()
         self.engine = Engine()
@@ -34,12 +32,6 @@ class Main:
                 'side': 'left'
             })
         ))
-
-        self.bot1 = self.plugin_loader.load("example_bot1.py")
-        self.bot2 = self.plugin_loader.load("example_bot1.py")
-
-        self.plugin_loader.run(self.bot1)
-        self.plugin_loader.run(self.bot2)
 
         while self.is_running:
             self.check_events()
