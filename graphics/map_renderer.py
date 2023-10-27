@@ -3,9 +3,8 @@ from pygame import Vector2
 from pygame import Color
 from random import choice
 
-from const import MAP_SIZE_PX, TILE_SIZE, MAP_SIZE_X, MAP_SIZE_Y
-
-from map import Map
+from .const import MAP_SIZE_PX, TILE_SIZE, MAP_SIZE_X, MAP_SIZE_Y
+from .map import Map
 
 class MapRenderer:
     def __init__(self) -> None:

@@ -1,9 +1,9 @@
-from const import DRAW_SCREEN_SIZE_X, DRAW_SCREEN_SIZE_Y, CAMERA_OFFSET_MOVE_AREA, \
+from .const import DRAW_SCREEN_SIZE_X, DRAW_SCREEN_SIZE_Y, CAMERA_OFFSET_MOVE_AREA, \
     CAMERA_OFFSET_SPEED, MAP_SIZE_PX_X, MAP_SIZE_PX_Y
-from stats import COST, START_RESOURCES
-from map import Map
-from interpreter import Action
-from mouse import Mouse
+from .stats import COST, START_RESOURCES
+from .map import Map
+from .interpreter import Action
+from .mouse import Mouse
 from pygame import Vector2
 
 class Game:

@@ -1,4 +1,4 @@
-from map import Map
+from .map import Map
 
 class Serializer:
     def __init__(self):

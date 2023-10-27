@@ -1,19 +1,20 @@
 from pygame import Surface
 from pygame import Vector2
 
-from const import DRAW_SCREEN_SIZE, DRAW_SCREEN_SIZE_X, DRAW_SCREEN_SIZE_Y, \
+from .const import DRAW_SCREEN_SIZE, DRAW_SCREEN_SIZE_X, DRAW_SCREEN_SIZE_Y, \
     MAP_SIZE_PX
-from game import Game
-from map import Map
-from assets_loader import AssetsLoader
-from map_renderer import MapRenderer
+from .game import Game
+from .map import Map
+from .assets_loader import AssetsLoader
+from .map_renderer import MapRenderer
 
 class Engine():
     def __init__(self):
         self.draw_screen = Surface(DRAW_SCREEN_SIZE)
         self.assets_loader = AssetsLoader()
         self.map_renderer = MapRenderer()
-        self.assets = self.assets_loader.load('textures', '.png')
+        path = "/".join([dir for dir in __file__.split('\\') if dir != ''][:-1]) + '/' + 'textures'
+        self.assets = self.assets_loader.load(path, '.png')
         self.camera_offset = Vector2(0, 0)
         self.map_texture = Surface(MAP_SIZE_PX)
         self.map_rendered = False

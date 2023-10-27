@@ -1,6 +1,7 @@
 from pygame.mouse import get_pos, get_pressed
 from pygame import Vector2
-from const import SCREEN_SIZE_X, DRAW_SCREEN_SIZE_X, SCREEN_SIZE_Y, DRAW_SCREEN_SIZE_Y
+
+from .const import SCREEN_SIZE_X, DRAW_SCREEN_SIZE_X, SCREEN_SIZE_Y, DRAW_SCREEN_SIZE_Y
 
 class Mouse:
     def __init__(self) -> None:

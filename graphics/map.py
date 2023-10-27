@@ -1,4 +1,4 @@
-from const import MAP_SIZE, MAP_SIZE_X, MAP_SIZE_Y, OBSTACLES_AMOUNT
+from .const import MAP_SIZE, MAP_SIZE_X, MAP_SIZE_Y, OBSTACLES_AMOUNT
 from random import choice
 from pygame import Vector2
 

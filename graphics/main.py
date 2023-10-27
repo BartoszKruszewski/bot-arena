@@ -4,11 +4,11 @@ from pygame.time import Clock
 from pygame.event import get as get_event
 from pygame.transform import scale 
 
-from const import SCREEN_SIZE, FRAMERATE, STANDARD_FRAMERATE
-from serializer import Serializer
-from engine import Engine
-from game import Game
-from interpreter import Interpreter, Action
+from .const import SCREEN_SIZE, FRAMERATE, STANDARD_FRAMERATE
+from .serializer import Serializer
+from .engine import Engine
+from .game import Game
+from .interpreter import Interpreter, Action
 
 class Main:
     def __init__(self):

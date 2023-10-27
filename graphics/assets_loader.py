@@ -13,4 +13,5 @@ class AssetsLoader:
 
         if type in dir_path:
             return image_load(dir_path)
+        
         return {path.split('.')[0] : self.load(dir_path + '/' + path, type) for path in listdir(dir_path)}
