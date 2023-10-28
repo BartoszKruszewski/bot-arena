@@ -1,14 +1,12 @@
-from pygame import init, WINDOWCLOSE, Vector2
+from pygame import init, WINDOWCLOSE
 from pygame.display import set_mode as display_set_mode, update as display_update
 from pygame.time import Clock
 from pygame.event import get as get_event
 from pygame.transform import scale 
 
 from .const import SCREEN_SIZE, FRAMERATE, STANDARD_FRAMERATE
-from .serializer import Serializer
 from .engine import Engine
-from .game import Game
-from .interpreter import Interpreter, Action
+from ..game_logic.game import Game
 
 class Main:
     def __init__(self):
@@ -17,36 +15,15 @@ class Main:
         self.is_running = True
         self.dt = 1
         self.clock = Clock()
-
-        self.serializer = Serializer()
-
-        self.interpreter = Interpreter()
-        self.game = Game()
         self.engine = Engine()
-
-        # example how to use Action
-        print(self.game.do_action(
-            Action('build', {
-                'id': 'farm',
-                'cord': Vector2(10, 0),
-                'side': 'left'
-            })
-        ))
+        self.game = Game()
 
         while self.is_running:
-            self.check_events()
+            self.is_running = WINDOWCLOSE not in map(lambda e: e.type, get_event())
             self.game.update()
-            self.screen_update()
+            self.__screen_update()
 
-    def check_events(self):
-        '''Check pygame build-in events
-        '''
-
-        for e in get_event():
-            if e.type == WINDOWCLOSE:
-                self.is_running = False
-
-    def screen_update(self):
+    def __screen_update(self):
         '''Refreshes screen and update frame clock.
         '''
 
@@ -54,6 +31,7 @@ class Main:
         self.screen.blit(scale(self.engine.render(self.game), SCREEN_SIZE), (0, 0))
         display_update()
 
+    
 
 if __name__ == "__main__":
     Main()

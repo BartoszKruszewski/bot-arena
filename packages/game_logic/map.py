@@ -1,19 +1,6 @@
-from .const import MAP_SIZE, MAP_SIZE_X, MAP_SIZE_Y, OBSTACLES_AMOUNT
+from .stats import MAP_SIZE_X, MAP_SIZE_Y, OBSTACLES_AMOUNT, STRUCTURES
 from random import choice
 from pygame import Vector2
-
-placable_ids = ('spawn', 'turret', 'farm')
-
-
-def are_in_board(cords: Vector2) -> bool:
-    '''Returns True if cords are in board.
-    '''
-    if cords.x < 0 or cords.y < 0:
-        return False
-    if cords.x >= MAP_SIZE_X or cords.y >= MAP_SIZE_Y:
-        return False
-    return True
-
 
 class Map():
     def __init__(self) -> None:
@@ -21,24 +8,34 @@ class Map():
         self.end = Vector2(MAP_SIZE_X - 1, MAP_SIZE_Y - 1)
 
         self.structures = {
-            "spawn":        [],           # spawn
-            "turret":       [],           # turret
-            "farm":         [],           # farm
-            "path":         [self.start], # path
-            "obstacles":    []            # trees
+            "spawn1":       [],           
+            "spawn2":       [],           
+            "turret":       [],           
+            "farm":         [],           
+            "path":         [self.start],
+            "obstacles":    []           
         }
+
+    def are_in_board(self, cords: Vector2) -> bool:
+        '''Returns True if cords are in board.
+        '''
+        if cords.x < 0 or cords.y < 0:
+            return False
+        if cords.x >= MAP_SIZE_X or cords.y >= MAP_SIZE_Y:
+            return False
+        return True
 
     def can_be_placed(self, cords: Vector2, structure_id: str) -> bool:
         '''Returns True if in cords structure can be placed.
         '''
 
-        if not are_in_board(cords):
+        if not self.are_in_board(cords):
             return False
 
         if any(cords in structure_list for structure_list in self.structures.values()):
             return False
 
-        if structure_id not in placable_ids:
+        if structure_id not in STRUCTURES:
             return False
 
         return True

@@ -1,14 +1,13 @@
 from pygame import Surface, SRCALPHA
 from pygame import Vector2
-from pygame import Color
 from random import choice
 
 from .const import MAP_SIZE_PX, TILE_SIZE, MAP_SIZE_X, MAP_SIZE_Y
-from .map import Map
+from ..game_logic.map import Map
 
 class MapRenderer:
     def __init__(self) -> None:
-        self.map_texture = Surface(MAP_SIZE_PX)
+        self.__map_texture = Surface(MAP_SIZE_PX)
         self.__ground_texture = Surface(MAP_SIZE_PX)
         self.__obstacles_texture = Surface(MAP_SIZE_PX, SRCALPHA)
         self.__assigned_obstacles = []
@@ -59,14 +58,14 @@ class MapRenderer:
         pass
 
     def render(self, assets: dict, map: Map) -> Surface:
-        self.map_texture = Surface(MAP_SIZE_PX)
+        self.__map_texture = Surface(MAP_SIZE_PX)
         self.__render_ground(map, assets)
         self.__assign_obstacles(map.structures['obstacles'], assets)
         self.__render_obstacles(assets)
-        self.map_texture.blit(self.__ground_texture, Vector2(0, 0))
-        self.map_texture.blit(self.__obstacles_texture, Vector2(0, 0))
+        self.__map_texture.blit(self.__ground_texture, Vector2(0, 0))
+        self.__map_texture.blit(self.__obstacles_texture, Vector2(0, 0))
 
-        return self.map_texture
+        return self.__map_texture
     
     def __group_tiles(self, cord: Vector2, other_tiles: list[Vector2]) -> list[Vector2]:
         
