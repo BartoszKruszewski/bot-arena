@@ -8,16 +8,17 @@ def test():
     game = Game()
     def print_soldiers():
         for i in range(len(game._map.path)):
-            if game._map.soliders['left'][i]:
+            if game._map.soldiers['left'][i]:
                 print('L', end='')
-            elif game._map.soliders['right'][i]:
+            elif game._map.soldiers['right'][i]:
                 print('R', end='')
             else:
                 print('.', end='')
         print()
 
-    game._map.soliders['left'][0] = 100
-    game._map.soliders['right'][13] = 110
+    game._map.soldiers['left'][0] = 100
+    game._map.soldiers['left'][7] = 20
+    game._map.soldiers['right'][13] = 110
 
     while(True):
         print_soldiers()

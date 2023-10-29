@@ -15,7 +15,7 @@ class Map():
         } for side in ("left", "right")
         }
 
-        self.soliders = {side: {
+        self.soldiers = {side: {
             cord: None for cord in range(len(self.path))
             } for side in ("left", "right")
         }

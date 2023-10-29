@@ -24,8 +24,8 @@ class Game:
 
 
     def __update_soldiers(self) -> None:
-        left_soldiers = self._map.soliders['left']
-        right_soldiers = self._map.soliders['right']
+        left_soldiers = self._map.soldiers['left']
+        right_soldiers = self._map.soldiers['right']
     
         def attack_phase() -> tuple[int, int]:
             for i in range(len(self._map.path) - 1):
@@ -67,8 +67,8 @@ class Game:
                 if new_left_soldiers[i+1] is None:
                     new_left_soldiers[i+1] = left_soldiers[i]
 
-            self._map.soliders['left'] = new_left_soldiers
-            self._map.soliders['right'] = new_right_soldiers
+            self._map.soldiers['left'] = new_left_soldiers
+            self._map.soldiers['right'] = new_right_soldiers
 
         where_attack = attack_phase()
         move_phase(where_attack)
