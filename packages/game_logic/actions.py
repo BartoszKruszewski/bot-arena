@@ -1,17 +1,16 @@
 class Action():
-    def __init__(self, time, player) -> None:
-        self.time = time
-        self.player = player
+    def __init__(self, side) -> None:
+        self.player = side
 
 class Wait(Action):
-    def __init__(self, time, player) -> None:
-        super().__init__(time, player)
+    def __init__(self, side) -> None:
+        super().__init__(side)
 
 class BuildTurret(Action):
-    def __init__(self, time, player, cord) -> None:
-        super().__init__(time, player)
+    def __init__(self, side, cord) -> None:
+        super().__init__(side)
         self.cord = cord
 
 class SpawnSoldier(Action):
-    def __init__(self, time, player) -> None:
-        super().__init__(time, player)
+    def __init__(self, side) -> None:
+        super().__init__(side)

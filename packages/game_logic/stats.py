@@ -1,5 +1,6 @@
 COST = {
     'tower': {'gold': 200},
+    'soldier': {'gold': 100},
 }
 
 START_RESOURCES = {

@@ -3,6 +3,14 @@ from .map import Map
 from .actions import Action 
 from . import actions
 
+ErrorCode = {
+    0: "OK",
+    1: "Both players can't build turret in the same place",
+    2: "Not enough gold",
+    3: "Can't build turret on path or obstacle",
+    4: "Too many soldiers on the path"
+}
+
 class Game:
     def __init__(self):
         self._map = Map()
@@ -12,13 +20,43 @@ class Game:
         return self._map
 
     def __make_action(self, action : Action) -> None:
-        pass
+        if isinstance(action, actions.BuildTurret):
+            if self._map.stats[action.player]['gold'] < COST['turret']:
+                return ErrorCode[2]
+            
+            if action.cord in self._map.structures['left']['turret'] or action.cord in self._map.structures['right']['turret']:
+                if action.cord in self._map.path or action.cord in self._map.obstacles:
+                    return ErrorCode[3]
 
-    def __action_handler(self, action_left : Action, action_right : Action) -> None:
+            self._map.structures[action.player]['turret'].append(action.cord)
+            self._map.stats[action.player]['gold'] -= COST['turret']
+            return ErrorCode[0]
+        
+        if isinstance(action, actions.SpawnSoldier):
+            if self._map.stats[action.player]['gold'] < COST['soldier']['gold']:
+                return ErrorCode[2]
+            if action.player == 'left':
+                if self._map.soldiers['left'][0] is not None:
+                    return ErrorCode[4]
+                self._map.soldiers['left'][0] = 100
+                return ErrorCode[0]
+            
+            if action.player == 'right':
+                if self._map.soldiers['right'][len(self._map.path) - 1] is not None:
+                    return ErrorCode[4]
+                self._map.soldiers['right'][len(self._map.path) - 1] = 100
+                return ErrorCode[0]
+            
+        return ErrorCode[0]
+            
+            
+
+
+    def __action_handler(self, action_left : Action, action_right : Action) -> tuple[ErrorCode, ErrorCode]:
         if isinstance(action_left, actions.BuildTurret) and isinstance(action_right, actions.BuildTurret):
             if action_left.cord == action_right.cord:
-                return "Both players can't build turret in the same place"
-            
+                return (ErrorCode[1], ErrorCode[1])
+        
         self.__make_action(action_left)
         self.__make_action(action_right)
 
@@ -80,7 +118,7 @@ class Game:
 
     def update(self, action_left : Action, action_right : Action) -> None:
         self.__update_map()
-        # make players actions
+        self.__action_handler(action_left, action_right)
         self._time += 1
 
 

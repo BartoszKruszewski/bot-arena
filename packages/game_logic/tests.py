@@ -1,8 +1,5 @@
 from .game import Game
-from .actions import Action
-
-
-
+from .actions import *
 
 def test():
     game = Game()
@@ -16,11 +13,17 @@ def test():
                 print('.', end='')
         print()
 
-    game._map.soldiers['left'][0] = 100
-    game._map.soldiers['left'][7] = 20
-    game._map.soldiers['right'][13] = 110
 
     while(True):
+        is_spawn = input('Spawn? (l/r/b/n) ')
+        if is_spawn == 'l':
+            game.update(SpawnSoldier("left"), Wait("right"))
+        elif is_spawn == 'r':
+            game.update(Wait("left"), SpawnSoldier("right"))
+        elif is_spawn == 'b':
+            game.update(SpawnSoldier("left"), SpawnSoldier("right"))
+        else:
+            game.update(Wait("left"), Wait("right"))
+
         print_soldiers()
-        game.update(Action, Action)
-        pause = input()
+
