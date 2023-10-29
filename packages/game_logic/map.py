@@ -16,7 +16,7 @@ class Map():
         }
 
         self.soliders = {side: {
-            cord: [] for cord in self.path
+            cord: None for cord in range(len(self.path))
             } for side in ("left", "right")
         }
 
