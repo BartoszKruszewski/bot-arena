@@ -52,8 +52,6 @@ class Game:
             return (-999, -999)
         
         def move_phase(where_attack) -> None:
-            if where_attack != (-999, -999):
-                print('no attack')
             new_left_soldiers = {i: None for i in range(-1, len(self._map.path)+2)}
             new_right_soldiers = {i: None for i in range(-1, len(self._map.path)+2)}
 
@@ -116,7 +114,7 @@ class Game:
 
     def __make_action(self, action : Action) -> None:
         if isinstance(action, actions.BuildTurret):
-            if self._map.stats[action.player]['gold'] < COST['turret']:
+            if self._map.stats[action.player]['gold'] < COST['turret']['gold']:
                 return ErrorCode[2]
             
             if action.cord in self._map.structures['left']['turret'] or action.cord in self._map.structures['right']['turret']:
@@ -124,7 +122,7 @@ class Game:
                     return ErrorCode[3]
 
             self._map.structures[action.player]['turret'].append(action.cord)
-            self._map.stats[action.player]['gold'] -= COST['turret']
+            self._map.stats[action.player]['gold'] -= COST['turret']['gold']
             return ErrorCode[0]
         
         if isinstance(action, actions.SpawnSoldier):

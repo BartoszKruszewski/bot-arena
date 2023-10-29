@@ -1,29 +1,50 @@
 from .game import Game
 from .actions import *
+import os
 
 def test():
     game = Game()
-    def print_soldiers():
-        for i in range(len(game._map.path)):
-            if game._map.soldiers['left'][i]:
-                print('L', end='')
-            elif game._map.soldiers['right'][i]:
-                print('R', end='')
-            else:
-                print('.', end='')
-        print()
 
+    os.system('cls')
 
     while(True):
-        is_spawn = input('Spawn? (l/r/b/n) ')
-        if is_spawn == 'l':
-            print(game.update(SpawnSoldier("left"), Wait("right")))
-        elif is_spawn == 'r':
-            print(game.update(Wait("left"), SpawnSoldier("right")))
-        elif is_spawn == 'b':
-            print(game.update(SpawnSoldier("left"), SpawnSoldier("right")))
-        else:
-            print(game.update(Wait("left"), Wait("right")))
+        print("Enter action: ")
+        print("l - spawn left soldier")
+        print("r - spawn right soldier")
+        print("b - spawn left and right soldier")
+        print("t [l/r] [x] [y] - build turret")
+        print("enter - next turn")
+        print("q - quit")
 
-        print_soldiers()
+        command = input()
+        action_left = Wait('left')
+        action_right = Wait('right')
+        if command == '':
+            pass
+        elif command == 'l':
+            action_left = SpawnSoldier('left')
+        elif command == 'r':
+            action_right = SpawnSoldier('right')
+        elif command == 'b':
+            action_left = SpawnSoldier('left')
+            action_right = SpawnSoldier('right')
+        elif command[0] == 't':
+            command = command.split(' ')
+            side = command[1]
+            x = int(command[2])
+            y = int(command[3])
+            if side == 'l':
+                action_left = BuildTurret('left', (x, y))
+            elif side == 'r':
+                action_right = BuildTurret('right', (x, y))
+        elif command == 'q':
+            break
+        else:
+            print("Wrong command")
+            continue
+
+        
+        os.system('cls')
+        print(game.update(action_left, action_right))
+        game._map._print_map()
 
