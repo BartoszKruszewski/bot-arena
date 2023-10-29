@@ -2,7 +2,7 @@ from .game import Game
 from .actions import *
 import os
 
-def test():
+def run():
     game = Game()
 
     os.system('cls')

@@ -16,7 +16,6 @@ ErrorCode = {
 class Game:
     def __init__(self):
         self._map = Map()
-        self._time = 0
 
     def get_map(self) -> Map:
         return self._map
@@ -32,8 +31,8 @@ class Game:
         def attack_phase() -> tuple[int, int]:
             for i in range(len(self._map.path) - 1):
                 if left_soldiers[i] and right_soldiers[i]:
-                    left_soldiers[i] -= 1
-                    right_soldiers[i] -= 1
+                    left_soldiers[i] -= 1 # attack -1 hp
+                    right_soldiers[i] -= 1 # attack -1 hp
 
                     if left_soldiers[i] <= 0: left_soldiers[i] = None
                     if right_soldiers[i] <= 0: right_soldiers[i] = None
@@ -41,8 +40,8 @@ class Game:
                     return (i, i)
             for i in range(len(self._map.path) - 1):
                 if left_soldiers[i] and right_soldiers[i + 1]:   
-                    left_soldiers[i] -= 1
-                    right_soldiers[i + 1] -= 1
+                    left_soldiers[i] -= 1 # attack -1 hp
+                    right_soldiers[i + 1] -= 1 # attack -1 hp
 
                     if left_soldiers[i] <= 0: left_soldiers[i] = None
                     if right_soldiers[i + 1] <= 0: right_soldiers[i + 1] = None
@@ -131,13 +130,13 @@ class Game:
             if action.player == 'left':
                 if self._map.soldiers['left'][0] is not None:
                     return ErrorCode[4]
-                self._map.soldiers['left'][0] = 9
+                self._map.soldiers['left'][0] = 9 # set soldier hp
                 return ErrorCode[0]
             
             if action.player == 'right':
                 if self._map.soldiers['right'][len(self._map.path) - 1] is not None:
                     return ErrorCode[4]
-                self._map.soldiers['right'][len(self._map.path) - 1] = 9
+                self._map.soldiers['right'][len(self._map.path) - 1] = 9 # set soldier hp
                 return ErrorCode[0]
             
         return ErrorCode[0]
@@ -161,8 +160,6 @@ class Game:
 
         response = self.__action_handler(action_left, action_right)
         is_win = self.__check_win()
-
-        self._time += 1
         
         if is_win != (ErrorCode[0], ErrorCode[0]):
             return is_win
