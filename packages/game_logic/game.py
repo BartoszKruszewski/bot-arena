@@ -112,7 +112,7 @@ class Game:
         self.__update_soldiers()
         self.__update_turrets_attacks()
 
-    def __make_action(self, action : Action) -> None:
+    def __make_action(self, action : Action) -> ErrorCode:
         if isinstance(action, actions.BuildTurret):
             if self._map.stats[action.player]['gold'] < COST['turret']['gold']:
                 return ErrorCode[2]
