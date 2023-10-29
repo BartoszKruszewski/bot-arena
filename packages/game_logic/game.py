@@ -75,7 +75,7 @@ class Game:
                     if right_soldiers[i] <= 0: right_soldiers[i] = None
 
                     return (i, i)
-                
+            for i in range(len(self._map.path) - 1):
                 if left_soldiers[i] and right_soldiers[i + 1]:   
                     left_soldiers[i] -= 10
                     right_soldiers[i + 1] -= 10
@@ -88,6 +88,8 @@ class Game:
             return (-999, -999)
         
         def move_phase(where_attack) -> None:
+            if where_attack != (-999, -999):
+                print('no attack')
             new_left_soldiers = {i: None for i in range(len(self._map.path))}
             new_right_soldiers = {i: None for i in range(len(self._map.path))}
 
@@ -97,6 +99,8 @@ class Game:
                     continue
                 if new_right_soldiers[i-1] is None:
                     new_right_soldiers[i-1] = right_soldiers[i]
+                else:
+                    new_right_soldiers[i] = right_soldiers[i]
 
             for i in range(len(self._map.path) - 2, -1, -1):
                 if i == where_attack[0]:
@@ -104,6 +108,8 @@ class Game:
                     continue
                 if new_left_soldiers[i+1] is None:
                     new_left_soldiers[i+1] = left_soldiers[i]
+                else:
+                    new_left_soldiers[i] = left_soldiers[i]
 
             self._map.soldiers['left'] = new_left_soldiers
             self._map.soldiers['right'] = new_right_soldiers
