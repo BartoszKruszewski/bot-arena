@@ -16,18 +16,11 @@ class MapRenderer:
         '''Drawing map tiles.
         '''
 
-        TEXTURE_NAMES = {
-            'path':  'tile_path',
-        }
-
         filled_cords = []
 
-        # for tile_code, cords in map.structures.items():
-        #     if tile_code != 'obstacles':
-        #         for cord in cords:
-        #             self.__ground_texture.blit(
-        #                 assets['tiles'][TEXTURE_NAMES[tile_code]], cord * TILE_SIZE)
-        #             filled_cords.append(cord)
+        for cord in map.path:
+            self.__ground_texture.blit(assets['tiles']['tile_path'], Vector2(cord) * TILE_SIZE)
+            filled_cords.append(cord)
 
         grass_cords = [
             Vector2(x, y) 
@@ -62,10 +55,19 @@ class MapRenderer:
         self.__assign_obstacles(map.obstacles, assets)
         self.__render_obstacles(assets)
         self.__map_texture.blit(self.__ground_texture, Vector2(0, 0))
-        self.__map_texture.blit(self.__obstacles_texture, Vector2(0, 0))
 
+        # self.__draw_obstacles_area(map)
+
+        self.__map_texture.blit(self.__obstacles_texture, Vector2(0, 0))
+        
         return self.__map_texture
     
+    def __draw_obstacles_area(self, map: Map) -> None:
+        surf = Surface((TILE_SIZE, TILE_SIZE))
+        surf.fill((255, 0, 0))
+        for cord in map.obstacles:
+            self.__map_texture.blit(surf, Vector2(cord) * TILE_SIZE)
+
     def __group_tiles(self, cord: Vector2, other_tiles: list[Vector2]) -> list[Vector2]:
         
         def recursive(actual_cord: Vector2, group: list[Vector2]) -> list[Vector2]:
