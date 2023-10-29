@@ -41,7 +41,7 @@ class Map():
 
         self.path = path
 
-    def __gemerate_obstacles(self) -> None:
+    def __generate_obstacles(self) -> None:
         not_path = [(x, y) for x in range(MAP_SIZE_X) 
                     for y in range(MAP_SIZE_Y) 
                     if (x, y) not in self.path]
@@ -52,7 +52,7 @@ class Map():
 
     def __generate_map(self) -> None:
         self.__generate_path()
-        self.__gemerate_obstacles()
+        self.__generate_obstacles()
 
     def _print_map(self) -> None:
         soldiers_left = [s for s in range(len(self.path)) if self.soldiers['left'][s] is not None]
