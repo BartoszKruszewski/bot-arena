@@ -18,17 +18,16 @@ class MapRenderer:
 
         TEXTURE_NAMES = {
             'path':  'tile_path',
-            'farm': 'tile_farm'
         }
 
         filled_cords = []
 
-        for tile_code, cords in map.structures.items():
-            if tile_code != 'obstacles':
-                for cord in cords:
-                    self.__ground_texture.blit(
-                        assets['tiles'][TEXTURE_NAMES[tile_code]], cord * TILE_SIZE)
-                    filled_cords.append(cord)
+        # for tile_code, cords in map.structures.items():
+        #     if tile_code != 'obstacles':
+        #         for cord in cords:
+        #             self.__ground_texture.blit(
+        #                 assets['tiles'][TEXTURE_NAMES[tile_code]], cord * TILE_SIZE)
+        #             filled_cords.append(cord)
 
         grass_cords = [
             Vector2(x, y) 
@@ -60,7 +59,7 @@ class MapRenderer:
     def render(self, assets: dict, map: Map) -> Surface:
         self.__map_texture = Surface(MAP_SIZE_PX)
         self.__render_ground(map, assets)
-        self.__assign_obstacles(map.structures['obstacles'], assets)
+        self.__assign_obstacles(map.obstacles, assets)
         self.__render_obstacles(assets)
         self.__map_texture.blit(self.__ground_texture, Vector2(0, 0))
         self.__map_texture.blit(self.__obstacles_texture, Vector2(0, 0))
@@ -134,7 +133,7 @@ class MapRenderer:
         '''Returns name of grass turn based on neighboring tiles.
         '''
 
-        is_path = self.__get_neighbouring_tiles(cord, map.structures['path'], only_offset = True, diagonal = True)
+        is_path = self.__get_neighbouring_tiles(cord, map.path, only_offset = True, diagonal = True)
         
         if not is_path:
             return 'center'

@@ -1,131 +1,70 @@
-from .stats import MAP_SIZE_X, MAP_SIZE_Y, OBSTACLES_AMOUNT, STRUCTURES
+from .stats import MAP_SIZE_X, MAP_SIZE_Y, OBSTACLES_AMOUNT, START_RESOURCES, COST
 from random import choice
-from pygame import Vector2
 
 class Map():
     def __init__(self) -> None:
-        self.start = Vector2(0, 0)
-        self.end = Vector2(MAP_SIZE_X - 1, MAP_SIZE_Y - 1)
+        self.start = (0, 0)
+        self.end = (MAP_SIZE_X - 1, MAP_SIZE_Y - 1)
 
-        self.structures = {
-            "spawn1":       [],           
-            "spawn2":       [],           
-            "turret":       [],           
-            "farm":         [],           
-            "path":         [self.start],
-            "obstacles":    []           
+        self.path = [self.start]
+        self.obstacles = []
+        self.__generate_map()
+
+        self.structures = {side: {         
+            "turret":       [],                             
+        } for side in ("left", "right")
         }
 
-    def are_in_board(self, cords: Vector2) -> bool:
-        '''Returns True if cords are in board.
-        '''
-        if cords.x < 0 or cords.y < 0:
-            return False
-        if cords.x >= MAP_SIZE_X or cords.y >= MAP_SIZE_Y:
-            return False
-        return True
+        self.soliders = {side: {
+            cord: [] for cord in self.path
+            } for side in ("left", "right")
+        }
 
-    def can_be_placed(self, cords: Vector2, structure_id: str) -> bool:
-        '''Returns True if in cords structure can be placed.
-        '''
+        self.stats = {side: {
+                'gold': START_RESOURCES['gold'],
+            } for side in ('left', 'right')
+        }
 
-        if not self.are_in_board(cords):
-            return False
 
-        if any(cords in structure_list for structure_list in self.structures.values()):
-            return False
-
-        if structure_id not in STRUCTURES:
-            return False
-
-        return True
-
-    def place_structure(self, cords: Vector2, structure_id: str) -> bool:
-        '''Place structure in cords.
-
-        Return True if operation was successful.
-        '''
-        if not self.can_be_placed(cords, structure_id):
-            return False
-
-        self.structures[structure_id].append(cords)
-        return True
-
-    def print_path(self) -> None:
-        '''Print path to the console.
-        '''
-        map = [["_" for i in range(MAP_SIZE_X)] for j in range(MAP_SIZE_Y)]
-
-        for key, items in self.structures.items():
-            for pos in items:
-                map[pos.y][pos.x] = key
-                if key == "path":
-                    map[pos.y][pos.x] = "#"
-
-        for row in map:
-            print(" ".join(row))
-
-    def load_map(self, path: str) -> None:
-        '''Loads path from file.
-        '''
-        # TODO: load path from file
-        pass
-
-    def generate_map(self) -> None:
-        '''Generate random path.
-        '''
-
-        # TODO: generate from seed
-        # TODO: make better generator
-        # TODO: genereate trees and grass
-
+    def __generate_path(self) -> None:
         path = [self.start]
-        while path[-1] != self.end:
-            next = list(path[-1])
-            where = choice((Vector2(0, 1), Vector2(1, 0)))
-            next += where
 
-            if next.x < MAP_SIZE_X and next.y < MAP_SIZE_Y:
+        while path[-1] != self.end:
+            next = path[-1]
+            where = choice(((0, 1), (1, 0)))
+            next = (next[0] + where[0], next[1] + where[1])
+
+            if next[0] < MAP_SIZE_X and next[1] < MAP_SIZE_Y:
                 path.append(next)
 
-        grass = []
+        self.path = path
+
+    def __gemerate_obstacles(self) -> None:
+        not_path = [(x, y) for x in range(MAP_SIZE_X) 
+                    for y in range(MAP_SIZE_Y) 
+                    if (x, y) not in self.path]
+        
+        while len(self.obstacles) < OBSTACLES_AMOUNT:
+            self.obstacles.append(choice(not_path))
+            not_path.remove(self.obstacles[-1])
+
+    def __generate_map(self) -> None:
+        self.__generate_path()
+        self.__gemerate_obstacles()
+
+    def _print_map(self) -> None:
         for y in range(MAP_SIZE_Y):
             for x in range(MAP_SIZE_X):
-                tile = Vector2(x, y)
-                if tile not in path:
-                    grass.append(tile)
-
-        obstacles = []
-        good_places = []
-        
-        for v in grass:
-            surr = [Vector2(v.x + x, v.y + y) for x in range(-1, 2) for y in range(-1, 2)]
-            good = True
-            for u in surr:
-                if u in path:
-                    good = False
-                    break
-            if good:    
-                good_places.append(v)
-
-
-        for _ in range(OBSTACLES_AMOUNT):
-            tile = choice(good_places)
-            obstacles.append(tile)
-            grass.remove(tile)
-            good_places.remove(tile)
-
-        self.structures["path"] = path
-        self.structures["obstacles"] = obstacles
+                if (x, y) in self.path:
+                    print("P", end="")
+                elif (x, y) in self.obstacles:
+                    print("O", end="")
+                else:
+                    print(" ", end="")
+            print()
 
 if __name__ == "__main__":
-    map = Map()
-    map.generate_map()
-    map.print_path()
+    m = Map()
+    m._print_map()
+    print(len(m.obstacles))
 
-    print()
-
-    map.place_structure((0, 5), "spawn")
-    map.place_structure((-1, 0), "tree")
-    map.place_structure((3, 3), "tree")
-    map.print_path()

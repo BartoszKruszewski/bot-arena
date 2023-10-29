@@ -1,68 +1,40 @@
 from .stats import COST, START_RESOURCES
 from .map import Map
-from ..simulator.interpreter import Action
+from .actions import Action 
+from . import actions
 
 class Game:
     def __init__(self):
-        self.__map = Map()
+        self._map = Map()
 
-        self.stats = {side: {
-                'gold': START_RESOURCES['gold'],
-            } for side in ('left', 'right')
-        }
-        
-        self.__map.generate_map()
+        self._actions = []
+        self._time = 0
 
     def get_map(self) -> Map:
-        return self.__map
+        return self._map
 
-    def update(self):
-        '''Main update function.
+    def __make_action(self, action : Action) -> None:
+        pass
 
-        Refereshes once per frame.
-        '''
+    def __action_handler(self, action_left : Action, action_right : Action) -> None:
+        if isinstance(action_left, actions.BuildTurret) and isinstance(action_right, actions.BuildTurret):
+            if action_left.cord == action_right.cord:
+                return "Both players can't build turret in the same place"
 
-    def do_action(self, action: Action) -> bool:
-        '''Performing actions
-        '''
+        if isinstance(action_left, actions.SpawnSoldier):
+            if self._map.soliders['left'][self.start] != []:
+                return "Player left has too many soliders"
+            
+        if isinstance(action_right, actions.SpawnSoldier):
+            if self._map.soliders['right'][self.start] != []:
+                return "Player right has too many soliders"
 
-        # maping action -> its function
-        ACTIONS = {
-            'build': self.__a_build_structure,
-        }
+    def update(self, action_left : Action, action_right : Action) -> None:
+        self.__actions.append((action_left, action_right))
+        self.__time += 1
 
-        # check is action name correct
-        if action.name not in ACTIONS:
-            return False
+        # calculate map
+        # make players actions
 
-        # execute action function and get feedback
-        return ACTIONS[action.name](action.value)
-
-    def __a_build_structure(self, value: dict) -> bool:
-        '''Build structure action function
-        '''
-
-        cord = value['cord']
-        id = value['id']
-        side = value['side']
-
-        if self.__map.can_be_placed(cord, id):
-            if self.__buy(id, side):
-                self.__map.place_structure(cord, id)
-                return True
-        return False
-
-    def __buy(self, id: str, side: str) -> bool:
-        '''If it's possible buys a thing and gets feedback. 
-        '''
-        if self.__can_be_bought(id, side):
-            self.stats[side]['gold'] -= COST[id]['gold']
-            return True
-        return False
-
-    def __can_be_bought(self, id, side) -> bool:
-        '''True if thing can be bought
-        '''
-        return COST[id]['gold'] <= self.stats[side]['gold']
 
     

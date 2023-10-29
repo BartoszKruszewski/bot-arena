@@ -20,7 +20,7 @@ class Main:
 
         while self.is_running:
             self.is_running = WINDOWCLOSE not in map(lambda e: e.type, get_event())
-            self.game.update()
+            # self.game.update()
             self.__screen_update()
 
     def __screen_update(self):
