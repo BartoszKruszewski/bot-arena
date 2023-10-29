@@ -1,5 +1,5 @@
 COST = {
-    'tower': {'gold': 200},
+    'turret': {'gold': 200},
     'soldier': {'gold': 100},
 }
 

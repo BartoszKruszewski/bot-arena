@@ -55,15 +55,29 @@ class Map():
         self.__gemerate_obstacles()
 
     def _print_map(self) -> None:
+        soldiers_left = [s for s in range(len(self.path)) if self.soldiers['left'][s] is not None]
+        soldiers_right = [s for s in range(len(self.path)) if self.soldiers['right'][s] is not None]
+
+        soldiers_left = [self.path[s] for s in soldiers_left]
+        soldiers_right = [self.path[s] for s in soldiers_right]
+
         for y in range(MAP_SIZE_Y):
             for x in range(MAP_SIZE_X):
                 if (x, y) in self.path:
-                    print("P", end="")
-                elif (x, y) in self.obstacles:
-                    print("O", end="")
+                    if (x, y) in soldiers_left:
+                        print('L', end='')
+                    elif (x, y) in soldiers_right:
+                        print('R', end='')
+                    else:
+                        print('.', end='')
+                elif (x, y) in self.structures['left']['turret']:
+                    print('l', end='')
+                elif (x, y) in self.structures['right']['turret']:
+                    print('r', end='')
                 else:
-                    print(" ", end="")
+                    print(' ', end='')
             print()
+            
 
 if __name__ == "__main__":
     m = Map()
