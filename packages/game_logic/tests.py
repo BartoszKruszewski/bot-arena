@@ -17,13 +17,13 @@ def test():
     while(True):
         is_spawn = input('Spawn? (l/r/b/n) ')
         if is_spawn == 'l':
-            game.update(SpawnSoldier("left"), Wait("right"))
+            print(game.update(SpawnSoldier("left"), Wait("right")))
         elif is_spawn == 'r':
-            game.update(Wait("left"), SpawnSoldier("right"))
+            print(game.update(Wait("left"), SpawnSoldier("right")))
         elif is_spawn == 'b':
-            game.update(SpawnSoldier("left"), SpawnSoldier("right"))
+            print(game.update(SpawnSoldier("left"), SpawnSoldier("right")))
         else:
-            game.update(Wait("left"), Wait("right"))
+            print(game.update(Wait("left"), Wait("right")))
 
         print_soldiers()
 

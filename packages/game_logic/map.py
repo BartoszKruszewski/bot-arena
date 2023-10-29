@@ -10,13 +10,15 @@ class Map():
         self.obstacles = []
         self.__generate_map()
 
+        # turret: list of cords
         self.structures = {side: {         
             "turret":       [],                             
         } for side in ("left", "right")
         }
 
+        # path index: hp
         self.soldiers = {side: {
-            cord: None for cord in range(len(self.path))
+            cord: None for cord in range(-1, len(self.path)+2)
             } for side in ("left", "right")
         }
 
