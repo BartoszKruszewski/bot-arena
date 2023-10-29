@@ -32,8 +32,8 @@ class Game:
         def attack_phase() -> tuple[int, int]:
             for i in range(len(self._map.path) - 1):
                 if left_soldiers[i] and right_soldiers[i]:
-                    left_soldiers[i] -= 10
-                    right_soldiers[i] -= 10
+                    left_soldiers[i] -= 1
+                    right_soldiers[i] -= 1
 
                     if left_soldiers[i] <= 0: left_soldiers[i] = None
                     if right_soldiers[i] <= 0: right_soldiers[i] = None
@@ -41,8 +41,8 @@ class Game:
                     return (i, i)
             for i in range(len(self._map.path) - 1):
                 if left_soldiers[i] and right_soldiers[i + 1]:   
-                    left_soldiers[i] -= 10
-                    right_soldiers[i + 1] -= 10
+                    left_soldiers[i] -= 1
+                    right_soldiers[i + 1] -= 1
 
                     if left_soldiers[i] <= 0: left_soldiers[i] = None
                     if right_soldiers[i + 1] <= 0: right_soldiers[i + 1] = None
@@ -93,7 +93,7 @@ class Game:
             left_soldier_cords = self._map.path[left_soldier_id]
             for right_turret_cord in right_turrets:
                 if manhattan_distance(left_soldier_cords, right_turret_cord) <= 3:
-                    self._map.soldiers['left'][left_soldier_id] -= 10
+                    self._map.soldiers['left'][left_soldier_id] -= 1
                     if self._map.soldiers['left'][left_soldier_id] <= 0:
                         self._map.soldiers['left'][left_soldier_id] = None
                     break
@@ -102,7 +102,7 @@ class Game:
             right_soldier_cords = self._map.path[right_soldier_id]
             for left_turret_cord in left_turrets:
                 if manhattan_distance(right_soldier_cords, left_turret_cord) <= 3:
-                    self._map.soldiers['right'][right_soldier_id] -= 10
+                    self._map.soldiers['right'][right_soldier_id] -= 1
                     if self._map.soldiers['right'][right_soldier_id] <= 0:
                         self._map.soldiers['right'][right_soldier_id] = None
                     break
@@ -131,13 +131,13 @@ class Game:
             if action.player == 'left':
                 if self._map.soldiers['left'][0] is not None:
                     return ErrorCode[4]
-                self._map.soldiers['left'][0] = 100
+                self._map.soldiers['left'][0] = 9
                 return ErrorCode[0]
             
             if action.player == 'right':
                 if self._map.soldiers['right'][len(self._map.path) - 1] is not None:
                     return ErrorCode[4]
-                self._map.soldiers['right'][len(self._map.path) - 1] = 100
+                self._map.soldiers['right'][len(self._map.path) - 1] = 9
                 return ErrorCode[0]
             
         return ErrorCode[0]

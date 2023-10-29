@@ -58,16 +58,20 @@ class Map():
         soldiers_left = [s for s in range(len(self.path)) if self.soldiers['left'][s] is not None]
         soldiers_right = [s for s in range(len(self.path)) if self.soldiers['right'][s] is not None]
 
+        soldiers_life_left = [self.soldiers['left'][s] for s in soldiers_left]
+        soldiers_life_right = [self.soldiers['right'][s] for s in soldiers_right]
+
         soldiers_left = [self.path[s] for s in soldiers_left]
         soldiers_right = [self.path[s] for s in soldiers_right]
+
 
         for y in range(MAP_SIZE_Y):
             for x in range(MAP_SIZE_X):
                 if (x, y) in self.path:
                     if (x, y) in soldiers_left:
-                        print('L', end='')
+                        print(soldiers_life_left[soldiers_left.index((x, y))], end='')
                     elif (x, y) in soldiers_right:
-                        print('R', end='')
+                        print(soldiers_life_right[soldiers_right.index((x, y))], end='')
                     else:
                         print('.', end='')
                 elif (x, y) in self.structures['left']['turret']:
