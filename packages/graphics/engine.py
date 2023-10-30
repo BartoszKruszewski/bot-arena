@@ -31,7 +31,6 @@ class Engine():
         Refereshes once per frame.
         '''
         self.__camera.update()
-        self.__track_soldiers(game.get_soldiers(), game.get_path())
         self.__update_animated_objects(game.get_path())
 
         # reset frame
