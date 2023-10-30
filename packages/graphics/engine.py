@@ -19,12 +19,8 @@ class Engine():
         path = "/".join([dir for dir in __file__.split('\\') if dir != ''][:-1]) + '/' + 'textures'
         self.__assets = self.__assets_loader.load(path, '.png')
 
-        # creating AnimationObjects
-        self.soldier_animation_objects = [
-            SoldierAnimatedObject(Vector2(cord), 'swordsman')
-            for side in game.get_soldiers()
-            for cord in game.get_soldiers()[side]
-        ]
+        # creating AnimatedObjects
+        self.__animated_objects = []
 
         # first render
         self.__map_texture = self.__map_renderer.render(self.__assets, game.get_map())
@@ -35,6 +31,8 @@ class Engine():
         Refereshes once per frame.
         '''
         self.__camera.update()
+        self.__track_soldiers(game.get_soldiers(), game.get_path())
+        self.__update_animated_objects(game.get_path())
 
         # reset frame
         self.__draw_screen.fill((0, 0, 0))
@@ -42,18 +40,23 @@ class Engine():
         # drawing
         self.__draw_screen.blit(self.__map_texture, self.__camera.get_offset())
 
-        # draw test soldier
-        self.__draw_soldiers()
+        self.__draw_animated_objects()
         return self.__draw_screen
 
-    def __draw_soldiers(self):
-        for soldier_animated_object in self.soldier_animation_objects:
-            self.__draw_animated_object(soldier_animated_object)
+    def __update_animated_objects(self, path):
+        for animated_object in self.__animated_objects:
+            if isinstance(animated_object, SoldierAnimatedObject):
+                animated_object.update_next_pos(path)
+            animated_object.update()
+
+    def __draw_animated_objects(self):
+        for animated_object in self.__animated_objects:
+            self.__draw_animated_object(animated_object)
 
     def __draw_animated_object(self, object: AnimatedObject) -> None:
         self.__draw(
                     self.__assets[object.type][object.name][object.animation]
-                    [object.direction][object.frame], object.pos - object.offset
+                    [object.direction][object.frame], object.real_pos - object.offset
                 )
 
     def __draw(self, texture: Surface, pos: Vector2) -> None:

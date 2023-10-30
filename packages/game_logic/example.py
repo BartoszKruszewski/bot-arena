@@ -47,4 +47,4 @@ def run():
         os.system('cls')
         print(game.update(action_left, action_right))
         game._map._print_map()
-
+    
