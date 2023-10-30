@@ -15,8 +15,9 @@ class Main:
         self.is_running = True
         self.dt = 1
         self.clock = Clock()
-        self.engine = Engine()
         self.game = Game()
+        self.engine = Engine(self.game)
+        
 
         while self.is_running:
             self.is_running = WINDOWCLOSE not in map(lambda e: e.type, get_event())
