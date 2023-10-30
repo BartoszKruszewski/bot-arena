@@ -184,9 +184,6 @@ class Game:
     def get_map_size(self) -> tuple[int, int]:
         return (self._map.MAP_SIZE_X, self._map.MAP_SIZE_Y)
 
-    def get_error_code(self) -> dict[int, str]:
-        return ErrorCode
-    
     def get_possible_actions(self) -> list[Action]:
         return [actions.Wait, actions.BuildTurret, actions.SpawnSoldier]
     
