@@ -36,6 +36,9 @@ class Engine():
         # drawing
         self.__draw_screen.blit(self.__map_texture, self.__camera.get_offset())
 
+        # draw test soldier
+        self.__draw(self.__assets['soldiers']['swordsman']['walk']['left'][0], Vector2(100, 100))
+
         return self.__draw_screen
 
     def __draw(self, texture: Surface, pos: Vector2) -> None:
