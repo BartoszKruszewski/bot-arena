@@ -3,12 +3,15 @@ from random import choice
 
 class Map():
     def __init__(self) -> None:
-        self.start = (0, 0)
-        self.end = (MAP_SIZE_X - 1, MAP_SIZE_Y - 1)
+        self._start = (0, 0)
+        self._end = (MAP_SIZE_X - 1, MAP_SIZE_Y - 1)
 
-        self.path = [self.start]
+        self.path = [self._start]
         self.obstacles = []
         self.__generate_map()
+
+        self.MAP_SIZE_X = MAP_SIZE_X
+        self.MAP_SIZE_Y = MAP_SIZE_Y
 
         # turret: list of cords
         self.structures = {side: {         
@@ -29,9 +32,9 @@ class Map():
 
 
     def __generate_path(self) -> None:
-        path = [self.start]
+        path = [self._start]
 
-        while path[-1] != self.end:
+        while path[-1] != self._end:
             next = path[-1]
             where = choice(((0, 1), (1, 0)))
             next = (next[0] + where[0], next[1] + where[1])

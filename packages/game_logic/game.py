@@ -16,9 +16,6 @@ ErrorCode = {
 class Game:
     def __init__(self):
         self._map = Map()
-
-    def get_map(self) -> Map:
-        return self._map
     
     def __update_resources(self) -> None:
         self._map.stats['left']['gold'] += 100
@@ -155,7 +152,7 @@ class Game:
             return (ErrorCode[-1], ErrorCode[-2])
         return (ErrorCode[0], ErrorCode[0])
 
-    def update(self, action_left : Action, action_right : Action) -> None:
+    def update(self, action_left : Action, action_right : Action) -> tuple[ErrorCode, ErrorCode]:
         self.__update_map()
 
         response = self.__action_handler(action_left, action_right)
@@ -165,6 +162,27 @@ class Game:
             return is_win
         
         return response
+    
+    def get_map(self) -> Map:
+        return self._map
+
+    def get_path(self) -> list[tuple[int, int]]:
+        return self._map.path
+    
+    def get_obstacles(self) -> list[tuple[int, int]]:
+        return self._map.obstacles
+    
+    def get_structures(self) -> dict[str, list[tuple[int, int]]]:
+        return self._map.structures
+    
+    def get_soldiers(self) -> dict[str, dict[int, int]]:
+        return self._map.soldiers
+    
+    def get_stats(self) -> dict[str, dict[str, int]]:
+        return self._map.stats
+    
+    def get_map_size(self) -> tuple[int, int]:
+        return (self._map.MAP_SIZE_X, self._map.MAP_SIZE_Y)
 
 
     
