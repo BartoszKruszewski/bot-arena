@@ -8,7 +8,7 @@ from .assets_loader import AssetsLoader
 from .map_renderer import MapRenderer
 from ..game_logic.game import Game
 from .animated_object import AnimatedObject
-from .soldier import SoldierAnimatedObject
+from .soldier_animated_object import SoldierAnimatedObject
 
 class Engine():
     def __init__(self, game: Game):
@@ -31,7 +31,7 @@ class Engine():
         Refereshes once per frame.
         '''
         self.__camera.update()
-        self.__update_animated_objects(game.get_path())
+        self.__update_animated_objects()
 
         # reset frame
         self.__draw_screen.fill((0, 0, 0))
@@ -42,10 +42,8 @@ class Engine():
         self.__draw_animated_objects()
         return self.__draw_screen
 
-    def __update_animated_objects(self, path):
+    def __update_animated_objects(self):
         for animated_object in self.__animated_objects:
-            if isinstance(animated_object, SoldierAnimatedObject):
-                animated_object.update_next_pos(path)
             animated_object.update()
 
     def __draw_animated_objects(self):

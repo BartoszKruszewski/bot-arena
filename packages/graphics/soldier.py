@@ -1,27 +1,12 @@
 from pygame import Vector2
-from .animated_object import AnimatedObject
-from .const import SPRITE_SIZE
+from .const import FRAMERATE, ANIMATION_SPEED, ANIMATION_LEN, TILE_SIZE
+from ..game_logic.stats import ROUND_LEN
 
-class SoldierAnimatedObject(AnimatedObject):
-    def __init__(self, pos, name):
-        self.frame = 0
-        self.tick = 0
-        self.direction = 'bot'
-        self.animation = 'walk'
-        self.pos = pos
-        self.type = 'soldiers'
-        self.name = name
-        self.offset = Vector2(SPRITE_SIZE // 2, SPRITE_SIZE // 2)
+class Soldier():
+    def __init__(self) -> None:
+        self.pos = Vector2(0, 0)
+        self.real_pos = Vector2(0, 0)
+        self.next_pos = Vector2(0, 0)
 
-    def update_next_pos(self, path):
-        pos = self.pos.x, self.pos.y
-        i = 0
-        while i < len(path) or path[i] != pos:
-            i += 1
-        
-        self.next_pos = Vector2(path[i + 1])
-
-    
-
-    
-        
+    def __update_real_pos(self):
+        self.real_pos += (self.next_pos - self.pos) * TILE_SIZE * ROUND_LEN / FRAMERATE / 1000
