@@ -1,3 +1,5 @@
+import sys
+
 def game_logic_main():
     from packages.game_logic.main import TestRun
 
@@ -10,7 +12,6 @@ def simulator_main():
     pass
 
 def main():
-    import sys
     if len(sys.argv) == 0:
         print('No arguments')
         return
@@ -21,3 +22,6 @@ def main():
         graphics_main()
     if sys.argv[1] == '3':
         simulator_main()
+
+if __name__ == '__main__':
+    main()

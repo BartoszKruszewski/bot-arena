@@ -54,11 +54,12 @@ class Game:
         
     def _handle_actions_error(self) -> tuple[int, int]:
         def check_build_place(action: Action) -> int:
+            print("build", action.side)
             if self.gold[action.side] < COST['turret']['gold']:
                 return -1
             if action.cords[0] < 0 or action.cords[0] >= self._map.MAP_SIZE_X or action.cords[1] < 0 or action.cords[1] >= self._map.MAP_SIZE_Y:
                 return -4
-            if action.cords in self._map.obstacles:
+            if action.cords in self._map.obstacles or action.cords in self._map.path:
                 return -4
             return 0
         
@@ -79,6 +80,7 @@ class Game:
 
         left_error = check_build_place(self.action_left) if isinstance(self.action_left, actions.BuildTurret) else 0
         right_error = check_build_place(self.action_right) if isinstance(self.action_right, actions.BuildTurret) else 0
+        print(left_error, right_error)
         left_error = check_spawn_soldier(self.action_left) if isinstance(self.action_left, actions.SpawnSoldier) else left_error
         right_error = check_spawn_soldier(self.action_right) if isinstance(self.action_right, actions.SpawnSoldier) else right_error
 
@@ -148,8 +150,6 @@ class Game:
         return (self._map.MAP_SIZE_X, self._map.MAP_SIZE_Y)
 
     def display(self) -> None:
-        import os
-        # os.system('cls' if os.name == 'nt' else 'clear')
         for i in range(self._map.MAP_SIZE_Y):
             for j in range(self._map.MAP_SIZE_X):
                 try:
