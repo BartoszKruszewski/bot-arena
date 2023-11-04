@@ -14,3 +14,4 @@ ANIMATION_LEN = 5
 ANIMATION_NAMES = ('walk', 'attack')
 ANIMATION_DIRECTIONS = ('top','right','bot')
 ANIMATION_SPEED = 10 # frames per second
+ROUND_LEN = 1000

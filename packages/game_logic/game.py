@@ -4,7 +4,9 @@ from .objects.map import Map
 from .actions import Action 
 from . import actions
 from .objects.turrets import Turrets
+from .objects.turrets import _Turret
 from .objects.soldiers import Soldiers
+from .objects.soldiers import _Soldier
 
 ErrorCode = {
     -5: 'Too many troops',
@@ -45,6 +47,10 @@ class Game:
 
         self.soldiers['left'].move()
         self.soldiers['right'].move()
+
+    def _shoot_turrets(self) -> None:
+        self.turrets['left'].shoot(self.soldiers['right'])
+        self.turrets['right'].shoot(self.soldiers['left'])
         
     def _handle_actions_error(self) -> tuple[int, int]:
         def check_build_place(action: Action) -> int:
@@ -99,7 +105,7 @@ class Game:
         action_to_function[self.action_left.__class__](self.action_left)
         action_to_function[self.action_right.__class__](self.action_right)
 
-    def is_win(self) -> tuple[bool, bool]:
+    def _is_win(self) -> tuple[bool, bool]:
         return (self.soldiers['left'].is_win(), self.soldiers['right'].is_win())
 
     def update(self, action_left: Action, action_right: Action) -> int:
@@ -109,12 +115,40 @@ class Game:
         self.action_right = action_right
         Error = self._handle_actions_error()
         self._execute_actions()
-        WinLog = self.is_win()
+        self._shoot_turrets()
+        WinLog = self._is_win()
 
         if WinLog[0] and WinLog[1]: return (3, 3)
         if WinLog[0]: return (1, 1)
         if WinLog[1]: return (2, 2)
-        return Error
+        return (ErrorCode[Error[0]], ErrorCode[Error[1]])
+    
+    def get_path(self) -> list[tuple[int, int]]:
+        return self._map.path
+    
+    def get_obstacles(self) -> list[tuple[int, int]]:
+        return self._map.obstacles
+    
+    def get_turrets(self) -> dict[str, list[_Turret]]:
+        return {
+            'left': [turret for turret in self.turrets['left'].turrets],
+            'right': [turret for turret in self.turrets['right'].turrets]
+        }
+
+    def get_soldiers(self) -> dict[str, list[_Soldier]]:
+        return {
+            'left': [soldier for soldier in self.soldiers['left'].soldiers if soldier.hp > 0],
+            'right': [soldier for soldier in self.soldiers['right'].soldiers if soldier.hp > 0]
+        }
+
+    def get_stats(self) -> dict[str, int]:
+        return self.gold
+    
+    def get_map_size(self) -> tuple[int, int]:
+        return (self._map.MAP_SIZE_X, self._map.MAP_SIZE_Y)
+
+    
+
 
     def display(self) -> None:
         import os
