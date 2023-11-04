@@ -1,7 +1,4 @@
 # from packages.graphics.main import Main 
-
-
-
 def GameTest():
     from packages.game_logic.game import Game
     from packages.game_logic.actions import Wait, BuildTurret, SpawnSoldier
@@ -20,7 +17,6 @@ def GameTest():
         print(action)
 
 
+
 if __name__ == '__main__':
     GameTest()
-
-    
