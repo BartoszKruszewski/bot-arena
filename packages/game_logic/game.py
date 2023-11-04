@@ -1,189 +1,139 @@
 from .stats import COST
-from .map import Map
+from .stats import START_RESOURCES
+from .objects.map import Map
 from .actions import Action 
 from . import actions
+from .objects.turrets import Turrets
+from .objects.soldiers import Soldiers
 
 ErrorCode = {
-    -2: "Win",
-    -1: "Lose",
-    0: "OK",
-    1: "Both players can't build turret in the same place",
-    2: "Not enough gold",
-    3: "Can't build turret on path or obstacle",
-    4: "Too many soldiers on the path"
+    -5: 'Too many troops',
+    -4: 'Wrong build place',
+    -3: 'Same build place',
+    -2: 'Wrong action',
+    -1: 'Not enough gold',
+    0: 'OK',
+    1: 'Left win',
+    2: 'Right win',
+    3: 'Tie'
 }
 
 class Game:
     def __init__(self):
         self._map = Map()
-    
-    def __update_resources(self) -> None:
-        self._map.stats['left']['gold'] += 100
-        self._map.stats['right']['gold'] += 100
 
-    def __update_soldiers(self) -> None:
-        left_soldiers = self._map.soldiers['left']
-        right_soldiers = self._map.soldiers['right']
-    
-        def attack_phase() -> tuple[int, int]:
-            for i in range(len(self._map.path) - 1):
-                if left_soldiers[i] and right_soldiers[i]:
-                    left_soldiers[i] -= 1 # attack -1 hp
-                    right_soldiers[i] -= 1 # attack -1 hp
+        self.turrets = {
+            'left': Turrets(),
+            'right': Turrets()
+        }
 
-                    if left_soldiers[i] <= 0: left_soldiers[i] = None
-                    if right_soldiers[i] <= 0: right_soldiers[i] = None
+        self.soldiers  = {
+            'left': Soldiers('left', self._map.path),
+            'right': Soldiers('right', self._map.path)
+        }
 
-                    return (i, i)
-            for i in range(len(self._map.path) - 1):
-                if left_soldiers[i] and right_soldiers[i + 1]:   
-                    left_soldiers[i] -= 1 # attack -1 hp
-                    right_soldiers[i + 1] -= 1 # attack -1 hp
+        self.gold = {
+            'left': START_RESOURCES['gold'],
+            'right': START_RESOURCES['gold']
+        }
 
-                    if left_soldiers[i] <= 0: left_soldiers[i] = None
-                    if right_soldiers[i + 1] <= 0: right_soldiers[i + 1] = None
+        self.action_left = actions.Wait('left')
+        self.action_right = actions.Wait('right')
 
-                    return (i, i + 1)
-                
-            return (-999, -999)
+    def _update_soldiers(self) -> None:
+        self.soldiers['left'].fight(self.soldiers['right'])
+
+        self.soldiers['left'].move()
+        self.soldiers['right'].move()
         
-        def move_phase(where_attack) -> None:
-            new_left_soldiers = {i: None for i in range(-1, len(self._map.path)+2)}
-            new_right_soldiers = {i: None for i in range(-1, len(self._map.path)+2)}
+    def _handle_actions_error(self) -> tuple[int, int]:
+        def check_build_place(action: Action) -> int:
+            if self.gold[action.side] < COST['turret']['gold']:
+                return -1
+            if action.cords < 0 or action.cords >= self._map.MAP_SIZE_X:
+                return -4
+            if action.cords in self._map.obstacles:
+                return -4
+            return 0
+        
+        def check_spawn_soldier(action: Action) -> int:
+            if self.gold[action.side] < COST['soldier']['gold']:
+                return -1
+            if not self.soldiers[action.side].can_spawn():
+                return -5
+            return 0
 
-            for i in range(0, len(self._map.path)):
-                if i == where_attack[1]:
-                    new_right_soldiers[i] = right_soldiers[i]
-                    continue
-                if new_right_soldiers[i-1] is None:
-                    new_right_soldiers[i-1] = right_soldiers[i]
-                else:
-                    new_right_soldiers[i] = right_soldiers[i]
-
-            for i in range(len(self._map.path) - 1, -1, -1):
-                if i == where_attack[0]:
-                    new_left_soldiers[i] = left_soldiers[i]
-                    continue
-                if new_left_soldiers[i+1] is None:
-                    new_left_soldiers[i+1] = left_soldiers[i]
-                else:
-                    new_left_soldiers[i] = left_soldiers[i]
-
-            self._map.soldiers['left'] = new_left_soldiers
-            self._map.soldiers['right'] = new_right_soldiers
-
-        where_attack = attack_phase()
-        move_phase(where_attack)
-
-    def __update_turrets_attacks(self) -> None:
-        def manhattan_distance(a, b):
-            return abs(a[0] - b[0]) + abs(a[1] - b[1])
-
-        left_turrets = self._map.structures['left']['turret']
-        right_turrets = self._map.structures['right']['turret']
-
-        left_soldiers_ids = [i for i in range(len(self._map.path)) if self._map.soldiers['left'][i] is not None]
-        right_soldiers_ids = [i for i in range(len(self._map.path)) if self._map.soldiers['right'][i] is not None]
-
-        for left_soldier_id in left_soldiers_ids:
-            left_soldier_cords = self._map.path[left_soldier_id]
-            for right_turret_cord in right_turrets:
-                if manhattan_distance(left_soldier_cords, right_turret_cord) <= 3:
-                    self._map.soldiers['left'][left_soldier_id] -= 1
-                    if self._map.soldiers['left'][left_soldier_id] <= 0:
-                        self._map.soldiers['left'][left_soldier_id] = None
-                    break
-
-        for right_soldier_id in right_soldiers_ids:
-            right_soldier_cords = self._map.path[right_soldier_id]
-            for left_turret_cord in left_turrets:
-                if manhattan_distance(right_soldier_cords, left_turret_cord) <= 3:
-                    self._map.soldiers['right'][right_soldier_id] -= 1
-                    if self._map.soldiers['right'][right_soldier_id] <= 0:
-                        self._map.soldiers['right'][right_soldier_id] = None
-                    break
-
-    def __update_map(self) -> None:
-        self.__update_resources()
-        self.__update_soldiers()
-        self.__update_turrets_attacks()
-
-    def __make_action(self, action : Action) -> ErrorCode:
-        if isinstance(action, actions.BuildTurret):
-            if self._map.stats[action.player]['gold'] < COST['turret']['gold']:
-                return ErrorCode[2]
+        # if same build place
+        if isinstance(self.action_left, actions.BuildTurret) and isinstance(self.action_right, actions.BuildTurret):
+            if self.action_left.cords == self.action_right.cords:
+                return (-3, -3)
             
-            if action.cord in self._map.structures['left']['turret'] or action.cord in self._map.structures['right']['turret']:
-                if action.cord in self._map.path or action.cord in self._map.obstacles:
-                    return ErrorCode[3]
+        left_error = None
+        right_error = None
 
-            self._map.structures[action.player]['turret'].append(action.cord)
-            self._map.stats[action.player]['gold'] -= COST['turret']['gold']
-            return ErrorCode[0]
-        
-        if isinstance(action, actions.SpawnSoldier):
-            if self._map.stats[action.player]['gold'] < COST['soldier']['gold']:
-                return ErrorCode[2]
-            if action.player == 'left':
-                if self._map.soldiers['left'][0] is not None:
-                    return ErrorCode[4]
-                self._map.soldiers['left'][0] = 9 # set soldier hp
-                return ErrorCode[0]
-            
-            if action.player == 'right':
-                if self._map.soldiers['right'][len(self._map.path) - 1] is not None:
-                    return ErrorCode[4]
-                self._map.soldiers['right'][len(self._map.path) - 1] = 9 # set soldier hp
-                return ErrorCode[0]
-            
-        return ErrorCode[0]
-            
-    def __action_handler(self, action_left : Action, action_right : Action) -> tuple[ErrorCode, ErrorCode]:
-        if isinstance(action_left, actions.BuildTurret) and isinstance(action_right, actions.BuildTurret):
-            if action_left.cord == action_right.cord:
-                return (ErrorCode[1], ErrorCode[1])
-        
-        return (self.__make_action(action_left), self.__make_action(action_right))
+        left_error = check_build_place(self.action_left) if isinstance(self.action_left, actions.BuildTurret) else 0
+        right_error = check_build_place(self.action_right) if isinstance(self.action_right, actions.BuildTurret) else 0
+        left_error = check_spawn_soldier(self.action_left) if isinstance(self.action_left, actions.SpawnSoldier) else left_error
+        right_error = check_spawn_soldier(self.action_right) if isinstance(self.action_right, actions.SpawnSoldier) else right_error
 
-    def __check_win(self) -> int:
-        if self._map.soldiers['left'][len(self._map.path)] is not None:
-            return (ErrorCode[-2], ErrorCode[-1])
-        if self._map.soldiers['right'][-1] is not None:
-            return (ErrorCode[-1], ErrorCode[-2])
-        return (ErrorCode[0], ErrorCode[0])
+        self.action_left = actions.Wait('left') if left_error else self.action_left
+        self.action_right = actions.Wait('right') if right_error else self.action_right
 
-    def update(self, action_left : Action, action_right : Action) -> tuple[ErrorCode, ErrorCode]:
-        self.__update_map()
+        return (left_error, right_error)
 
-        response = self.__action_handler(action_left, action_right)
-        is_win = self.__check_win()
-        
-        if is_win != (ErrorCode[0], ErrorCode[0]):
-            return is_win
-        
-        return response
-    
-    def get_map(self) -> Map:
-        return self._map
+    def _execute_actions(self) -> None:
+        def build(action: Action) -> None:
+            self.gold[action.side] -= COST['turret']['gold']
+            self.turrets[action.side].spawn(action.cords)
 
-    def get_path(self) -> list[tuple[int, int]]:
-        return self._map.path
-    
-    def get_obstacles(self) -> list[tuple[int, int]]:
-        return self._map.obstacles
-    
-    def get_structures(self) -> dict[str, list[tuple[int, int]]]:
-        return self._map.structures
-    
-    def get_soldiers(self) -> dict[str, dict[int, int]]:
-        return self._map.soldiers
-    
-    def get_stats(self) -> dict[str, dict[str, int]]:
-        return self._map.stats
-    
-    def get_map_size(self) -> tuple[int, int]:
-        return (self._map.MAP_SIZE_X, self._map.MAP_SIZE_Y)
+        def spawn(action: Action) -> None:
+            self.gold[action.side] -= COST['soldier']['gold']
+            self.soldiers[action.side].spawn()
 
-    def get_possible_actions(self) -> list[Action]:
-        return [actions.Wait, actions.BuildTurret, actions.SpawnSoldier]
-    
+        action_to_function = {
+            actions.BuildTurret: build,
+            actions.SpawnSoldier: spawn,
+            actions.Wait: lambda action: None
+        }
+
+        action_to_function[self.action_left.__class__](self.action_left)
+        action_to_function[self.action_right.__class__](self.action_right)
+
+    def is_win(self) -> tuple[bool, bool]:
+        return (self.soldiers['left'].is_win(), self.soldiers['right'].is_win())
+
+    def update(self, action_left: Action, action_right: Action) -> int:
+        self._update_soldiers()
+
+        self.action_left = action_left
+        self.action_right = action_right
+        Error = self._handle_actions_error()
+        self._execute_actions()
+        WinLog = self.is_win()
+
+        if WinLog[0] and WinLog[1]: return (3, 3)
+        if WinLog[0]: return (1, 1)
+        if WinLog[1]: return (2, 2)
+        return Error
+
+    def display(self) -> None:
+        import os
+        # os.system('cls' if os.name == 'nt' else 'clear')
+        for i in range(self._map.MAP_SIZE_Y):
+            for j in range(self._map.MAP_SIZE_X):
+                try:
+                    if (j, i) in self.soldiers['left']:
+                        print('l', end='')
+                    elif (j, i) in self.soldiers['right']:
+                        print('r', end='')
+                    elif (j, i) in self._map.path:
+                        print('O', end='')
+                    else:
+                        print('.', end='')
+                except:
+                    if (j, i) in self._map.path:
+                        print('O', end='')
+                    else:
+                        print('.', end='')
+
+            print()

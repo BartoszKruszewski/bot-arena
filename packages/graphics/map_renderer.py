@@ -3,7 +3,7 @@ from pygame import Vector2
 from random import choice
 
 from .const import MAP_SIZE_PX, TILE_SIZE, MAP_SIZE_X, MAP_SIZE_Y
-from ..game_logic.map import Map
+from ..game_logic.objects.map import Map
 
 class MapRenderer:
     def __init__(self) -> None:
