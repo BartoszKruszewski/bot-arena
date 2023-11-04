@@ -1,15 +1,15 @@
 class Action():
     def __init__(self, side) -> None:
-        self.player = side
+        self.side = side
 
 class Wait(Action):
     def __init__(self, side) -> None:
         super().__init__(side)
 
 class BuildTurret(Action):
-    def __init__(self, side, cord) -> None:
+    def __init__(self, side, cords) -> None:
         super().__init__(side)
-        self.cord = cord
+        self.cords = cords
 
 class SpawnSoldier(Action):
     def __init__(self, side) -> None:
