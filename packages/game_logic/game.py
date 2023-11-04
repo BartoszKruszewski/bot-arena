@@ -147,9 +147,6 @@ class Game:
     def get_map_size(self) -> tuple[int, int]:
         return (self._map.MAP_SIZE_X, self._map.MAP_SIZE_Y)
 
-    
-
-
     def display(self) -> None:
         import os
         # os.system('cls' if os.name == 'nt' else 'clear')
