@@ -12,8 +12,6 @@ class _Turret():
 
 
     def _shoot(self, soldiers: Soldiers) -> None:
-
-
         for soldier in soldiers.soldiers:
             if self._is_in_range(soldiers._position_to_cords(soldier.position)):
                 soldier.hp -= self.attack
