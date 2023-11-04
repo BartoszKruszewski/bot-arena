@@ -96,13 +96,11 @@ class Game:
             actions.Wait: lambda action: None
         }
 
-
         action_to_function[self.action_left.__class__](self.action_left)
         action_to_function[self.action_right.__class__](self.action_right)
 
     def is_win(self) -> tuple[bool, bool]:
         return (self.soldiers['left'].is_win(), self.soldiers['right'].is_win())
-
 
     def update(self, action_left: Action, action_right: Action) -> int:
         self._update_soldiers()
@@ -138,11 +136,4 @@ class Game:
                     else:
                         print('.', end='')
 
-
             print()
-
-
-    
-
-
-

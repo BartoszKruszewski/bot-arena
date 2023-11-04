@@ -28,6 +28,8 @@ class Soldiers():
         return all(soldier.position != 0 for soldier in self.soldiers)
         
     def fight(self, right_soldiers: 'Soldiers') -> None:
+        if self.side == "right": Exception("You can't fight from right side")
+
         if not self.soldiers or not right_soldiers.soldiers:
             return
 

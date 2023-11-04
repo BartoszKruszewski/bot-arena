@@ -16,7 +16,5 @@ def GameTest():
         Game.display(game)
         print(action)
 
-
-
 if __name__ == '__main__':
     GameTest()
