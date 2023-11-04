@@ -118,9 +118,9 @@ class Game:
         self._shoot_turrets()
         WinLog = self._is_win()
 
-        if WinLog[0] and WinLog[1]: return (3, 3)
-        if WinLog[0]: return (1, 1)
-        if WinLog[1]: return (2, 2)
+        if WinLog[0] and WinLog[1]: return (ErrorCode[3], ErrorCode[3])
+        if WinLog[0]: return (ErrorCode[1], ErrorCode[1])
+        if WinLog[1]: return (ErrorCode[2], ErrorCode[2])
         return (ErrorCode[Error[0]], ErrorCode[Error[1]])
     
     def get_path(self) -> list[tuple[int, int]]:
