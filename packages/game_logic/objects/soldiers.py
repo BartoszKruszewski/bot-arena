@@ -18,8 +18,11 @@ class Soldiers():
         self.next_id = 0
         self.path = path
 
-    def _sort_soldiers(self) -> None:  
-        self.soldiers.sort(key=lambda soldier: soldier.position)
+    def _position_to_cords(self, position: int) -> tuple[int, int]:
+        return self.path[position]
+
+    def _sort_soldiers(self, reverse=False) -> None:  
+        self.soldiers.sort(key=lambda soldier: soldier.position, reverse=reverse)
 
     def _clean_dead(self) -> None:
         self.soldiers = [soldier for soldier in self.soldiers if soldier.hp > 0]
