@@ -8,7 +8,7 @@ def TestRun():
     status = None
 
     while True:
-        os.system('cls' if os.name == 'nt' else 'clear')
+        # os.system('cls' if os.name == 'nt' else 'clear')
         print(status)
         game.display()
 
