@@ -11,6 +11,15 @@ class _Soldier():
         enemy.hp -= self.damage
         self.hp -= enemy.damage
 
+    def get_id(self) -> int:
+        return self.id
+    
+    def get_hp(self) -> int:
+        return self.hp
+    
+    def get_position(self) -> int:
+        return self.position
+
 class Soldiers():
     def __init__(self, side, path) -> None:
         self.side = side
