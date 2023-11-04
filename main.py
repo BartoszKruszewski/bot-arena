@@ -6,7 +6,8 @@ def game_logic_main():
     TestRun()
 
 def graphics_main():
-    pass
+    from packages.graphics.main import Main
+    Main()
 
 def simulator_main():
     pass
@@ -24,4 +25,4 @@ def main():
         simulator_main()
 
 if __name__ == '__main__':
-    main()
+    graphics_main()

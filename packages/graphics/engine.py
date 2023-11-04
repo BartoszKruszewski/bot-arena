@@ -1,21 +1,22 @@
 from pygame import Surface
 from pygame import Vector2
 
-from .const import DRAW_SCREEN_SIZE, DRAW_SCREEN_SIZE_X, DRAW_SCREEN_SIZE_Y, \
-    MAP_SIZE_PX, TILE_SIZE
+from .const import DRAW_SCREEN_SIZE, DRAW_SCREEN_SIZE_X, DRAW_SCREEN_SIZE_Y, TILE_SIZE
 from .camera import Camera
 from .assets_loader import AssetsLoader
 from .map_renderer import MapRenderer
 from ..game_logic.game import Game
 from .animated_object import AnimatedObject
 from .soldier_animated_object import SoldierAnimatedObject
+from .object_tracer import ObjectTracer
 
 class Engine():
     def __init__(self, game: Game):
         self.__draw_screen = Surface(DRAW_SCREEN_SIZE)
         self.__assets_loader = AssetsLoader()
-        self.__map_renderer = MapRenderer()
-        self.__camera = Camera()
+        self.__map_renderer = MapRenderer(game)
+        self.__object_tracer = ObjectTracer()
+        self.__camera = Camera(game.get_map_size())
         path = "/".join([dir for dir in __file__.split('\\') if dir != ''][:-1]) + '/' + 'textures'
         self.__assets = self.__assets_loader.load(path, '.png')
 
@@ -23,7 +24,7 @@ class Engine():
         self.__animated_objects = []
 
         # first render
-        self.__map_texture = self.__map_renderer.render(self.__assets, game.get_map())
+        self.__map_texture = self.__map_renderer.render(self.__assets, game)
 
     def render(self, game: Game) -> Surface:
         '''Main rendering function.
@@ -31,7 +32,8 @@ class Engine():
         Refereshes once per frame.
         '''
         self.__camera.update()
-        self.__update_animated_objects()
+        self.__object_tracer.update_soldier_animated_objects(game.get_soldiers(), self.__animated_objects)
+        self.__update_animated_objects(game.get_path())
 
         # reset frame
         self.__draw_screen.fill((0, 0, 0))
@@ -42,9 +44,10 @@ class Engine():
         self.__draw_animated_objects()
         return self.__draw_screen
 
-    def __update_animated_objects(self):
+    def __update_animated_objects(self, path: list[tuple[int, int]]):
         for animated_object in self.__animated_objects:
-            animated_object.update()
+            if isinstance(animated_object, SoldierAnimatedObject):
+                animated_object.update(path)
 
     def __draw_animated_objects(self):
         for animated_object in self.__animated_objects:

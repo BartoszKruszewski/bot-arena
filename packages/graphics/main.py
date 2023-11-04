@@ -3,13 +3,12 @@ from pygame.display import set_mode as display_set_mode, update as display_updat
 from pygame.time import Clock
 from pygame.event import get as get_event
 from pygame.transform import scale 
-from random import choice, randint
 
-from .const import SCREEN_SIZE, FRAMERATE, STANDARD_FRAMERATE
+from .const import SCREEN_SIZE, FRAMERATE, STANDARD_FRAMERATE, ROUND_LEN
 from .engine import Engine
 from ..game_logic.game import Game
 from ..game_logic.actions import Wait, SpawnSoldier
-from ..game_logic.stats import ROUND_LEN
+
 class Main:
     def __init__(self):
         init()
@@ -19,15 +18,15 @@ class Main:
         self.clock = Clock()
         self.game = Game()
         self.engine = Engine(self.game)
-        self.game.update(SpawnSoldier('left'), Wait('right'))
         self.tick = 0
+        self.game.update(SpawnSoldier('left'), Wait('right'))
 
         while self.is_running:
             self.is_running = WINDOWCLOSE not in map(lambda e: e.type, get_event())
             self.tick += 1
             if self.tick > FRAMERATE / ROUND_LEN * 1000:
-                self.tick = 0
                 self.game.update(Wait('left'), Wait('right'))
+                self.tick = 0
             self.__screen_update()
 
     def __screen_update(self):
@@ -37,8 +36,6 @@ class Main:
         self.dt = self.clock.tick(FRAMERATE) * STANDARD_FRAMERATE / 1000
         self.screen.blit(scale(self.engine.render(self.game), SCREEN_SIZE), (0, 0))
         display_update()
-
-    
 
 if __name__ == "__main__":
     Main()

@@ -2,36 +2,37 @@ from pygame import Surface, SRCALPHA
 from pygame import Vector2
 from random import choice
 
-from .const import MAP_SIZE_PX, TILE_SIZE, MAP_SIZE_X, MAP_SIZE_Y
-from ..game_logic.objects.map import Map
+from .const import TILE_SIZE
+from ..game_logic.game import Game
 
 class MapRenderer:
-    def __init__(self) -> None:
-        self.__map_texture = Surface(MAP_SIZE_PX)
-        self.__ground_texture = Surface(MAP_SIZE_PX)
-        self.__obstacles_texture = Surface(MAP_SIZE_PX, SRCALPHA)
+    def __init__(self, game: Game) -> None:
+        self.__map_size = Vector2(game.get_map_size())
+        self.__map_texture = Surface(self.__map_size * TILE_SIZE)
+        self.__ground_texture = Surface(self.__map_size * TILE_SIZE)
+        self.__obstacles_texture = Surface(self.__map_size * TILE_SIZE, SRCALPHA)
         self.__assigned_obstacles = []
     
-    def __render_ground(self, map: Map, assets: dict):
+    def __render_ground(self, path: list[tuple[int, int]], assets: dict):
         '''Drawing map tiles.
         '''
 
         filled_cords = []
 
-        for cord in map.path:
+        for cord in path:
             self.__ground_texture.blit(assets['tiles']['tile_path'], Vector2(cord) * TILE_SIZE)
             filled_cords.append(cord)
 
         grass_cords = [
             Vector2(x, y) 
-            for x in range(MAP_SIZE_X)
-              for y in range(MAP_SIZE_Y)
+            for x in range(int(self.__map_size.x))
+              for y in range(int(self.__map_size.y))
                 if not Vector2(x, y) in filled_cords
         ]
         
         for cord in grass_cords:
             self.__ground_texture.blit(
-                assets['tiles']['tile_grass_' + self.__get_grass_turn(cord, map)], cord * TILE_SIZE)
+                assets['tiles']['tile_grass_' + self.__get_grass_turn(cord, path)], cord * TILE_SIZE)
 
     def __render_obstacles(self, assets: dict) -> None:
         for render_cord, texture_name in sorted(self.__assigned_obstacles, key = lambda x: x[0].y):
@@ -49,23 +50,23 @@ class MapRenderer:
     def re_render():
         pass
 
-    def render(self, assets: dict, map: Map) -> Surface:
-        self.__map_texture = Surface(MAP_SIZE_PX)
-        self.__render_ground(map, assets)
-        self.__assign_obstacles(map.obstacles, assets)
+    def render(self, assets: dict, game: Game) -> Surface:
+        self.__map_texture = Surface(Vector2(game.get_map_size()) * TILE_SIZE)
+        self.__render_ground(game.get_path(), assets)
+        self.__assign_obstacles(game.get_obstacles(), assets)
         self.__render_obstacles(assets)
         self.__map_texture.blit(self.__ground_texture, Vector2(0, 0))
 
-        # self.__draw_obstacles_area(map)
+        # self.__draw_obstacles_area(game.get_obstacles())
 
         self.__map_texture.blit(self.__obstacles_texture, Vector2(0, 0))
         
         return self.__map_texture
     
-    def __draw_obstacles_area(self, map: Map) -> None:
+    def __draw_obstacles_area(self, obstacles: list[Vector2]) -> None:
         surf = Surface((TILE_SIZE, TILE_SIZE))
         surf.fill((255, 0, 0))
-        for cord in map.obstacles:
+        for cord in obstacles:
             self.__map_texture.blit(surf, Vector2(cord) * TILE_SIZE)
 
     def __group_tiles(self, cord: Vector2, other_tiles: list[Vector2]) -> list[Vector2]:
@@ -131,11 +132,11 @@ class MapRenderer:
                 for x, y in r if Vector2(x, y) + cord in other_tiles
         ]
 
-    def __get_grass_turn(self, cord: Vector2, map: Map) -> str:
+    def __get_grass_turn(self, cord: Vector2, path: list[tuple[int, int]]) -> str:
         '''Returns name of grass turn based on neighboring tiles.
         '''
 
-        is_path = self.__get_neighbouring_tiles(cord, map.path, only_offset = True, diagonal = True)
+        is_path = self.__get_neighbouring_tiles(cord, path, only_offset = True, diagonal = True)
         
         if not is_path:
             return 'center'

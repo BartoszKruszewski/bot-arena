@@ -1,12 +1,10 @@
 from pygame import Vector2
-
-from .const import DRAW_SCREEN_SIZE_X, DRAW_SCREEN_SIZE_Y, CAMERA_OFFSET_MOVE_AREA, \
-    MAP_SIZE_PX_X, MAP_SIZE_PX_Y, CAMERA_OFFSET_SPEED
-
+from .const import DRAW_SCREEN_SIZE_X, DRAW_SCREEN_SIZE_Y, CAMERA_OFFSET_MOVE_AREA, CAMERA_OFFSET_SPEED, TILE_SIZE
 from .mouse import Mouse
 
 class Camera:
-    def __init__(self):
+    def __init__(self, map_size):
+        self.__map_size = map_size
         self.__mouse = Mouse()
         self.__camera_offset = Vector2(0, 0)
         self.__dest_camera_offset = Vector2(0, 0)
@@ -32,9 +30,9 @@ class Camera:
             self.__dest_camera_offset.y += CAMERA_OFFSET_SPEED
 
         self.__dest_camera_offset.x = max(
-            self.__dest_camera_offset.x, -(MAP_SIZE_PX_X - DRAW_SCREEN_SIZE_X))
+            self.__dest_camera_offset.x, -(self.__map_size[0] * TILE_SIZE - DRAW_SCREEN_SIZE_X))
         self.__dest_camera_offset.y = max(
-            self.__dest_camera_offset.y, -(MAP_SIZE_PX_Y - DRAW_SCREEN_SIZE_Y))
+            self.__dest_camera_offset.y, -(self.__map_size[1] * TILE_SIZE - DRAW_SCREEN_SIZE_Y))
         self.__dest_camera_offset.x = min(self.__dest_camera_offset.x, 0)
         self.__dest_camera_offset.y = min(self.__dest_camera_offset.y, 0)
 

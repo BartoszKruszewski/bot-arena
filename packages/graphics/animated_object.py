@@ -7,12 +7,12 @@ class AnimatedObject(ABC):
     def __init__(self):
         self.frame = 0
         self.tick = 0
+        self.offset = Vector2(0, 0)
         self.direction = 'bot'
         self.animation = None
-        self.pos = Vector2(0, 0)
+        self.tile_pos = Vector2(0, 0)
         self.type = None
         self.name = None
-        self.offset = Vector2(0, 0)
         self.id = 0
 
     def update(self):
