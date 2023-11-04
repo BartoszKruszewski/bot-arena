@@ -56,7 +56,7 @@ class Game:
         def check_build_place(action: Action) -> int:
             if self.gold[action.side] < COST['turret']['gold']:
                 return -1
-            if action.cords < 0 or action.cords >= self._map.MAP_SIZE_X:
+            if action.cords[0] < 0 or action.cords[0] >= self._map.MAP_SIZE_X or action.cords[1] < 0 or action.cords[1] >= self._map.MAP_SIZE_Y:
                 return -4
             if action.cords in self._map.obstacles:
                 return -4
@@ -158,7 +158,11 @@ class Game:
                     elif (j, i) in self.soldiers['right']:
                         print('r', end='')
                     elif (j, i) in self._map.path:
-                        print('O', end='')
+                        print('_', end='')
+                    elif (j, i) in self.turrets['left']:
+                        print('L', end='')
+                    elif (j, i) in self.turrets['right']:
+                        print('R', end='')
                     else:
                         print('.', end='')
                 except:

@@ -25,7 +25,7 @@ class Turrets():
         self.next_id = 0
 
     def spawn(self, cords: tuple[int, int]) -> None:
-        self.turrets.append(_Turret(cords), id=self.next_id)
+        self.turrets.append(_Turret(cords, id=self.next_id))
         self.next_id += 1
 
     def shoot(self, soldiers: Soldiers) -> None:
@@ -35,6 +35,10 @@ class Turrets():
             turret._shoot(soldiers)
 
         soldiers._clean_dead()
+
+    def __iter__(self) -> iter:
+        for turret in self.turrets:
+            yield turret.cords
         
     
 
