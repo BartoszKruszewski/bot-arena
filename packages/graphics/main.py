@@ -22,6 +22,8 @@ class Main:
         self.game.update(SpawnSoldier('left'), Wait('right'))
         self.game.update(Wait('left'), Wait('right'))
         self.game.update(Wait('left'), Wait('right'))
+        self.game.update(SpawnSoldier('left'), Wait('right'))
+        self.game.update(Wait('left'), SpawnSoldier('right'))
         self.game.update(Wait('left'), Wait('right'))
         self.game.update(SpawnSoldier('left'), SpawnSoldier('right'))
 

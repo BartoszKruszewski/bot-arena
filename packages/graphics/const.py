@@ -12,3 +12,6 @@ ANIMATION_NAMES = ('walk', 'fight')
 ANIMATION_DIRECTIONS = ('top','right','bot')
 ANIMATION_SPEED = 10 # frames per second
 ROUND_LEN = 500
+SHOW_GRID = False
+SHOW_OBSTACLES_AREA = False
+SHOW_SOLDIERS_REAL_POS = False

@@ -1,46 +1,62 @@
 from pygame import Surface
 from pygame import Vector2
 
-from .const import DRAW_SCREEN_SIZE, DRAW_SCREEN_SIZE_X, DRAW_SCREEN_SIZE_Y, TILE_SIZE
+from .const import DRAW_SCREEN_SIZE, DRAW_SCREEN_SIZE_X, DRAW_SCREEN_SIZE_Y, \
+    TILE_SIZE, SHOW_SOLDIERS_REAL_POS
 from .camera import Camera
 from .assets_loader import AssetsLoader
 from .map_renderer import MapRenderer
 from ..game_logic.game import Game
 from .soldier_rt import SoldierRT
-from .soldier_tracer import SoldierTracer
+from .soldier_tracker import SoldierTracker
 
 class Engine():
+    '''Main graphics class.
+    '''
+
     def __init__(self, game: Game):
+
+        # render surface
         self.__draw_screen = Surface(DRAW_SCREEN_SIZE)
-        self.__assets_loader = AssetsLoader()
+        
+        # initialize modules
         self.__map_renderer = MapRenderer(game)
-        self.__soldier_tracer = SoldierTracer(game.get_path())
+        self.__soldier_tracker = SoldierTracker(game.get_path())
         self.__camera = Camera(game.get_map_size())
+
+        # assets
+        self.__assets_loader = AssetsLoader()
         path = "/".join([dir for dir in __file__.split('\\') if dir != ''][:-1]) + '/' + 'textures'
         self.__assets = self.__assets_loader.load(path, '.png')
 
         # first render
         self.__map_texture = self.__map_renderer.render(self.__assets, game)
+        self.__soldier_tracker.update_tracker(game.get_soldiers())
 
     def render(self, game: Game) -> Surface:
         '''Main rendering function.
 
         Refereshes once per frame.
         '''
+
+        # update staff
         self.__camera.update()
-        self.__soldier_tracer.update(game.get_soldiers())
+        self.__soldier_tracker.update_tracker(game.get_soldiers())
+        self.__soldier_tracker.update_soldiers()
 
         # reset frame
         self.__draw_screen.fill((0, 0, 0))
 
         # drawing
         self.__draw_screen.blit(self.__map_texture, self.__camera.get_offset())
-        for soldier in self.__soldier_tracer.get_soldiers():
+        for soldier in self.__soldier_tracker.get_soldiers():
             self.__draw_soldier(soldier)
 
         return self.__draw_screen
 
     def __draw_soldier(self, soldier: SoldierRT) -> None:
+        '''Draw soldier object on the screen.
+        '''
         direction = {
             (0, 0):    'bot',
             (0, -1):   'top',
@@ -60,9 +76,10 @@ class Engine():
         )
 
         # real pos
-        surf = Surface((1, 1))
-        surf.fill((255, 0, 0))
-        self.__draw(surf, soldier.real_pos)
+        if SHOW_SOLDIERS_REAL_POS:
+            surf = Surface((1, 1))
+            surf.fill((255, 0, 0))
+            self.__draw(surf, soldier.real_pos)
 
     def __draw(self, texture: Surface, pos: Vector2) -> None:
         '''Draw texture with camera offset.
