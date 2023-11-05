@@ -15,7 +15,7 @@ class Engine():
         self.__draw_screen = Surface(DRAW_SCREEN_SIZE)
         self.__assets_loader = AssetsLoader()
         self.__map_renderer = MapRenderer(game)
-        self.__object_tracer = ObjectTracer()
+        self.__object_tracer = ObjectTracer(game.get_path())
         self.__camera = Camera(game.get_map_size())
         path = "/".join([dir for dir in __file__.split('\\') if dir != ''][:-1]) + '/' + 'textures'
         self.__assets = self.__assets_loader.load(path, '.png')
@@ -34,6 +34,7 @@ class Engine():
         self.__camera.update()
         self.__object_tracer.update_soldier_animated_objects(game.get_soldiers(), self.__animated_objects)
         self.__update_animated_objects(game.get_path())
+        
 
         # reset frame
         self.__draw_screen.fill((0, 0, 0))
@@ -48,6 +49,7 @@ class Engine():
         for animated_object in self.__animated_objects:
             if isinstance(animated_object, SoldierAnimatedObject):
                 animated_object.update(path)
+                print(animated_object)
 
     def __draw_animated_objects(self):
         for animated_object in self.__animated_objects:

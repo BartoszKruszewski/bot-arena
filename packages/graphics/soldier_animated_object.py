@@ -3,15 +3,15 @@ from .animated_object import AnimatedObject
 from .const import SPRITE_SIZE, TILE_SIZE, ROUND_LEN, FRAMERATE
 
 class SoldierAnimatedObject(AnimatedObject):
-    def __init__(self, pos, name, side):
+    def __init__(self, path_pos, real_pos, name, side):
         super().__init__()
         self.animation = 'walk'
         self.type = 'soldiers'
         self.name = name
         self.offset = Vector2(SPRITE_SIZE // 2, SPRITE_SIZE // 2)
-        self.path_pos = pos
+        self.path_pos = path_pos
         self.side = side
-        self.real_pos = Vector2(0.0, 0.0)
+        self.real_pos = real_pos
         self.direction_v = Vector2(0, 0)
 
     def update(self, path: list[tuple[int, int]]):
@@ -37,6 +37,9 @@ class SoldierAnimatedObject(AnimatedObject):
 
     def __update_real_pos(self):
         self.real_pos += self.direction_v * TILE_SIZE * ROUND_LEN / FRAMERATE / 1000
+
+    def __str__(self):
+        return f'<{self.side}:{self.id} {self.real_pos}>'
         
 
     

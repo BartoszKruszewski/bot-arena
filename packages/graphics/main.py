@@ -19,7 +19,7 @@ class Main:
         self.game = Game()
         self.engine = Engine(self.game)
         self.tick = 0
-        self.game.update(SpawnSoldier('left'), Wait('right'))
+        self.game.update(SpawnSoldier('left'), SpawnSoldier('right'))
 
         while self.is_running:
             self.is_running = WINDOWCLOSE not in map(lambda e: e.type, get_event())
