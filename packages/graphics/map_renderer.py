@@ -1,5 +1,6 @@
-from pygame import Surface, SRCALPHA
+from pygame import Surface, SRCALPHA, Rect
 from pygame import Vector2
+from pygame.draw import rect as draw_rect
 from random import choice
 
 from .const import TILE_SIZE
@@ -60,9 +61,17 @@ class MapRenderer:
         # self.__draw_obstacles_area(game.get_obstacles())
 
         self.__map_texture.blit(self.__obstacles_texture, Vector2(0, 0))
+        self.__draw_grid()
         
         return self.__map_texture
     
+    def __draw_grid(self):
+        surf = Surface((TILE_SIZE, TILE_SIZE), SRCALPHA)
+        draw_rect(surf, (0, 0, 0, 100), Rect(0, 0, TILE_SIZE, TILE_SIZE), 1)
+        for y in range(int(self.__map_size.y)):
+            for x in range(int(self.__map_size.x)):
+                self.__map_texture.blit(surf, Vector2(x, y) * TILE_SIZE)
+
     def __draw_obstacles_area(self, obstacles: list[Vector2]) -> None:
         surf = Surface((TILE_SIZE, TILE_SIZE))
         surf.fill((255, 0, 0))

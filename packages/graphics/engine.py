@@ -33,7 +33,7 @@ class Engine():
         '''
         self.__camera.update()
         self.__object_tracer.update_soldier_animated_objects(game.get_soldiers(), self.__animated_objects)
-        self.__update_animated_objects(game.get_path())
+        self.__update_animated_objects()
         
 
         # reset frame
@@ -45,10 +45,10 @@ class Engine():
         self.__draw_animated_objects()
         return self.__draw_screen
 
-    def __update_animated_objects(self, path: list[tuple[int, int]]):
+    def __update_animated_objects(self):
         for animated_object in self.__animated_objects:
             if isinstance(animated_object, SoldierAnimatedObject):
-                animated_object.update(path)
+                animated_object.update()
 
     def __draw_animated_objects(self):
         for animated_object in self.__animated_objects:
@@ -56,9 +56,14 @@ class Engine():
 
     def __draw_animated_object(self, object: AnimatedObject) -> None:
         self.__draw(
-                    self.__assets[object.type][object.name][object.animation]
-                    [object.direction][object.frame], object.real_pos - object.offset
-                )
+            self.__assets[object.type][object.name][object.animation]
+            [object.direction][object.frame], object.real_pos - object.offset
+        )
+        surf = Surface((1, 1))
+        surf.fill((255, 0, 0))
+        self.__draw(
+            surf, object.real_pos
+        )
 
     def __draw(self, texture: Surface, pos: Vector2) -> None:
         '''Draw texture with camera offset.

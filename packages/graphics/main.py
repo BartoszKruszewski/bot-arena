@@ -19,6 +19,10 @@ class Main:
         self.game = Game()
         self.engine = Engine(self.game)
         self.tick = 0
+        self.game.update(SpawnSoldier('left'), Wait('right'))
+        self.game.update(Wait('left'), Wait('right'))
+        self.game.update(Wait('left'), Wait('right'))
+        self.game.update(Wait('left'), Wait('right'))
         self.game.update(SpawnSoldier('left'), SpawnSoldier('right'))
 
         while self.is_running:
