@@ -42,6 +42,9 @@ class Soldiers():
     def fight(self, right_soldiers: 'Soldiers') -> None:
         if self.side == "right": Exception("You can't fight from right side")
 
+        for soldier in self.soldiers:
+            soldier.can_move = True
+
         if not self.soldiers or not right_soldiers.soldiers:
             return
 
@@ -67,9 +70,6 @@ class Soldiers():
         for soldier in self.soldiers:
             if soldier.can_move:
                 soldier.position += 1 if self.side == 'left' else -1
-
-        for soldier in self.soldiers:
-            soldier.can_move = True
 
     def spawn(self) -> None:
         if self.can_spawn():

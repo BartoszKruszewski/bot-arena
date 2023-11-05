@@ -25,4 +25,4 @@ def main():
         simulator_main()
 
 if __name__ == '__main__':
-    graphics_main()
+    main()
