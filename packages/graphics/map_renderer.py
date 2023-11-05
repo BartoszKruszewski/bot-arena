@@ -99,7 +99,7 @@ class MapRenderer:
         
         tiles = self.__group_tiles(cord, obstacles)
         tiles_size = self.__get_tile_group_size(tiles) * TILE_SIZE
-        size = Vector2(MAP_SIZE_PX) 
+        size = self.__map_size * TILE_SIZE 
         while not (size.x <= tiles_size.x and size.y <= tiles_size.y):
             name = choice(list(assets['obstacles']))
             texture = assets['obstacles'][name]

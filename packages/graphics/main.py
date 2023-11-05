@@ -24,7 +24,7 @@ class Main:
         while self.is_running:
             self.is_running = WINDOWCLOSE not in map(lambda e: e.type, get_event())
             self.tick += 1
-            if self.tick > FRAMERATE / ROUND_LEN * 1000:
+            if self.tick > FRAMERATE * ROUND_LEN / 1000:
                 self.game.update(Wait('left'), Wait('right'))
                 self.tick = 0
             self.__screen_update()

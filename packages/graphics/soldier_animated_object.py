@@ -21,6 +21,10 @@ class SoldierAnimatedObject(AnimatedObject):
 
     def set_path_position(self, pos):
         self.path_pos = pos
+        
+
+    def set_animation(self, animation: str):
+        self.animation = animation
 
     def __update_direction(self, path: list[tuple[int, int]]):
         if self.side == 'left':
@@ -36,7 +40,8 @@ class SoldierAnimatedObject(AnimatedObject):
         }[(int(self.direction_v.x), int(self.direction_v.y))]
 
     def __update_real_pos(self):
-        self.real_pos += self.direction_v * TILE_SIZE * ROUND_LEN / FRAMERATE / 1000
+        if self.animation == 'walk':
+            self.real_pos += self.direction_v * TILE_SIZE * 1000 / ROUND_LEN / FRAMERATE 
 
     def __str__(self):
         return f'<{self.side}:{self.id} {self.real_pos}>'

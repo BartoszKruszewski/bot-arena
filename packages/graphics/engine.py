@@ -49,7 +49,6 @@ class Engine():
         for animated_object in self.__animated_objects:
             if isinstance(animated_object, SoldierAnimatedObject):
                 animated_object.update(path)
-                print(animated_object)
 
     def __draw_animated_objects(self):
         for animated_object in self.__animated_objects:

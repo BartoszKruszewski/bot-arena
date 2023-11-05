@@ -5,34 +5,44 @@ from .const import TILE_SIZE
 
 class ObjectTracer:
     def __init__(self, path):
-        self.__spawn_left = Vector2(path[0])
-        self.__spawn_right = Vector2(path[-1])
+        self.__spawn_pos = {
+            'left': Vector2(path[0]),
+            'right': Vector2(path[-1])
+        } 
 
     def update_soldier_animated_objects(self, soldiers: dict[str, list[_Soldier]], soldier_animated_objects: list[SoldierAnimatedObject]):
-        positions = {}
-        for side in soldiers:
-            side_positions = {}
+        soldiers_data = {}
+        for side in ('left', 'right'):
+            side_data = {}
             for soldier in soldiers[side]:
-                side_positions[soldier.id] = soldier.position
-            positions[side] = side_positions
+                side_data[soldier.id] = soldier
+            soldiers_data[side] = side_data
 
-        soldier_animated_objects_ids = []
-        for soldier_animated_object in soldier_animated_objects:
+        sao_data = {}
+        for side in ('left', 'right'):
+            side_data = {}
+            for sao in soldier_animated_objects:
+                if side == sao.side:
+                    side_data[sao.id] = sao
+            sao_data[side] = side_data
 
-            if soldier_animated_object.id in positions['left'] and soldier_animated_object.side == 'left':
-                soldier_animated_object.set_path_position(positions['left'][soldier_animated_object.id])
-                soldier_animated_objects_ids.append(soldier_animated_object.id)
-            elif soldier_animated_object.id in positions['right'] and soldier_animated_object.side == 'right':
-                soldier_animated_object.set_path_position(positions['right'][soldier_animated_object.id])
-                soldier_animated_objects_ids.append(soldier_animated_object.id)
-            else:
-                soldier_animated_objects.remove(soldier_animated_object)
-
-        for side in positions:
-            for id in positions[side]:
-                if id not in soldier_animated_objects_ids:
-                    soldier_animated_objects.append(SoldierAnimatedObject(positions[side][id],
-                        self.__spawn_left * TILE_SIZE if side == 'left' else self.__spawn_right * TILE_SIZE,
-                        'swordsman', side))
-
+        for side in ('left', 'right'):
+            for soldier_id in soldiers_data[side]:
+                soldier_data = soldiers_data[side][soldier_id]
+                if soldier_id in sao_data[side]:
+                    print(soldier_data.hp)
+                    sao_data[side][soldier_id].set_path_position(soldier_data.position)
+                    sao_data[side][soldier_id].set_animation('walk' if soldier_data.can_move else 'fight')
+                else:
+                    soldier_animated_objects.append(SoldierAnimatedObject(
+                        soldier_data.position,
+                        self.__spawn_pos[side] * TILE_SIZE,
+                        'swordsman',
+                        side
+                    ))
+        
+        for side in ('left', 'right'):
+            for sao_id in sao_data[side]:
+                if sao_id not in soldiers_data[side]:
+                    soldier_animated_objects.remove(sao_data[side][sao_id]) 
         
