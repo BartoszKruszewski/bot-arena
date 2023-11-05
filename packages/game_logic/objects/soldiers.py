@@ -45,6 +45,9 @@ class Soldiers():
         for soldier in self.soldiers:
             soldier.can_move = True
 
+        for soldier in right_soldiers.soldiers:
+            soldier.can_move = True
+
         if not self.soldiers or not right_soldiers.soldiers:
             return
 
@@ -67,9 +70,23 @@ class Soldiers():
             return self.soldiers and self.soldiers[0].position == -1
 
     def move(self) -> None:
+        self._sort_soldiers(reverse=True) if self.side == 'left' else self._sort_soldiers()
+
         for soldier in self.soldiers:
-            if soldier.can_move:
-                soldier.position += 1 if self.side == 'left' else -1
+            if not soldier.can_move:
+                continue
+
+            new_position = soldier.position + (1 if self.side == 'left' else -1)
+            
+            my_positions = [soldier.position for soldier in self.soldiers]
+            if new_position in my_positions:
+                continue
+
+            soldier.position = new_position
+
+
+        
+                
 
     def spawn(self) -> None:
         if self.can_spawn():
