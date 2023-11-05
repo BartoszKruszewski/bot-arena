@@ -1,5 +1,7 @@
 from pygame import Vector2
-from .const import DRAW_SCREEN_SIZE_X, DRAW_SCREEN_SIZE_Y, CAMERA_OFFSET_MOVE_AREA, CAMERA_OFFSET_SPEED, TILE_SIZE, CAMERA_SMOOTH, FRAMERATE, STANDARD_FRAMERATE
+from .const import DRAW_SCREEN_SIZE_X, DRAW_SCREEN_SIZE_Y, \
+    CAMERA_OFFSET_MOVE_AREA, CAMERA_OFFSET_SPEED, TILE_SIZE, \
+    CAMERA_SMOOTH, FRAMERATE, STANDARD_FRAMERATE
 from .mouse import Mouse
 
 class Camera:
@@ -14,7 +16,7 @@ class Camera:
         self.__mouse.update()
         self.__update_camera_offset()
 
-    def get_offset(self):
+    def get_offset(self) -> Vector2:
         return self.__camera_offset
 
     def __update_camera_offset(self):
@@ -36,6 +38,7 @@ class Camera:
         self.__dest_camera_offset.x = min(self.__dest_camera_offset.x, 0)
         self.__dest_camera_offset.y = min(self.__dest_camera_offset.y, 0)
 
-        self.__real_camera_offset += (self.__dest_camera_offset - self.__real_camera_offset) / CAMERA_SMOOTH / FRAMERATE * STANDARD_FRAMERATE
+        self.__real_camera_offset += (self.__dest_camera_offset - self.__real_camera_offset) \
+                                        / CAMERA_SMOOTH / FRAMERATE * STANDARD_FRAMERATE
         self.__camera_offset = Vector2(
             int(self.__real_camera_offset.x), int(self.__real_camera_offset.y)) 
