@@ -80,13 +80,10 @@ class Soldiers():
             
             my_positions = [soldier.position for soldier in self.soldiers]
             if new_position in my_positions:
+                soldier.can_move = False
                 continue
 
             soldier.position = new_position
-
-
-        
-                
 
     def spawn(self) -> None:
         if self.can_spawn():
