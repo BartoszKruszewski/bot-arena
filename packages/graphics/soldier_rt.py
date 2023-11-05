@@ -5,21 +5,20 @@ class SoldierRT():
     path = []
 
     def __init__(self, id: int, path_pos: int, name: str, side: str):
-        # state
+
+        # data
         self.id = id
+        self.name = name
+        self.side = side
+
+        # state
         self.frame = 0
         self.tick = 0
-        self.direction = 'bot'
-        self.direction_v = Vector2(0, 0)
+        self.direction = Vector2(0, 0)
         self.animation = 'walk'
         self.state = 'walk'
         self.real_pos = SoldierRT.path[path_pos]
         self.path_pos = path_pos
-
-        # data    
-        self.name = name
-        self.offset = Vector2(SPRITE_SIZE // 2, SPRITE_SIZE // 2)
-        self.side = side
 
     def update(self):
         self.__update_frame()
@@ -28,9 +27,14 @@ class SoldierRT():
         self.__update_animation()
 
     def set_path_position(self, pos: int):
+        if pos < 0 or pos > len(SoldierRT.path):
+            raise Exception('Position not in path!')
+        if (self.side == "left" and pos < self.path_pos) or \
+            (self.side == "right" and pos > self.path_pos):
+            raise Exception('Soldier cannot move back!')
         if self.path_pos != pos:
             self.path_pos = pos
-            self.real_pos = Vector2(SoldierRT.path[self.path_pos]) * TILE_SIZE + Vector2(TILE_SIZE // 2, TILE_SIZE // 2)
+            self.real_pos = Vector2(SoldierRT.path[self.path_pos]) * TILE_SIZE
 
     def set_state(self, state: str):
         if state not in ANIMATION_NAMES and state != 'idle':
@@ -45,25 +49,17 @@ class SoldierRT():
 
     def __update_direction(self):
         if self.side == 'left':
-            self.direction_v = Vector2(SoldierRT.path[self.path_pos + 1]) \
+            self.direction = Vector2(SoldierRT.path[self.path_pos + 1]) \
                 - Vector2(SoldierRT.path[self.path_pos])
         else:
-            self.direction_v = Vector2(SoldierRT.path[self.path_pos - 1]) \
+            self.direction = Vector2(SoldierRT.path[self.path_pos - 1]) \
                 - Vector2(SoldierRT.path[self.path_pos])
-
-        self.direction = {
-            (0, -1):    'top',
-            (0, 1):     'bot',
-            (-1, 0):     'left',
-            (1, 0):    'right'
-        }[(int(self.direction_v.x), int(self.direction_v.y))]
 
     def __update_real_pos(self):
         if self.state == 'walk':
-            self.real_pos += self.direction_v * TILE_SIZE * 1000 / ROUND_LEN / FRAMERATE
+            self.real_pos += self.direction * TILE_SIZE * 1000 / ROUND_LEN / FRAMERATE
         else:
-            self.real_pos = Vector2(SoldierRT.path[self.path_pos]) \
-                * TILE_SIZE + Vector2(TILE_SIZE // 2, TILE_SIZE // 2)
+            self.real_pos = Vector2(SoldierRT.path[self.path_pos]) * TILE_SIZE
 
     def __update_frame(self):
         if not self.state == 'idle':

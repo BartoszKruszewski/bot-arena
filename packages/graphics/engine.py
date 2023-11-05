@@ -41,15 +41,28 @@ class Engine():
         return self.__draw_screen
 
     def __draw_soldier(self, soldier: SoldierRT) -> None:
+        direction = {
+            (0, 0):    'bot',
+            (0, -1):   'top',
+            (0, 1):    'bot',
+            (-1, 0):   'left',
+            (1, 0):    'right'
+        }[(int(soldier.direction.x), int(soldier.direction.y))]
+
+        texture = self.__assets['soldiers'][soldier.name] \
+            [soldier.animation][direction][soldier.frame]
+
         self.__draw(
-            self.__assets['soldiers'][soldier.name][soldier.animation]
-            [soldier.direction][soldier.frame], soldier.real_pos - soldier.offset
+            texture,
+            soldier.real_pos + \
+            Vector2(TILE_SIZE // 2, TILE_SIZE // 2) \
+            - Vector2(texture.get_size()) // 2
         )
+
+        # real pos
         surf = Surface((1, 1))
         surf.fill((255, 0, 0))
-        self.__draw(
-            surf, soldier.real_pos
-        )
+        self.__draw(surf, soldier.real_pos)
 
     def __draw(self, texture: Surface, pos: Vector2) -> None:
         '''Draw texture with camera offset.

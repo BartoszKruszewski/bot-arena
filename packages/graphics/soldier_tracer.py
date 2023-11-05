@@ -3,7 +3,6 @@ from ..game_logic.objects.soldiers import _Soldier
 
 class SoldierTracer:
     def __init__(self, path: list[tuple[int, int]]):
-        self.__path = path
         SoldierRT.path = path
         self.__fight_pos = None
         self.soldiers_rt = []
