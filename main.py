@@ -10,10 +10,22 @@ def graphics_main():
     Main()
 
 def simulator_main():
-    pass
+    from packages.simulator.example import run
+    run()
 
 def main():
-    graphics_main()
+    if len(sys.argv) == 0:
+        print('1 - game_logic')
+        print('2 - graphics')
+        print('3 - simulator')
+        return
+    
+    if sys.argv[1] == '1':
+        game_logic_main()
+    elif sys.argv[1] == '2':
+        graphics_main()
+    elif sys.argv[1] == '3':
+        simulator_main()
 
 if __name__ == '__main__':
     main()
