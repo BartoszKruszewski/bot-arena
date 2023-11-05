@@ -1,43 +1,111 @@
-from pygame import Surface, SRCALPHA
+from pygame import Surface, SRCALPHA, Rect
 from pygame import Vector2
+from pygame.draw import rect as draw_rect
 from random import choice
 
-from .const import MAP_SIZE_PX, TILE_SIZE, MAP_SIZE_X, MAP_SIZE_Y
-from ..game_logic.objects.map import Map
+from .const import TILE_SIZE, SHOW_GRID, SHOW_OBSTACLES_AREA
+from ..game_logic.game import Game
 
 class MapRenderer:
-    def __init__(self) -> None:
-        self.__map_texture = Surface(MAP_SIZE_PX)
-        self.__ground_texture = Surface(MAP_SIZE_PX)
-        self.__obstacles_texture = Surface(MAP_SIZE_PX, SRCALPHA)
+    '''Map rendering class.
+    '''
+
+    def __init__(self, game: Game) -> None:
+        self.__map_size = Vector2(game.get_map_size())
+        self.__map_texture = Surface(self.__map_size * TILE_SIZE)
+        self.__ground_texture = Surface(self.__map_size * TILE_SIZE)
+        self.__obstacles_texture = Surface(self.__map_size * TILE_SIZE, SRCALPHA)
         self.__assigned_obstacles = []
+
+    def re_render():
+        '''Fast render
+        '''
+        pass
+
+    def render(self, assets: dict, game: Game) -> Surface:
+        '''Complete render.
+
+        Rendering items:
+            - path tiles
+            - grass
+            - obstacles (with pre calculation)
+            - map helpers (grid, obstacles area)
+        '''
+
+        # reset map texture
+        self.__map_texture = Surface(Vector2(game.get_map_size()) * TILE_SIZE)
+
+        # render ground
+        self.__render_ground(game.get_path(), assets)
+        self.__map_texture.blit(self.__ground_texture, Vector2(0, 0))
+
+        # render obstacles
+        self.__assign_obstacles(game.get_obstacles(), assets)
+        self.__render_obstacles(assets)
+
+        if SHOW_OBSTACLES_AREA:
+            self.__draw_obstacles_area(game.get_obstacles())
+
+        self.__map_texture.blit(self.__obstacles_texture, Vector2(0, 0))
+
+        # render grid
+        if SHOW_GRID:
+            self.__draw_grid()
+        
+        return self.__map_texture
     
-    def __render_ground(self, map: Map, assets: dict):
+    def __render_ground(self, path: list[tuple[int, int]], assets: dict):
         '''Drawing map tiles.
         '''
 
         filled_cords = []
 
-        for cord in map.path:
+        for cord in path:
             self.__ground_texture.blit(assets['tiles']['tile_path'], Vector2(cord) * TILE_SIZE)
             filled_cords.append(cord)
 
         grass_cords = [
             Vector2(x, y) 
-            for x in range(MAP_SIZE_X)
-              for y in range(MAP_SIZE_Y)
+            for x in range(int(self.__map_size.x))
+              for y in range(int(self.__map_size.y))
                 if not Vector2(x, y) in filled_cords
         ]
         
         for cord in grass_cords:
             self.__ground_texture.blit(
-                assets['tiles']['tile_grass_' + self.__get_grass_turn(cord, map)], cord * TILE_SIZE)
+                assets['tiles']['tile_grass_' + self.__get_grass_turn(cord, path)], cord * TILE_SIZE)
+    
+    def __get_grass_turn(self, cord: Vector2, path: list[tuple[int, int]]) -> str:
+        '''Returns name of grass turn based on neighboring tiles.
+        '''
+
+        is_path = self.__get_neighbouring_tiles(cord, path, only_offset = True, diagonal = True)
+        
+        if not is_path:
+            return 'center'
+
+        turn = 'top' if (0, -1) in is_path else 'bot' if (0, 1) in is_path else ''
+        turn += 'left' if (-1, 0) in is_path else 'right' if (1, 0) in is_path else ''
+
+        if not turn:
+            turn += ([v for key, v in {
+                (-1, -1):   'd1',
+                (1, -1):    'd2',
+                (1, 1):     'd3',
+                (-1, 1):    'd4',
+            }.items() if key in is_path] + [''])[0]
+
+        return turn
 
     def __render_obstacles(self, assets: dict) -> None:
+        '''Rendering obstacles on obstacle texture.
+        '''
         for render_cord, texture_name in sorted(self.__assigned_obstacles, key = lambda x: x[0].y):
             self.__obstacles_texture.blit(assets['obstacles'][texture_name], render_cord)
 
     def __assign_obstacles(self, cords: list[Vector2], assets: dict):
+        '''Calculating best textures for obstacles.
+        '''
         obstacle_cords = cords.copy()
         self.__assigned_obstacles = []
         while obstacle_cords:
@@ -45,60 +113,22 @@ class MapRenderer:
             self.__assigned_obstacles.append((render_cord, texture_name))
             for cord in covered_cords:
                 obstacle_cords.remove(cord)
-    
-    def re_render():
-        pass
 
-    def render(self, assets: dict, map: Map) -> Surface:
-        self.__map_texture = Surface(MAP_SIZE_PX)
-        self.__render_ground(map, assets)
-        self.__assign_obstacles(map.obstacles, assets)
-        self.__render_obstacles(assets)
-        self.__map_texture.blit(self.__ground_texture, Vector2(0, 0))
+    def __render_obstacle(
+            self, cord: Vector2, assets: dict, obstacles: list[Vector2]
+        ) -> tuple[Vector2, str, list[Vector2]]:
 
-        # self.__draw_obstacles_area(map)
+        '''Calculate single obstacle texture.
 
-        self.__map_texture.blit(self.__obstacles_texture, Vector2(0, 0))
-        
-        return self.__map_texture
-    
-    def __draw_obstacles_area(self, map: Map) -> None:
-        surf = Surface((TILE_SIZE, TILE_SIZE))
-        surf.fill((255, 0, 0))
-        for cord in map.obstacles:
-            self.__map_texture.blit(surf, Vector2(cord) * TILE_SIZE)
+        Returns:
+            - position of obstacle
+            - texture name
+            - covered tiles from group
+        '''
 
-    def __group_tiles(self, cord: Vector2, other_tiles: list[Vector2]) -> list[Vector2]:
-        
-        def recursive(actual_cord: Vector2, group: list[Vector2]) -> list[Vector2]:
-            new_tiles = [v for v in self.__get_neighbouring_tiles(actual_cord, other_tiles) if v not in group]
-            all_tiles = group + new_tiles
-            for tile in new_tiles:
-                all_tiles.extend(v for v in recursive(tile, all_tiles) if v not in all_tiles)
-        
-            return all_tiles
-
-        tiles = recursive(cord, []) 
-        return tiles
-    
-    def __get_tile_group_size(self, group: list[Vector2]) -> Vector2:
-        max_x = max(group, key = lambda v: v.x).x
-        max_y = max(group, key = lambda v: v.y).y
-        min_x = min(group, key = lambda v: v.x).x
-        min_y = min(group, key = lambda v: v.y).y
-        return Vector2(max_x - min_x + 1, max_y - min_y + 1)
-
-    def __get_tile_group_bottom_center(self, group: list[Vector2]) -> Vector2:
-        max_x = max(group, key = lambda v: v.x).x
-        min_x = min(group, key = lambda v: v.x).x
-        max_y = max(group, key = lambda v: v.y).y 
-        return Vector2(min_x + (max_x - min_x + 1) / 2, max_y + 1)
-        
-    def __render_obstacle(self, cord: Vector2, assets: dict, obstacles: list[Vector2]) -> list[Vector2]:
-        
         tiles = self.__group_tiles(cord, obstacles)
         tiles_size = self.__get_tile_group_size(tiles) * TILE_SIZE
-        size = Vector2(MAP_SIZE_PX) 
+        size = self.__map_size * TILE_SIZE 
         while not (size.x <= tiles_size.x and size.y <= tiles_size.y):
             name = choice(list(assets['obstacles']))
             texture = assets['obstacles'][name]
@@ -121,8 +151,15 @@ class MapRenderer:
         ]
 
         return render_pos, name, covered_cords if covered_cords else tiles
-
+    
     def __get_neighbouring_tiles(self, cord: Vector2, other_tiles: list[Vector2], **kwargs) -> list[Vector2]:
+        '''Returns neightbouring tile cords.
+
+        Params:
+            - only_offset: function returns only offset of neighbouring tiles, not full cords
+            - diagonal: function calculate also diagonal neighbouring tiles
+        '''
+
         r = ((x, y) for x in range(-1, 2) for y in range(-1, 2)) \
             if 'diagonal' in kwargs else ((1, 0), (-1, 0), (0, 1), (0, -1), (0, 0))
 
@@ -131,24 +168,57 @@ class MapRenderer:
                 for x, y in r if Vector2(x, y) + cord in other_tiles
         ]
 
-    def __get_grass_turn(self, cord: Vector2, map: Map) -> str:
-        '''Returns name of grass turn based on neighboring tiles.
+    def __group_tiles(self, cord: Vector2, other_tiles: list[Vector2]) -> list[Vector2]:
+        '''Recursive grouping neighbouring tiles.
+        '''
+        def recursive(actual_cord: Vector2, group: list[Vector2]) -> list[Vector2]:
+            new_tiles = [v for v in self.__get_neighbouring_tiles(actual_cord, other_tiles) if v not in group]
+            all_tiles = group + new_tiles
+            for tile in new_tiles:
+                all_tiles.extend(v for v in recursive(tile, all_tiles) if v not in all_tiles)
+        
+            return all_tiles
+
+        tiles = recursive(cord, []) 
+        return tiles
+
+    def __get_tile_group_size(self, group: list[Vector2]) -> Vector2:
+        '''Returns max size of grouped tiles bordering rectangle.
+        '''
+        max_x = max(group, key = lambda v: v.x).x
+        max_y = max(group, key = lambda v: v.y).y
+        min_x = min(group, key = lambda v: v.x).x
+        min_y = min(group, key = lambda v: v.y).y
+        return Vector2(max_x - min_x + 1, max_y - min_y + 1)
+
+    def __get_tile_group_bottom_center(self, group: list[Vector2]) -> Vector2:
+        '''Returns bottom center of grouped tiles bordering rectangle.
+        '''
+        max_x = max(group, key = lambda v: v.x).x
+        min_x = min(group, key = lambda v: v.x).x
+        max_y = max(group, key = lambda v: v.y).y 
+        return Vector2(min_x + (max_x - min_x + 1) / 2, max_y + 1)
+
+    def __draw_grid(self):
+        '''Draws grid on map texture
         '''
 
-        is_path = self.__get_neighbouring_tiles(cord, map.path, only_offset = True, diagonal = True)
-        
-        if not is_path:
-            return 'center'
+        COLOR = (0, 0, 0, 100)
 
-        turn = 'top' if (0, -1) in is_path else 'bot' if (0, 1) in is_path else ''
-        turn += 'left' if (-1, 0) in is_path else 'right' if (1, 0) in is_path else ''
+        surf = Surface((TILE_SIZE, TILE_SIZE), SRCALPHA)
+        draw_rect(surf, COLOR, Rect(0, 0, TILE_SIZE, TILE_SIZE), 1)
+        for y in range(int(self.__map_size.y)):
+            for x in range(int(self.__map_size.x)):
+                self.__map_texture.blit(surf, Vector2(x, y) * TILE_SIZE)
 
-        if not turn:
-            turn += ([v for key, v in {
-                (-1, -1):   'd1',
-                (1, -1):    'd2',
-                (1, 1):     'd3',
-                (-1, 1):    'd4',
-            }.items() if key in is_path] + [''])[0]
+    def __draw_obstacles_area(self, obstacles: list[Vector2]) -> None:
+        '''Fill in color tiles where are
+        obsctales positions in game logic.
+        '''
 
-        return turn
+        COLOR = (255, 0, 0)
+
+        surf = Surface((TILE_SIZE, TILE_SIZE))
+        surf.fill(COLOR)
+        for cord in obstacles:
+            self.__map_texture.blit(surf, Vector2(cord) * TILE_SIZE)

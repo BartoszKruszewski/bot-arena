@@ -6,21 +6,25 @@ def game_logic_main():
     TestRun()
 
 def graphics_main():
-    pass
+    from packages.graphics.main import Main
+    Main()
 
 def simulator_main():
-    pass
+    from packages.simulator.example import run
+    run()
 
 def main():
     if len(sys.argv) == 0:
-        print('No arguments')
+        print('1 - game_logic')
+        print('2 - graphics')
+        print('3 - simulator')
         return
     
     if sys.argv[1] == '1':
         game_logic_main()
-    if sys.argv[1] == '2':
+    elif sys.argv[1] == '2':
         graphics_main()
-    if sys.argv[1] == '3':
+    elif sys.argv[1] == '3':
         simulator_main()
 
 if __name__ == '__main__':
