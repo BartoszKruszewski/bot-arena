@@ -58,9 +58,6 @@ class Soldiers():
             last_soldier.can_move = False
             first_enemy_soldier.can_move = False
 
-        self._clean_dead()
-        right_soldiers._clean_dead()
-
     def is_win(self) -> bool:
         ENEMY_BASE = len(self.path) if self.side == 'left' else -1
 
@@ -85,6 +82,8 @@ class Soldiers():
                 continue
 
             soldier.position = new_position
+
+        self._clean_dead()
 
     def spawn(self) -> None:
         if self.can_spawn():
