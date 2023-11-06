@@ -82,7 +82,7 @@ class Game:
 
         left_error = check_build_place(self.action_left) if isinstance(self.action_left, actions.BuildTurret) else 0
         right_error = check_build_place(self.action_right) if isinstance(self.action_right, actions.BuildTurret) else 0
-        print(left_error, right_error)
+        
         left_error = check_spawn_soldier(self.action_left) if isinstance(self.action_left, actions.SpawnSoldier) else left_error
         right_error = check_spawn_soldier(self.action_right) if isinstance(self.action_right, actions.SpawnSoldier) else right_error
 

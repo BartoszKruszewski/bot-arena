@@ -13,7 +13,7 @@ class SoldierTracker:
         SoldierRT.path = path
         self.soldiers_rt = {'left': {}, 'right': {}}
 
-    def __parse_soldiers_data_NOTUSED(self, soldiers: dict[str, list[_Soldier]]) -> dict[str, dict[int, _Soldier]]:
+    def __parse_soldiers_data(self, soldiers: dict[str, list[_Soldier]]) -> dict[str, dict[int, _Soldier]]:
         '''Parsing soldier data.
 
         From:
@@ -46,7 +46,7 @@ class SoldierTracker:
 
         return soldiers_data
 
-    def __get_fight_pos_NOTUSED(self, soldiers: dict[str, list[_Soldier]]) -> dict[str, int]:
+    def __get_fight_pos(self, soldiers: dict[str, list[_Soldier]]) -> dict[str, int]:
         '''Returns soldiers fight path pos.
 
         Position of two enemy soldiers in the neightbouring path pos.
@@ -61,7 +61,7 @@ class SoldierTracker:
                     return {'left': l_pos, 'right': r_pos}
         return {'left': -1, 'right': -1}
     
-    def update_tracker(self, soldiers: dict[str, list[_Soldier]]) -> None:
+    def update_tracker_NOTUSED(self, soldiers: dict[str, list[_Soldier]]) -> None:
         '''Update number and state of real time soldiers,
         based on soldiers from game logic.
 
@@ -123,7 +123,7 @@ class SoldierTracker:
         update_soldiers_state(soldiers['left'], 'left')
         update_soldiers_state(soldiers['right'], 'right')
 
-    def update_tracker_NOTUSED(self, soldiers: dict[str, list[_Soldier]]) -> None:
+    def update_tracker(self, soldiers: dict[str, list[_Soldier]]) -> None:
         '''Update number and state of real time soldiers,
         based on soldiers from game logic.
 
