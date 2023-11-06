@@ -13,7 +13,7 @@ class SoldierTracker:
         SoldierRT.path = path
         self.soldiers_rt = {'left': {}, 'right': {}}
 
-    def __parse_soldiers_data(self, soldiers: dict[str, list[_Soldier]]) -> dict[str, dict[int, _Soldier]]:
+    def __parse_soldiers_data_NOTUSED(self, soldiers: dict[str, list[_Soldier]]) -> dict[str, dict[int, _Soldier]]:
         '''Parsing soldier data.
 
         From:
@@ -46,7 +46,7 @@ class SoldierTracker:
 
         return soldiers_data
 
-    def __get_fight_pos(self, soldiers: dict[str, list[_Soldier]]) -> dict[str, int]:
+    def __get_fight_pos_NOTUSED(self, soldiers: dict[str, list[_Soldier]]) -> dict[str, int]:
         '''Returns soldiers fight path pos.
 
         Position of two enemy soldiers in the neightbouring path pos.
@@ -60,8 +60,70 @@ class SoldierTracker:
                 if abs(l_pos - r_pos) <= 1:
                     return {'left': l_pos, 'right': r_pos}
         return {'left': -1, 'right': -1}
-
+    
     def update_tracker(self, soldiers: dict[str, list[_Soldier]]) -> None:
+        '''Update number and state of real time soldiers,
+        based on soldiers from game logic.
+
+        Impact on graphics state:
+            - adding new real time soldiers
+            - removing soldiers that should be dead
+            - updating path position of real time soldiers
+            - updating state of real time soldiers
+        '''
+        def spawn_new_soldiers(side_soldiers: list[_Soldier], side: str):
+            for soldier in side_soldiers:
+                if soldier.id not in self.soldiers_rt[side]:
+                    self.soldiers_rt[side][soldier.id] = SoldierRT(
+                        soldier.id,
+                        soldier.position,
+                        'swordsman',
+                        side
+                    )
+
+        spawn_new_soldiers(soldiers['left'], 'left')
+        spawn_new_soldiers(soldiers['right'], 'right')
+
+        def remove_dead_soldiers(side_soldiers: list[_Soldier], side: str):
+            ids_to_remove = []
+
+            for id in self.soldiers_rt[side]:
+                if id not in [s.id for s in side_soldiers]:
+                    ids_to_remove.append(id)
+
+            for id in ids_to_remove:
+                self.soldiers_rt[side].pop(id)
+                    
+        remove_dead_soldiers(soldiers['left'], 'left')
+        remove_dead_soldiers(soldiers['right'], 'right')
+
+        LEFT_EXISTS = len(soldiers['left']) > 0
+        RIGHT_EXISTS = len(soldiers['right']) > 0
+
+        is_fight = LEFT_EXISTS and RIGHT_EXISTS and \
+                    abs(soldiers['left'][0].position - soldiers['right'][0].position) <= 1
+        
+        if is_fight:
+            self.soldiers_rt['left'][soldiers['left'][0].id].set_state('fight')
+            self.soldiers_rt['right'][soldiers['right'][0].id].set_state('fight')
+        else:
+            if LEFT_EXISTS: self.soldiers_rt['left'][soldiers['left'][0].id].set_state('walk')
+            if RIGHT_EXISTS: self.soldiers_rt['right'][soldiers['right'][0].id].set_state('walk')
+
+        def update_soldiers_state(side_soldiers: list[_Soldier], side: str):
+            for i in range(1, len(side_soldiers)):
+                if abs(side_soldiers[i].position - side_soldiers[i-1].position) <= 1:
+                    self.soldiers_rt[side][side_soldiers[i].id].set_state('idle')
+                else:
+                    self.soldiers_rt[side][side_soldiers[i].id].set_state('walk')
+
+            for soldier in side_soldiers:
+                self.soldiers_rt[side][soldier.id].set_path_position(soldier.position)
+
+        update_soldiers_state(soldiers['left'], 'left')
+        update_soldiers_state(soldiers['right'], 'right')
+
+    def update_tracker_NOTUSED(self, soldiers: dict[str, list[_Soldier]]) -> None:
         '''Update number and state of real time soldiers,
         based on soldiers from game logic.
 
@@ -75,6 +137,8 @@ class SoldierTracker:
         soldiers_data = self.__parse_soldiers_data(soldiers)
         fight_pos = self.__get_fight_pos(soldiers)
 
+        # Maciek - "Można usunąć sortowanie, Game w domyśle tzyma posortowanych żołnierzy"
+        # Patrz: game_logic/objects/soldiers/Soldiers._sort_soldiers()
         sorted_soldiers = {
             'left': sorted(soldiers['left'], key = lambda s: s.position, reverse=True),
             'right': sorted(soldiers['right'], key = lambda s: s.position)

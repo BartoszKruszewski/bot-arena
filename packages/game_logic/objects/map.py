@@ -1,5 +1,5 @@
-from ..stats import MAP_SIZE_X, MAP_SIZE_Y, OBSTACLES_AMOUNT
 from random import choice
+from ..stats import MAP_SIZE_X, MAP_SIZE_Y, OBSTACLES_AMOUNT
 
 class Map():
     def __init__(self) -> None:

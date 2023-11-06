@@ -11,15 +11,6 @@ class _Soldier():
         enemy.hp -= self.damage
         self.hp -= enemy.damage
 
-    def get_id(self) -> int:
-        return self.id
-    
-    def get_hp(self) -> int:
-        return self.hp
-    
-    def get_position(self) -> int:
-        return self.position
-
 class Soldiers():
     def __init__(self, side, path) -> None:
         self.side = side
@@ -30,11 +21,15 @@ class Soldiers():
     def _position_to_cords(self, position: int) -> tuple[int, int]:
         return self.path[position]
 
-    def _sort_soldiers(self, reverse=False) -> None:  
-        self.soldiers.sort(key=lambda soldier: soldier.position, reverse=reverse)
+    def _sort_soldiers(self) -> None:
+        """Sorts soldiers by position, where 0 is the closest to the ENEMY base.
+        """
+
+        self.soldiers.sort(key=lambda soldier: soldier.position, 
+                           reverse=True if self.side == 'left' else False)
 
     def _clean_dead(self) -> None:
-        self.soldiers = [soldier for soldier in self.soldiers if soldier.hp > 0]
+        self.soldiers = list(filter(lambda soldier: soldier.hp > 0, self.soldiers))
 
     def can_spawn(self) -> bool:
         return all(soldier.position != 0 for soldier in self.soldiers)
@@ -54,31 +49,37 @@ class Soldiers():
         self._sort_soldiers()
         right_soldiers._sort_soldiers()
 
-        if self.soldiers[-1].position == right_soldiers.soldiers[0].position or \
-           self.soldiers[-1].position + 1 == right_soldiers.soldiers[0].position:
-            self.soldiers[-1]._fight(right_soldiers.soldiers[0])
-            self.soldiers[-1].can_move = False
-            right_soldiers.soldiers[0].can_move = False
+        last_soldier = self.soldiers[0]
+        first_enemy_soldier = right_soldiers.soldiers[0]
+
+        if last_soldier.position == first_enemy_soldier.position or \
+            last_soldier.position + 1 == first_enemy_soldier.position:
+            last_soldier._fight(first_enemy_soldier)
+            last_soldier.can_move = False
+            first_enemy_soldier.can_move = False
 
         self._clean_dead()
         right_soldiers._clean_dead()
 
     def is_win(self) -> bool:
-        if self.side == 'left':
-            return self.soldiers and self.soldiers[-1].position == len(self.path)
-        else:
-            return self.soldiers and self.soldiers[0].position == -1
+        ENEMY_BASE = len(self.path) if self.side == 'left' else -1
+
+        return any(soldier.position == ENEMY_BASE for soldier in self.soldiers)
 
     def move(self) -> None:
-        self._sort_soldiers(reverse=True) if self.side == 'left' else self._sort_soldiers()
+        FORWARD = 1
+        BACKWARD = -1
+
+        self._sort_soldiers()
 
         for soldier in self.soldiers:
             if not soldier.can_move:
                 continue
 
-            new_position = soldier.position + (1 if self.side == 'left' else -1)
+            new_position = soldier.position + (FORWARD if self.side == 'left' else BACKWARD)
             
             my_positions = [soldier.position for soldier in self.soldiers]
+
             if new_position in my_positions:
                 soldier.can_move = False
                 continue
