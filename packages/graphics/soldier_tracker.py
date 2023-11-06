@@ -13,7 +13,7 @@ class SoldierTracker:
         SoldierRT.path = path
         self.soldiers_rt = {'left': {}, 'right': {}}
 
-    def __parse_soldiers_data(self, soldiers: dict[str, list[_Soldier]]) -> dict[str, dict[int, _Soldier]]:
+    def __parse_soldiers_data_NOTUSED(self, soldiers: dict[str, list[_Soldier]]) -> dict[str, dict[int, _Soldier]]:
         '''Parsing soldier data.
 
         From:
@@ -46,7 +46,7 @@ class SoldierTracker:
 
         return soldiers_data
 
-    def __get_fight_pos(self, soldiers: dict[str, list[_Soldier]]) -> dict[str, int]:
+    def __get_fight_pos_NOTUSED(self, soldiers: dict[str, list[_Soldier]]) -> dict[str, int]:
         '''Returns soldiers fight path pos.
 
         Position of two enemy soldiers in the neightbouring path pos.
@@ -61,7 +61,7 @@ class SoldierTracker:
                     return {'left': l_pos, 'right': r_pos}
         return {'left': -1, 'right': -1}
     
-    def update_tracker_NOTUSED(self, soldiers: dict[str, list[_Soldier]]) -> None:
+    def update_tracker(self, soldiers: dict[str, list[_Soldier]]) -> None:
         '''Update number and state of real time soldiers,
         based on soldiers from game logic.
 
@@ -71,8 +71,8 @@ class SoldierTracker:
             - updating path position of real time soldiers
             - updating state of real time soldiers
         '''
-        def spawn_new_soldiers(side_soldiers: list[_Soldier], side: str):
-            for soldier in side_soldiers:
+        def spawn_new_soldiers(site_soldiers: list[_Soldier], side: str):
+            for soldier in site_soldiers:
                 if soldier.id not in self.soldiers_rt[side]:
                     self.soldiers_rt[side][soldier.id] = SoldierRT(
                         soldier.id,
@@ -84,11 +84,11 @@ class SoldierTracker:
         spawn_new_soldiers(soldiers['left'], 'left')
         spawn_new_soldiers(soldiers['right'], 'right')
 
-        def remove_dead_soldiers(side_soldiers: list[_Soldier], side: str):
+        def remove_dead_soldiers(site_soldiers: list[_Soldier], side: str):
             ids_to_remove = []
 
             for id in self.soldiers_rt[side]:
-                if id not in [s.id for s in side_soldiers]:
+                if id not in [s.id for s in site_soldiers]:
                     ids_to_remove.append(id)
 
             for id in ids_to_remove:
@@ -110,20 +110,24 @@ class SoldierTracker:
             if LEFT_EXISTS: self.soldiers_rt['left'][soldiers['left'][0].id].set_state('walk')
             if RIGHT_EXISTS: self.soldiers_rt['right'][soldiers['right'][0].id].set_state('walk')
 
-        def update_soldiers_state(side_soldiers: list[_Soldier], side: str):
-            for i in range(1, len(side_soldiers)):
-                if abs(side_soldiers[i].position - side_soldiers[i-1].position) <= 1:
-                    self.soldiers_rt[side][side_soldiers[i].id].set_state('idle')
-                else:
-                    self.soldiers_rt[side][side_soldiers[i].id].set_state('walk')
+        def update_soldiers_state(site_soldiers: list[_Soldier], side: str):
+            for i in range(1, len(site_soldiers)):
+                current_soldier = self.soldiers_rt[side][site_soldiers[i].id]
+                previous_soldier = self.soldiers_rt[side][site_soldiers[i-1].id]
+                position_difference = abs(site_soldiers[i].position - site_soldiers[i-1].position)
 
-            for soldier in side_soldiers:
+                if position_difference < 1 or (position_difference == 1 and previous_soldier.state != 'walk'):
+                    current_soldier.set_state('idle')
+                else:
+                    current_soldier.set_state('walk')
+
+            for soldier in site_soldiers:
                 self.soldiers_rt[side][soldier.id].set_path_position(soldier.position)
 
         update_soldiers_state(soldiers['left'], 'left')
         update_soldiers_state(soldiers['right'], 'right')
 
-    def update_tracker(self, soldiers: dict[str, list[_Soldier]]) -> None:
+    def update_tracker_NOTUSED(self, soldiers: dict[str, list[_Soldier]]) -> None:
         '''Update number and state of real time soldiers,
         based on soldiers from game logic.
 
