@@ -27,9 +27,13 @@ class Map():
         self.path = path
 
     def __generate_obstacles(self) -> None:
+        def near_path(pos: tuple[int, int]) -> bool:
+            return any([abs(pos[0] - x) <= 1 and abs(pos[1] - y) <= 1 for x, y in self.path])
+
+
         not_path = [(x, y) for x in range(MAP_SIZE_X) 
                     for y in range(MAP_SIZE_Y) 
-                    if (x, y) not in self.path]
+                    if not near_path((x, y))]
         
         while len(self.obstacles) < OBSTACLES_AMOUNT:
             self.obstacles.append(choice(not_path))
