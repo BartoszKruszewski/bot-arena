@@ -5,10 +5,10 @@ import threading
 
 
 class RandomBot:
-    def __init__(self, api_url: str, bot_id: str):
+    def __init__(self, api_url: str, side: str):
         self._api_url = api_url
         self._game_status = None
-        self._bot_id = bot_id
+        self._side = side
 
     def run(self):
         while True:
@@ -24,24 +24,23 @@ class RandomBot:
         if response.status_code == 200:
             return response.json()
         else:
-            print(f"{self._bot_id}: Błąd przy pobieraniu stanu gry: {response.status_code}")
+            print(f"{self._side}: Błąd przy pobieraniu stanu gry: {response.status_code}")
             return
 
     def _send_command(self):
         command = self._randomCommand()
-        payload = {'bot_id': self._bot_id}
+        payload = {'side': self._side}
 
         response = requests.post(f"{self._api_url}/send_command", data=command, params=payload)
         if response.status_code == 200:
-            print(f"{self._bot_id}: Wysłano komendę: {command}")
+            print(f"{self._side}: Wysłano komendę: {command}")
         else:
-            print(f"{self._bot_id}: Błąd wysyłania komendy: {response.status_code}")
+            print(f"{self._side}: Błąd wysyłania komendy: {response.status_code}")
 
     def _randomCommand(self) -> str:
         coords = self._randomCoords()
-        side = random.choice(['l', 'r'])
+        commands = ['w', 's', f't {coords[0]} {coords[1]}']
 
-        commands = ['w', 'l', 'b', 'r', f't {side} {coords[0]} {coords[1]}']
         return random.choice(commands)
 
     def _randomCoords(self) -> tuple[int, int]:
@@ -56,8 +55,8 @@ class RandomBot:
 
 
 if __name__ == "__main__":
-    bot1 = RandomBot('http://127.0.0.1:5000', bot_id="bot1")
-    bot2 = RandomBot('http://127.0.0.1:5000', bot_id="bot2")
+    bot1 = RandomBot('http://127.0.0.1:5000', side='left')
+    bot2 = RandomBot('http://127.0.0.1:5000', side='right')
 
     thread1 = threading.Thread(target=bot1.run)
     thread2 = threading.Thread(target=bot2.run)
