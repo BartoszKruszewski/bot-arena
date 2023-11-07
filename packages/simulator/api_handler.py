@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, jsonify
 import json
 
 from packages.game_logic.game import Game
@@ -16,21 +16,21 @@ class ApiHandler:
 
 
         @self.app.route('/game_status', methods=['GET'])
-        def get_game_status():
+        def get_game_status() -> json:
             return Serializer.get(self._game)
 
         @self.app.route('/send_command', methods=['POST'])
-        def send_command():
+        def send_command() -> dict[str,str]:
             bot_id = request.args.get('bot_id')
             command = request.data.decode('utf-8')
 
 
             if bot_id == 'bot1':
-                self._last_command['left']
+                self._last_command['left'] = command
             elif bot_id == 'bot2':
-                self._last_command['right']
+                self._last_command['right'] = command
 
-            return command
+            return self._last_command
 
         @self.app.route('/dev', methods=['GET'])
         def dev_endpoint():
@@ -38,7 +38,7 @@ class ApiHandler:
                 'game_status': Serializer.get(self._game),
                 'last_command': self._last_command
             }
-            return json.dumps(server_state)
+            return jsonify(server_state)
 
 # Dev
 if __name__ == "__main__":

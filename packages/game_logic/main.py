@@ -28,6 +28,7 @@ def TestRun():
         else:
             status = game.update(Wait('left'), Wait('right'))
 
+def TestBotRun():
 
         
 

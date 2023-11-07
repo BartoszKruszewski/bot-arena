@@ -2,8 +2,6 @@ import json
 
 from packages.game_logic.game import Game
 from packages.game_logic.actions import *
-from packages.game_logic.objects.turrets import Turrets
-
 
 class Serializer:
     def __init__(self):
@@ -40,23 +38,26 @@ class Serializer:
         }
 
     def serialize_player(game: Game, player_side: str) -> dict[str, str]:
-        # turrets_data = game.get_turrets()[player_side]
-        #
-        # turret_coords = {}
-        # for i in turrets_data:
-        #     turret_coords[i] = turrets_data.getcoords()
+        turrets_data = game.get_turrets()[player_side]
+
+        turrets_cords = []
+
+        for turret in turrets_data:
+            turrets_cords.append(turret.get_cords())
 
         player_data = {
-            'turrets': game.get_turrets(),
+            'turrets': turrets_cords,
             'stats': game.get_stats()[player_side]
         }
         return player_data
 
+
 if __name__ == '__main__':
     game = Game()
-    #
-    # log = game.update(BuildTurret('left', (0, 1)),Wait('right'))
-    # print(log)
+
+    log = game.update(BuildTurret('left', (0, 3)),Wait('right'))
+    log = game.update(BuildTurret('right', (1, 3)), Wait('left'))
 
     game = Serializer.get(game)
     print(game)
+

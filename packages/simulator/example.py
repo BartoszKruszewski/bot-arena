@@ -39,7 +39,7 @@ def run():
 
     while True:
         time.sleep(5)
-        command = api_handler.last_command
+        command = api_handler._last_command
 
         if command == 'w':
             action_left = Wait('left')
