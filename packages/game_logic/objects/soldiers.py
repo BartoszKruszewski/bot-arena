@@ -32,7 +32,8 @@ class Soldiers():
         self.soldiers = list(filter(lambda soldier: soldier.hp > 0, self.soldiers))
 
     def can_spawn(self) -> bool:
-        return all(soldier.position != 0 for soldier in self.soldiers)
+        MY_BASE = 0 if self.side == 'left' else len(self.path) - 1
+        return all(soldier.position != MY_BASE for soldier in self.soldiers)
         
     def fight(self, right_soldiers: 'Soldiers') -> None:
         if self.side == "right": Exception("You can't fight from right side")
