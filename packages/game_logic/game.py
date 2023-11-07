@@ -1,8 +1,10 @@
 from .stats import COST
 from .stats import START_RESOURCES
-from .objects.map import Map
+
 from .actions import Action 
 from . import actions
+
+from .objects.map import Map
 from .objects.turrets import Turrets
 from .objects.turrets import _Turret
 from .objects.soldiers import Soldiers
@@ -80,7 +82,7 @@ class Game:
 
         left_error = check_build_place(self.action_left) if isinstance(self.action_left, actions.BuildTurret) else 0
         right_error = check_build_place(self.action_right) if isinstance(self.action_right, actions.BuildTurret) else 0
-        print(left_error, right_error)
+        
         left_error = check_spawn_soldier(self.action_left) if isinstance(self.action_left, actions.SpawnSoldier) else left_error
         right_error = check_spawn_soldier(self.action_right) if isinstance(self.action_right, actions.SpawnSoldier) else right_error
 
@@ -133,14 +135,14 @@ class Game:
     
     def get_turrets(self) -> dict[str, list[_Turret]]:
         return {
-            'left': [turret for turret in self.turrets['left'].turrets],
-            'right': [turret for turret in self.turrets['right'].turrets]
+            'left': self.turrets["left"].turrets,
+            'right': self.turrets["right"].turrets
         }
 
     def get_soldiers(self) -> dict[str, list[_Soldier]]:
         return {
-            'left': [soldier for soldier in self.soldiers['left'].soldiers if soldier.hp > 0],
-            'right': [soldier for soldier in self.soldiers['right'].soldiers if soldier.hp > 0]
+            'left': self.soldiers['left'].soldiers,
+            'right': self.soldiers['right'].soldiers
         }
 
     def get_stats(self) -> dict[str, int]:

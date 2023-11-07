@@ -17,13 +17,6 @@ class _Turret():
                 soldier.hp -= self.attack
                 break
 
-    def get_cords(self) -> tuple[int, int]:
-        return self.cords
-    def get_id(self) -> int:
-        return self.id
-
-    
-
 class Turrets():
     def __init__(self) -> None:
         self.turrets = []
@@ -34,7 +27,7 @@ class Turrets():
         self.next_id += 1
 
     def shoot(self, soldiers: Soldiers) -> None:
-        soldiers._sort_soldiers(reverse=True) if soldiers.side == 'left' else soldiers._sort_soldiers()
+        soldiers._sort_soldiers()
 
         for turret in self.turrets:
             turret._shoot(soldiers)
@@ -44,11 +37,4 @@ class Turrets():
     def __iter__(self) -> iter:
         for turret in self.turrets:
             yield turret.cords
-        
-    
-
-        
-                    
-
-        
         

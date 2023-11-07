@@ -7,7 +7,8 @@ from pygame.transform import scale
 from .const import SCREEN_SIZE, FRAMERATE, STANDARD_FRAMERATE, ROUND_LEN
 from .engine import Engine
 from ..game_logic.game import Game
-from ..game_logic.actions import Wait, SpawnSoldier
+
+from .log_interpreter import LogInterpreter
 
 class Main:
     def __init__(self):
@@ -19,19 +20,15 @@ class Main:
         self.game = Game()
         self.engine = Engine(self.game)
         self.tick = 0
-        self.game.update(SpawnSoldier('left'), Wait('right'))
-        self.game.update(Wait('left'), Wait('right'))
-        self.game.update(Wait('left'), Wait('right'))
-        self.game.update(SpawnSoldier('left'), Wait('right'))
-        self.game.update(Wait('left'), SpawnSoldier('right'))
-        self.game.update(Wait('left'), Wait('right'))
-        self.game.update(SpawnSoldier('left'), SpawnSoldier('right'))
+
+        log_interpreter = LogInterpreter()
 
         while self.is_running:
             self.is_running = WINDOWCLOSE not in map(lambda e: e.type, get_event())
             self.tick += 1
             if self.tick > FRAMERATE * ROUND_LEN / 1000:
-                self.game.update(Wait('left'), Wait('right'))
+                game_output = self.game.update(*log_interpreter.get_next_actions())
+                print(game_output)
                 self.tick = 0
             self.__screen_update()
 
