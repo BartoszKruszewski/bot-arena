@@ -1,7 +1,7 @@
 import subprocess
 import json
 
-class CommunicationHandler:
+class BotPipe:
 
     def __init__(self,bot :str):
         self.bot = bot
