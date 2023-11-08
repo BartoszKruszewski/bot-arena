@@ -53,7 +53,3 @@ class CommunicationHandler:
             response = self.get_message()
 
         return response
-
-communication = CommunicationHandler('./bots/random_bot.py')
-communication.start()
-communication.bot_message()
