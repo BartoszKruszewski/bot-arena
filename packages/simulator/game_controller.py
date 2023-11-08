@@ -54,8 +54,8 @@ class GameController:
             self.post_game_data(self.bot_left)
             self.post_game_data(self.bot_right)
 
-            left_command = self.get_move(self.bot_left)
-            right_command = self.get_move(self.bot_right)
+            left_command = self.get_command(self.bot_left)
+            right_command = self.get_command(self.bot_right)
 
             self.log.update(left_command.upper() + '|' + right_command.upper())
 
@@ -63,6 +63,8 @@ class GameController:
             right_action = self.command_to_action(right_command)
 
             self.game.update(left_action, right_action)
+
+        self.log.close()
 
     def command_to_action(move: str, side: str):
         if side not in ['left', 'right']:
@@ -84,8 +86,7 @@ class GameController:
             return Wait(side)
 
     def get_command(self, bot: BotPipe) -> str:
-        bot.get_request('move')
-        responseJson = bot.listen()
+        responseJson = bot.get_request('move')
 
         if responseJson is not None:
             response = json.loads(responseJson)
@@ -99,7 +100,7 @@ class GameController:
         msg = {
             'game_data': Serializer.get(self.game),
         }
-        msgJson = json.dups(msg)
+        msgJson = json.dumps(msg)
 
         bot.post_request(msgJson)
 

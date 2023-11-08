@@ -29,15 +29,6 @@ class BotPipe:
 
     def bot_message(self, message: json):
         self.game_to_bot.write(message)
-    def get_request(self, message: json):
-        msg = json.loads(message)
-        msg = {'GET': msg}
-        self.bot_message(json.dumps(msg))
-
-    def post_request(self, message: json):
-        msg = json.loads(message)
-        msg = {'POST': msg}
-        self.bot_message(json.dumps(msg))
 
     def get_response(self) -> json:
         try:
@@ -51,8 +42,20 @@ class BotPipe:
             print(f"File format error. {str(e)}")
 
     def listen(self) -> json:
-        response = self.get_message()
+        response = self.get_response()
         while response is None:
-            response = self.get_message()
+            response = self.get_response()
 
         return response
+
+    def get_request(self, message: json) -> json:
+        msg = json.loads(message)
+        msg = {'GET': msg}
+        self.bot_message(json.dumps(msg))
+
+        return self.listen()
+
+    def post_request(self, message: json):
+        msg = json.loads(message)
+        msg = {'POST': msg}
+        self.bot_message(json.dumps(msg))
