@@ -50,6 +50,8 @@ Game.get_stats() -> dict[str, int]
 #### ErrorCode
 
 ```python
+from game_logic import ErrorCode
+
 ErrorCode = {
     -5: 'Too many troops',
     -4: 'Wrong build place',
@@ -71,6 +73,7 @@ Public attributes:
 
 ```python
 Soldier.id: int
+Soldier.max_hp: int
 Soldier.hp: int
 Soldier.dmg: int
 
@@ -96,6 +99,7 @@ Turret.range: int
 ```python
 from game_logic import Game
 from game_logic import Wait, SpawnSoldier, BuildTurret
+from game_logic import ErrorCode
 
 action_left = Wait("left")
 action_right = SpawnSoldier("right")
@@ -103,5 +107,6 @@ action_right = SpawnSoldier("right")
 game = Game()
 game_response = game.update(action_left, action_right)
 print(game_response)
+if (ErrorCode[0], ErrorCode[0]) == game_response print("Action Succesful")
 # ('OK', 'OK')
 ```
