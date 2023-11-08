@@ -10,7 +10,6 @@ class BotPipe:
         self.bot_to_game = None
         self.game_to_bot = None
 
-
     def start(self):
         try:
             self.bot_process = subprocess.Popen(self.bot, stdin=subprocess.PIPE,
@@ -24,7 +23,6 @@ class BotPipe:
         except BrokenPipeError as e:
             print(f"Broken pipe error: {str(e)}")
 
-
     def stop(self):
         if self.bot_process is not None:
             self.bot_process.kill()
@@ -34,6 +32,11 @@ class BotPipe:
     def get_request(self, message: json):
         msg = json.loads(message)
         msg = {'GET': msg}
+        self.bot_message(json.dumps(msg))
+
+    def post_request(self, message: json):
+        msg = json.loads(message)
+        msg = {'POST': msg}
         self.bot_message(json.dumps(msg))
 
     def get_response(self) -> json:

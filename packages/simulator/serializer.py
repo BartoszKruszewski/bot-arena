@@ -7,7 +7,7 @@ class Serializer:
     def __init__(self):
         pass
 
-    def get(game: Game) -> json:
+    def get(game: Game) -> dict[dict[str, str], dict[dict[str, str], dict[str, str]]]:
         game_data = {
             'arena': Serializer.serialize_arena(game),
             'players' : {
@@ -16,9 +16,7 @@ class Serializer:
             }
         }
 
-        gameJSON = json.dumps(game_data)
-
-        return gameJSON
+        return game_data
 
     def serialize_arena(game: Game) -> dict[str, str]:
         # Arena data

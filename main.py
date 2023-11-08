@@ -9,10 +9,6 @@ def graphics_main():
     from packages.graphics.main import Main
     Main()
 
-def simulator_main():
-    from packages.simulator.example import run
-    run()
-
 def main():
     if len(sys.argv) == 0:
         print('1 - game_logic')
