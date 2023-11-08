@@ -7,9 +7,10 @@ class Wait(Action):
         super().__init__(side)
 
 class BuildTurret(Action):
-    def __init__(self, side, cords) -> None:
+    def __init__(self, side, x, y) -> None:
         super().__init__(side)
-        self.cords = cords
+        x, y = int(x), int(y)
+        self.cords = (x, y)
 
 class SpawnSoldier(Action):
     def __init__(self, side) -> None:
