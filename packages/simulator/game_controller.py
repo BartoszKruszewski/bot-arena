@@ -80,7 +80,7 @@ class GameController:
             move = move.split(' ')
             x = int(move[1])
             y = int(move[2])
-            return BuildTurret(side, (x, y))
+            return BuildTurret(side, x, y)
         else:
             print("Wrong command")
             return Wait(side)
@@ -103,14 +103,6 @@ class GameController:
         msgJson = json.dumps(msg)
 
         bot.post_request(msgJson)
-
-    # def post_game_status(self, bot:BotPipe):
-    #     msg = {
-    #         'game_status': game.,
-    #     }
-    #     msgJson = json.dumps(msg)
-    #
-    #     bot.post_request(msgJson)
 
 
 
