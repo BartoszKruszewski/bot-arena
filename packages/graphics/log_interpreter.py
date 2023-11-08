@@ -1,3 +1,4 @@
+from os import listdir
 from packages.game_logic.actions import *
 
 class LogInterpreter:
@@ -10,7 +11,7 @@ class LogInterpreter:
         'T': BuildTurret,
     }
 
-    def __init__(self, log_path="packages/utils/example_log.txt") -> None:
+    def __init__(self, log_path: str) -> None:
         self.log = []
 
         self.__load_log(log_path)
@@ -19,7 +20,7 @@ class LogInterpreter:
         self.index = 0
         self.log_size = len(self.log)
         
-    def __load_log(self, log_path):
+    def __load_log(self, log_path: str):
         with open(log_path, "r") as log:
             self.log = log.readlines()
     
