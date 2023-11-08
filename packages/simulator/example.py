@@ -1,6 +1,6 @@
 from packages.game_logic.game import Game
 from packages.game_logic.actions import *
-from packages.simulator.api_handler import *
+from packages.simulator.communication_handler import *
 from packages.simulator.bots.random_bot import RandomBot
 
 import time
