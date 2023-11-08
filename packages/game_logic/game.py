@@ -121,7 +121,7 @@ class Game:
         
         return None
 
-    def update(self, action_left: Action, action_right: Action) -> int:
+    def update(self, action_left: Action, action_right: Action) -> tuple[str, str]:
         self.__update_soldiers()
         self.__shoot_turrets()
         self.soldiers['left'].clear_dead()
@@ -145,6 +145,9 @@ class Game:
     def get_obstacles(self) -> list[tuple[int, int]]:
         return self._map.obstacles
     
+    def get_map_size(self) -> tuple[int, int]:
+        return (self._map.MAP_SIZE_X, self._map.MAP_SIZE_Y)
+
     def get_turrets(self) -> dict[str, list[Turret]]:
         return {
             'left': self.turrets["left"].turrets,
@@ -160,9 +163,6 @@ class Game:
     def get_stats(self) -> dict[str, int]:
         return self.gold
     
-    def get_map_size(self) -> tuple[int, int]:
-        return (self._map.MAP_SIZE_X, self._map.MAP_SIZE_Y)
-
     def display(self) -> None:
         for turret in self.turrets['left'].turrets:
             print(turret.cords, end=' ')
