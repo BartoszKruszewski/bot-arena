@@ -23,13 +23,9 @@ class SoldierTracker:
             - updating path position of real time soldiers
             - updating state of real time soldiers
         '''
-<<<<<<< HEAD
+
         def spawn_new_soldiers(side_soldiers: list[Soldier], side: str):
             for soldier in side_soldiers:
-=======
-        def spawn_new_soldiers(site_soldiers: list[Soldier], side: str):
-            for soldier in site_soldiers:
->>>>>>> 2bca386bd38b65282602d7cce1319c45f8d5770a
                 if soldier.id not in self.soldiers_rt[side]:
                     self.soldiers_rt[side][soldier.id] = SoldierRT(
                         soldier.id,
@@ -41,11 +37,7 @@ class SoldierTracker:
         spawn_new_soldiers(soldiers['left'], 'left')
         spawn_new_soldiers(soldiers['right'], 'right')
 
-<<<<<<< HEAD
         def remove_dead_soldiers(side_soldiers: list[Soldier], side: str):
-=======
-        def remove_dead_soldiers(site_soldiers: list[Soldier], side: str):
->>>>>>> 2bca386bd38b65282602d7cce1319c45f8d5770a
             ids_to_remove = []
 
             for id in self.soldiers_rt[side]:
