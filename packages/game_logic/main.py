@@ -17,7 +17,7 @@ def TestRun():
             status = game.update(SpawnSoldier('left'), SpawnSoldier('right'))
         elif command[0:2] == 'lt':
             command = command.split(' ')
-            status = game.update(BuildTurret('left', (int(command[1]), int(command[2]))), Wait('right'))
+            status = game.update(BuildTurret('left', int(command[1]), int(command[2])), Wait('right'))
         elif command[0:2] == 'rt':
             command = command.split(' ')
             status = game.update(Wait('left'), BuildTurret('right', (int(command[1]), int(command[2]))))

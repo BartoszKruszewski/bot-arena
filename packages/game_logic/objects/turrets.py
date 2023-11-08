@@ -10,17 +10,17 @@ class Turret():
     def _is_in_range(self, cords: tuple[int, int]) -> bool:
         return abs(self.cords[0] - cords[0]) + abs(self.cords[1] - cords[1]) <= self.range
 
-
-    def _shoot(self, soldiers: Soldiers) -> None:
+    def _shoot(self, soldiers: Soldiers, path: list[tuple]) -> None:
         for soldier in soldiers.soldiers:
-            if self._is_in_range(soldiers._position_to_cords(soldier.position)):
+            if self._is_in_range(path[soldier.position]):
                 soldier.hp -= self.attack
                 break
 
 class Turrets():
-    def __init__(self) -> None:
+    def __init__(self, path) -> None:
         self.turrets = []
         self.next_id = 0
+        self.path = path
 
     def spawn(self, cords: tuple[int, int]) -> None:
         self.turrets.append(Turret(cords, id=self.next_id))
@@ -28,7 +28,7 @@ class Turrets():
 
     def shoot(self, soldiers: Soldiers) -> None:
         for turret in self.turrets:
-            turret._shoot(soldiers)
+            turret._shoot(soldiers, self.path)
 
     def __iter__(self) -> iter:
         for turret in self.turrets:

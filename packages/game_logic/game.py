@@ -27,8 +27,8 @@ class Game:
         self._map = Map()
 
         self.turrets = {
-            'left': Turrets(),
-            'right': Turrets()
+            'left': Turrets(self._map.path),
+            'right': Turrets(self._map.path)
         }
 
         self.soldiers  = {
@@ -153,6 +153,7 @@ class Game:
         }
 
     def get_soldiers(self) -> dict[str, list[Soldier]]:
+        print(self.turrets['left'].turrets)
         return {
             'left': self.soldiers['left'].soldiers,
             'right': self.soldiers['right'].soldiers
@@ -165,6 +166,10 @@ class Game:
         return (self._map.MAP_SIZE_X, self._map.MAP_SIZE_Y)
 
     def display(self) -> None:
+        for turret in self.turrets['left'].turrets:
+            print(turret.cords, end=' ')
+        print()
+
         for i in range(self._map.MAP_SIZE_Y):
             for j in range(self._map.MAP_SIZE_X):
                 try:
