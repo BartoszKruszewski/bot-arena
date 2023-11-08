@@ -1,5 +1,5 @@
 from .soldier_rt import SoldierRT
-from ..game_logic.objects.soldiers import _Soldier
+from ..game_logic.objects.soldiers import Soldier as _Soldier
 
 class SoldierTracker:
     '''Soldier objects tracker.
@@ -42,7 +42,6 @@ class SoldierTracker:
             for id in self.soldiers_rt[side]:
                 if id not in [s.id for s in site_soldiers]:
                     ids_to_remove.append(id)
-
             for id in ids_to_remove:
                 self.soldiers_rt[side].pop(id)
                     

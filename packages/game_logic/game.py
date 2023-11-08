@@ -6,9 +6,9 @@ from . import actions
 
 from .objects.map import Map
 from .objects.turrets import Turrets
-from .objects.turrets import _Turret
+from .objects.turrets import Turret
 from .objects.soldiers import Soldiers
-from .objects.soldiers import _Soldier
+from .objects.soldiers import Soldier
 
 ErrorCode = {
     -5: 'Too many troops',
@@ -44,17 +44,17 @@ class Game:
         self.action_left = actions.Wait('left')
         self.action_right = actions.Wait('right')
 
-    def _update_soldiers(self) -> None:
+    def __update_soldiers(self) -> None:
         self.soldiers['left'].fight(self.soldiers['right'])
 
         self.soldiers['left'].move()
         self.soldiers['right'].move()
 
-    def _shoot_turrets(self) -> None:
+    def __shoot_turrets(self) -> None:
         self.turrets['left'].shoot(self.soldiers['right'])
         self.turrets['right'].shoot(self.soldiers['left'])
         
-    def _handle_actions_error(self) -> tuple[int, int]:
+    def __handle_actions_error(self) -> tuple[int, int]:
         def check_build_place(action: Action) -> int:
             print("build", action.side)
             if self.gold[action.side] < COST['turret']['gold']:
@@ -91,7 +91,7 @@ class Game:
 
         return (left_error, right_error)
 
-    def _execute_actions(self) -> None:
+    def __execute_actions(self) -> None:
         def build(action: Action) -> None:
             self.gold[action.side] -= COST['turret']['gold']
             self.turrets[action.side].spawn(action.cords)
@@ -109,22 +109,35 @@ class Game:
         action_to_function[self.action_left.__class__](self.action_left)
         action_to_function[self.action_right.__class__](self.action_right)
 
-    def _is_win(self) -> tuple[bool, bool]:
-        return (self.soldiers['left'].is_win(), self.soldiers['right'].is_win())
+    def __is_win(self) -> tuple[bool, bool]:
+        left_win = self.soldiers['left'].is_win
+        right_win = self.soldiers['right'].is_win
+
+        if left_win and right_win:
+            return (ErrorCode[3], ErrorCode[3])
+        if left_win:
+            return (ErrorCode[1], ErrorCode[1])
+        if right_win:
+            return (ErrorCode[2], ErrorCode[2])
+        
+        return None
 
     def update(self, action_left: Action, action_right: Action) -> int:
-        self._update_soldiers()
+        self.__update_soldiers()
+        self.__shoot_turrets()
+        self.soldiers['left'].clear_dead()
+        self.soldiers['right'].clear_dead()
 
         self.action_left = action_left
         self.action_right = action_right
-        Error = self._handle_actions_error()
-        self._execute_actions()
-        self._shoot_turrets()
-        WinLog = self._is_win()
+        Error = self.__handle_actions_error()
+        self.__execute_actions()
+        WinLog = self.__is_win()
 
-        if WinLog[0] and WinLog[1]: return (ErrorCode[3], ErrorCode[3])
-        if WinLog[0]: return (ErrorCode[1], ErrorCode[1])
-        if WinLog[1]: return (ErrorCode[2], ErrorCode[2])
+        if WinLog:
+            self.update = lambda action_left, action_right: self.__is_win()
+            return WinLog
+
         return (ErrorCode[Error[0]], ErrorCode[Error[1]])
     
     def get_path(self) -> list[tuple[int, int]]:
@@ -133,13 +146,13 @@ class Game:
     def get_obstacles(self) -> list[tuple[int, int]]:
         return self._map.obstacles
     
-    def get_turrets(self) -> dict[str, list[_Turret]]:
+    def get_turrets(self) -> dict[str, list[Turret]]:
         return {
             'left': self.turrets["left"].turrets,
             'right': self.turrets["right"].turrets
         }
 
-    def get_soldiers(self) -> dict[str, list[_Soldier]]:
+    def get_soldiers(self) -> dict[str, list[Soldier]]:
         return {
             'left': self.soldiers['left'].soldiers,
             'right': self.soldiers['right'].soldiers

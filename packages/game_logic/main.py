@@ -4,14 +4,10 @@ from packages.game_logic.actions import *
 def TestRun():
     import os
     game = Game()
-
+    os.system('cls' if os.name == 'nt' else 'clear')
     status = None
 
     while True:
-        # os.system('cls' if os.name == 'nt' else 'clear')
-        print(status)
-        game.display()
-
         command = input('Enter command: ')
         if command == 'l':
             status = game.update(SpawnSoldier('left'), Wait('right'))
@@ -28,13 +24,6 @@ def TestRun():
         else:
             status = game.update(Wait('left'), Wait('right'))
 
-def TestBotRun():
-
-        
-
-
-
-
-
-
-
+        os.system('cls' if os.name == 'nt' else 'clear')
+        print(status)
+        game.display()

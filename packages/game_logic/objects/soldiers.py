@@ -1,4 +1,4 @@
-class _Soldier():
+class Soldier():
     def __init__(self, id, position) -> None:
         self.id = id
         self.hp = 100
@@ -7,10 +7,6 @@ class _Soldier():
         self.can_move = True
         self.position = position
 
-    def _fight(self, enemy: '_Soldier') -> None:
-        enemy.hp -= self.damage
-        self.hp -= enemy.damage
-
 class Soldiers():
     def __init__(self, side, path) -> None:
         self.side = side
@@ -18,18 +14,28 @@ class Soldiers():
         self.next_id = 0
         self.path = path
 
-    def _position_to_cords(self, position: int) -> tuple[int, int]:
-        return self.path[position]
+        self.is_win = False
 
-    def _sort_soldiers(self) -> None:
+    def __sort_soldiers(self) -> None:
         """Sorts soldiers by position, where 0 is the closest to the ENEMY base.
         """
 
         self.soldiers.sort(key=lambda soldier: soldier.position, 
                            reverse=True if self.side == 'left' else False)
 
-    def _clean_dead(self) -> None:
+    def __fight_soldiers(self, soldier1: Soldier, soldier2: Soldier) -> None:
+        soldier1.hp -= soldier2.damage
+        soldier2.hp -= soldier1.damage
+
+    def clear_dead(self) -> None:
         self.soldiers = list(filter(lambda soldier: soldier.hp > 0, self.soldiers))
+        
+        ENEMY_BASE = -1 if self.side == 'right' else len(self.path)
+        if any(soldier.position == ENEMY_BASE for soldier in self.soldiers):
+            self.is_win = True
+        self.soldiers = list(filter(lambda soldier: soldier.position != ENEMY_BASE, self.soldiers))
+
+        self.__sort_soldiers()
 
     def can_spawn(self) -> bool:
         MY_BASE = 0 if self.side == 'left' else len(self.path) - 1
@@ -47,28 +53,18 @@ class Soldiers():
         if not self.soldiers or not right_soldiers.soldiers:
             return
 
-        self._sort_soldiers()
-        right_soldiers._sort_soldiers()
-
         last_soldier = self.soldiers[0]
         first_enemy_soldier = right_soldiers.soldiers[0]
 
         if last_soldier.position == first_enemy_soldier.position or \
             last_soldier.position + 1 == first_enemy_soldier.position:
-            last_soldier._fight(first_enemy_soldier)
+            self.__fight_soldiers(last_soldier, first_enemy_soldier)
             last_soldier.can_move = False
             first_enemy_soldier.can_move = False
-
-    def is_win(self) -> bool:
-        ENEMY_BASE = len(self.path) if self.side == 'left' else -1
-
-        return any(soldier.position == ENEMY_BASE for soldier in self.soldiers)
 
     def move(self) -> None:
         FORWARD = 1
         BACKWARD = -1
-
-        self._sort_soldiers()
 
         for soldier in self.soldiers:
             if not soldier.can_move:
@@ -83,12 +79,11 @@ class Soldiers():
                 continue
 
             soldier.position = new_position
-
-        self._clean_dead()
+            
 
     def spawn(self) -> None:
         if self.can_spawn():
-            self.soldiers.append(_Soldier(self.next_id, 0 if self.side == 'left' else len(self.path) - 1))
+            self.soldiers.append(Soldier(self.next_id, 0 if self.side == 'left' else len(self.path) - 1))
             self.next_id += 1
 
     def __iter__(self):

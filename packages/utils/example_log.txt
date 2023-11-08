@@ -2,9 +2,5 @@ S | W
 T 10 10 | S
 W | W
 S | W
-W | S
-S | S
-S | S
-S | S
-S | S
+W | W
 S | W

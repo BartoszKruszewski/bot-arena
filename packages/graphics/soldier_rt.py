@@ -77,9 +77,13 @@ class SoldierRT():
         '''
 
         if self.side == 'left':
+            if self.path_pos == len(SoldierRT.path) - 1: return
+                
             self.direction = Vector2(SoldierRT.path[self.path_pos + 1]) \
                 - Vector2(SoldierRT.path[self.path_pos])
         else:
+            if self.path_pos == 0: return
+
             self.direction = Vector2(SoldierRT.path[self.path_pos - 1]) \
                 - Vector2(SoldierRT.path[self.path_pos])
 
