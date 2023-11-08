@@ -1,5 +1,5 @@
 from .soldier_rt import SoldierRT
-from ..game_logic.objects.soldiers import Soldier as _Soldier
+from ..game_logic.objects.soldiers import Soldier
 
 class SoldierTracker:
     '''Soldier objects tracker.
@@ -13,7 +13,7 @@ class SoldierTracker:
         SoldierRT.path = path
         self.soldiers_rt = {'left': {}, 'right': {}}
     
-    def update_tracker(self, soldiers: dict[str, list[_Soldier]]) -> None:
+    def update_tracker(self, soldiers: dict[str, list[Soldier]]) -> None:
         '''Update number and state of real time soldiers,
         based on soldiers from game logic.
 
@@ -23,8 +23,13 @@ class SoldierTracker:
             - updating path position of real time soldiers
             - updating state of real time soldiers
         '''
-        def spawn_new_soldiers(side_soldiers: list[_Soldier], side: str):
+<<<<<<< HEAD
+        def spawn_new_soldiers(side_soldiers: list[Soldier], side: str):
             for soldier in side_soldiers:
+=======
+        def spawn_new_soldiers(site_soldiers: list[Soldier], side: str):
+            for soldier in site_soldiers:
+>>>>>>> 2bca386bd38b65282602d7cce1319c45f8d5770a
                 if soldier.id not in self.soldiers_rt[side]:
                     self.soldiers_rt[side][soldier.id] = SoldierRT(
                         soldier.id,
@@ -36,7 +41,11 @@ class SoldierTracker:
         spawn_new_soldiers(soldiers['left'], 'left')
         spawn_new_soldiers(soldiers['right'], 'right')
 
-        def remove_dead_soldiers(side_soldiers: list[_Soldier], side: str):
+<<<<<<< HEAD
+        def remove_dead_soldiers(side_soldiers: list[Soldier], side: str):
+=======
+        def remove_dead_soldiers(site_soldiers: list[Soldier], side: str):
+>>>>>>> 2bca386bd38b65282602d7cce1319c45f8d5770a
             ids_to_remove = []
 
             for id in self.soldiers_rt[side]:
@@ -61,7 +70,7 @@ class SoldierTracker:
             if LEFT_EXISTS: self.soldiers_rt['left'][soldiers['left'][0].id].set_state('walk')
             if RIGHT_EXISTS: self.soldiers_rt['right'][soldiers['right'][0].id].set_state('walk')
 
-        def update_soldiers_state(site_soldiers: list[_Soldier], side: str):
+        def update_soldiers_state(site_soldiers: list[Soldier], side: str):
             for i in range(1, len(site_soldiers)):
                 current_soldier = self.soldiers_rt[side][site_soldiers[i].id]
                 previous_soldier = self.soldiers_rt[side][site_soldiers[i-1].id]
