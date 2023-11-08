@@ -5,7 +5,7 @@ class Turret():
         self.cords = cords
         self.attack = 10
         self.id = id
-        self.range = 2
+        self.range = 5
 
     def _is_in_range(self, cords: tuple[int, int]) -> bool:
         return abs(self.cords[0] - cords[0]) + abs(self.cords[1] - cords[1]) <= self.range

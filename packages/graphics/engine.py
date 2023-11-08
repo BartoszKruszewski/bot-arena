@@ -52,7 +52,7 @@ class Engine():
         # reset frame
         self.__draw_screen.fill((0, 0, 0))
 
-        # drawing soldiers
+        # drawing soldiers and their health bars
         self.__draw_screen.blit(self.__map_texture, self.__camera.get_offset())
         for soldier in self.__soldier_tracker.get_soldiers():
             self.__draw_soldier(soldier)

@@ -7,7 +7,7 @@ def game_logic_main():
 
 def graphics_main():
     from packages.graphics.main import Main
-    Main()
+    Main("example_log.txt")
 
 def simulator_main():
     from packages.simulator.main import TestRun
