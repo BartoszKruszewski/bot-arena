@@ -28,7 +28,7 @@ class Main:
             self.tick += 1
             if self.tick > FRAMERATE * ROUND_LEN / 1000:
                 game_output = self.game.update(*log_interpreter.get_next_actions())
-                print(game_output)
+                print(__name__, game_output)
                 self.tick = 0
             self.__screen_update()
 

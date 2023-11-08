@@ -4,7 +4,7 @@ class Soldier():
         self.hp = 100
         self.damage = 10
 
-        self.can_move = True
+        self.did_move = True
         self.position = position
 
 class Soldiers():
@@ -45,10 +45,10 @@ class Soldiers():
         if self.side == "right": Exception("You can't fight from right side")
 
         for soldier in self.soldiers:
-            soldier.can_move = True
+            soldier.did_move = True
 
         for soldier in right_soldiers.soldiers:
-            soldier.can_move = True
+            soldier.did_move = True
 
         if not self.soldiers or not right_soldiers.soldiers:
             return
@@ -59,15 +59,15 @@ class Soldiers():
         if last_soldier.position == first_enemy_soldier.position or \
             last_soldier.position + 1 == first_enemy_soldier.position:
             self.__fight_soldiers(last_soldier, first_enemy_soldier)
-            last_soldier.can_move = False
-            first_enemy_soldier.can_move = False
+            last_soldier.did_move = False
+            first_enemy_soldier.did_move = False
 
     def move(self) -> None:
         FORWARD = 1
         BACKWARD = -1
 
         for soldier in self.soldiers:
-            if not soldier.can_move:
+            if not soldier.did_move:
                 continue
 
             new_position = soldier.position + (FORWARD if self.side == 'left' else BACKWARD)
@@ -75,7 +75,7 @@ class Soldiers():
             my_positions = [soldier.position for soldier in self.soldiers]
 
             if new_position in my_positions:
-                soldier.can_move = False
+                soldier.did_move = False
                 continue
 
             soldier.position = new_position

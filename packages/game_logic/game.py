@@ -56,7 +56,6 @@ class Game:
         
     def __handle_actions_error(self) -> tuple[int, int]:
         def check_build_place(action: Action) -> int:
-            print("build", action.side)
             if self.gold[action.side] < COST['turret']['gold']:
                 return -1
             if action.cords[0] < 0 or action.cords[0] >= self._map.MAP_SIZE_X or action.cords[1] < 0 or action.cords[1] >= self._map.MAP_SIZE_Y:
@@ -153,7 +152,6 @@ class Game:
         }
 
     def get_soldiers(self) -> dict[str, list[Soldier]]:
-        print(self.turrets['left'].turrets)
         return {
             'left': self.soldiers['left'].soldiers,
             'right': self.soldiers['right'].soldiers

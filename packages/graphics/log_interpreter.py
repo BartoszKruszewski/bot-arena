@@ -33,8 +33,6 @@ class LogInterpreter:
             left_action = LogInterpreter.letter_to_action[left_action[0]]
             right_action = LogInterpreter.letter_to_action[right_action[0]]
 
-            print(left_args, right_args)
-
             left_action = left_action(*left_args)
             right_action = right_action(*right_args)
            
