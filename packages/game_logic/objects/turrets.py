@@ -12,6 +12,7 @@ class Turret():
 
     def _shoot(self, soldiers: Soldiers, path: list[tuple]) -> None:
         for soldier in soldiers.soldiers:
+            if soldier.position < 0 or soldier.position >= len(path): break
             if self._is_in_range(path[soldier.position]):
                 soldier.hp -= self.attack
                 break
