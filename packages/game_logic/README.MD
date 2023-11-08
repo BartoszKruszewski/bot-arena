@@ -66,6 +66,7 @@ ErrorCode = {
 #### Soldier
 
 Soldier class represents a soldier on the map.
+
 Public attributes:
 
 ```python
@@ -80,6 +81,7 @@ Soldier.position: int
 #### Turret
 
 Turret class represents a turret on the map.
+
 Public attributes:
 
 ```python
@@ -101,6 +103,5 @@ action_right = SpawnSoldier("right")
 game = Game()
 game_response = game.update(action_left, action_right)
 print(game_response)
+# ('OK', 'OK')
 ```
-
-> `('OK', 'OK')`
