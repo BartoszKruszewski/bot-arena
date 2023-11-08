@@ -1,5 +1,5 @@
 S | W
-T 10 10 | S
+T 5 5 | S
 W | W
 S | W
 W | W

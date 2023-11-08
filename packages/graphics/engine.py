@@ -2,13 +2,15 @@ from pygame import Surface
 from pygame import Vector2
 
 from .const import DRAW_SCREEN_SIZE, DRAW_SCREEN_SIZE_X, DRAW_SCREEN_SIZE_Y, \
-    TILE_SIZE, SHOW_SOLDIERS_REAL_POS
+    TILE_SIZE, SHOW_SOLDIERS_REAL_POS, SHOW_TURRETS_REAL_POS
 from .camera import Camera
 from .assets_loader import AssetsLoader
 from .map_renderer import MapRenderer
 from ..game_logic.game import Game
 from .soldier_rt import SoldierRT
 from .soldier_tracker import SoldierTracker
+from .turret_rt import TurretRT
+from .turret_tracker import TurretTracker
 
 class Engine():
     '''Main graphics class.
@@ -22,6 +24,7 @@ class Engine():
         # initialize modules
         self.__map_renderer = MapRenderer(game)
         self.__soldier_tracker = SoldierTracker(game.get_path())
+        self.__turret_tracker = TurretTracker()
         self.__camera = Camera(game.get_map_size())
 
         # assets
@@ -43,14 +46,20 @@ class Engine():
         self.__camera.update()
         self.__soldier_tracker.update_tracker(game.get_soldiers())
         self.__soldier_tracker.update_soldiers()
+        self.__turret_tracker.update_tracker(game.get_turrets())
+        self.__turret_tracker.update_turrets()
 
         # reset frame
         self.__draw_screen.fill((0, 0, 0))
 
-        # drawing
+        # drawing soldiers
         self.__draw_screen.blit(self.__map_texture, self.__camera.get_offset())
         for soldier in self.__soldier_tracker.get_soldiers():
             self.__draw_soldier(soldier)
+
+        # drawing turrets
+        for turret in self.__turret_tracker.get_turrets():
+            self.__draw_turret(turret)
 
         return self.__draw_screen
 
@@ -80,6 +89,28 @@ class Engine():
             surf = Surface((1, 1))
             surf.fill((255, 0, 0))
             self.__draw(surf, soldier.real_pos)
+
+    def __draw_turret(self, turret: TurretRT) -> None:
+        '''Draw turret object on the screen.
+        '''
+
+        texture = self.__assets["turrets"]["turret"]
+
+        size = texture.get_size()
+
+        self.__draw(
+            texture,
+            turret.cords + \
+            Vector2(TILE_SIZE // 2, TILE_SIZE - size[1]) \
+            - Vector2(size[0], 0) // 2
+        )
+        
+        # real pos
+        if SHOW_TURRETS_REAL_POS:
+            surf = Surface((TILE_SIZE, TILE_SIZE))
+            surf.set_alpha(70)
+            surf.fill((255, 0, 0))
+            self.__draw(surf, Vector2(turret.cords))
 
     def __draw(self, texture: Surface, pos: Vector2) -> None:
         '''Draw texture with camera offset.
