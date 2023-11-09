@@ -1,11 +1,13 @@
-class Soldier():
-    def __init__(self, id, position) -> None:
-        self.id = id
-        self.max_hp = 100
-        
-        self.hp = 100
-        self.damage = 10
+from packages.game_logic.stats import SOLDIERS_STATS
 
+class Soldier():
+    def __init__(self, id, position, stats) -> None:
+        self.id = id
+        self.max_hp = stats['max_hp']
+        self.damage = stats['damage']
+        self.range = stats['range']
+
+        self.hp = self.max_hp
         self.did_move = False
         self.position = position
 
@@ -25,9 +27,10 @@ class Soldiers():
         self.soldiers.sort(key=lambda soldier: soldier.position, 
                            reverse=True if self.side == 'left' else False)
 
-    def __fight_soldiers(self, soldier1: Soldier, soldier2: Soldier) -> None:
-        soldier1.hp -= soldier2.damage
-        soldier2.hp -= soldier1.damage
+    def __attack_soldier(self, soldier: Soldier, enemy_soldier: Soldier) -> None:
+        soldier.did_move = True
+        enemy_soldier.hp -= soldier.damage
+        # print(f"Side {self.side} Soldier {soldier.position} attacked soldier {enemy_soldier.position} for {soldier.damage} damage")
 
     def clear_dead(self) -> None:
         self.soldiers = list(filter(lambda soldier: soldier.hp > 0, self.soldiers))
@@ -43,26 +46,41 @@ class Soldiers():
         MY_BASE = 0 if self.side == 'left' else len(self.path) - 1
         return all(soldier.position != MY_BASE for soldier in self.soldiers)
         
-    def fight(self, right_soldiers: 'Soldiers') -> None:
-        if self.side == "right": Exception("You can't fight from right side")
-
+    def fight(self, enemy_soldiers: 'Soldiers') -> None:
         for soldier in self.soldiers:
             soldier.did_move = False
 
-        for soldier in right_soldiers.soldiers:
-            soldier.did_move = False
-
-        if not self.soldiers or not right_soldiers.soldiers:
+        if len(self.soldiers) == 0 or len(enemy_soldiers.soldiers) == 0:
             return
 
-        last_soldier = self.soldiers[0]
-        first_enemy_soldier = right_soldiers.soldiers[0]
+        def distance(soldier: Soldier, enemy_soldier: Soldier) -> int:
+            return abs(soldier.position - enemy_soldier.position)
 
-        if last_soldier.position == first_enemy_soldier.position or \
-            last_soldier.position + 1 == first_enemy_soldier.position:
-            self.__fight_soldiers(last_soldier, first_enemy_soldier)
-            last_soldier.did_move = True
-            first_enemy_soldier.did_move = True
+        def is_near(soldier: Soldier, enemy_soldier: Soldier) -> bool:
+            return distance(soldier, enemy_soldier) <= 1
+
+        def is_any_attack() -> bool:
+            left_first = self.soldiers[0]
+            right_first = enemy_soldiers.soldiers[0]
+            if not is_near(left_first, right_first):
+                return False
+            self.__attack_soldier(left_first, right_first)
+            return True
+        
+        if not is_any_attack():
+            return
+        
+        def can_soldier_shoot(index: int) -> bool:
+            for i in range(index, 0, -1):
+                if not is_near(self.soldiers[i], self.soldiers[i-1]):
+                    return False
+                if self.soldiers[i-1].did_move:
+                    return True
+            raise Exception('This should not happen')
+                    
+        for i, soldier in enumerate(self.soldiers[1:], 1):
+            if can_soldier_shoot(i) and distance(soldier, enemy_soldiers.soldiers[0]) <= soldier.range:
+                self.__attack_soldier(soldier, enemy_soldiers.soldiers[0])
 
     def move(self) -> None:
         FORWARD = 1
@@ -82,10 +100,11 @@ class Soldiers():
 
             soldier.position = new_position
             
-
-    def spawn(self) -> None:
+    def spawn(self, name='basic') -> None:
         if self.can_spawn():
-            self.soldiers.append(Soldier(self.next_id, 0 if self.side == 'left' else len(self.path) - 1))
+            MY_BASE = 0 if self.side == 'left' else len(self.path) - 1
+            new_soldier = Soldier(self.next_id, MY_BASE, SOLDIERS_STATS[name])
+            self.soldiers.append(new_soldier)
             self.next_id += 1
 
     def __iter__(self):

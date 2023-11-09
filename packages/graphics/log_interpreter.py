@@ -1,5 +1,5 @@
 from os import listdir
-from packages.game_logic.actions import *
+from packages.game_logic.actions import Action, BuildTurret, BuildFarm, SpawnSoldier, Wait
 
 class LogInterpreter:
     '''Changes .txt file to list[tuple[Action, Action]]
@@ -9,6 +9,7 @@ class LogInterpreter:
         'W': Wait,
         'S': SpawnSoldier,
         'T': BuildTurret,
+        'F': BuildFarm
     }
 
     def __init__(self, log_path: str) -> None:

@@ -1,14 +1,14 @@
 from .stats import COST
-from .stats import START_RESOURCES
+from .stats import START_GOLD, PASSIVE_GOLD
+from .stats import SOLDIERS_STATS
 
-from .actions import Action 
-from . import actions
+from .actions import Action, BuildAction
+from .actions import Wait, BuildTurret, BuildFarm, SpawnSoldier
 
 from .objects.map import Map
-from .objects.turrets import Turrets
-from .objects.turrets import Turret
-from .objects.soldiers import Soldiers
-from .objects.soldiers import Soldier
+from .objects.turrets import Turrets, Turret
+from .objects.soldiers import Soldiers, Soldier
+from .objects.farms import Farms, Farm
 
 ErrorCode = {
     -5: 'Too many troops',
@@ -36,16 +36,27 @@ class Game:
             'right': Soldiers('right', self._map.path)
         }
 
-        self.gold = {
-            'left': START_RESOURCES['gold'],
-            'right': START_RESOURCES['gold']
+        self.farms = {
+            'left': Farms(self._map.path),
+            'right': Farms(self._map.path)
         }
 
-        self.action_left = actions.Wait('left')
-        self.action_right = actions.Wait('right')
+        self.gold = {
+            'left': START_GOLD,
+            'right': START_GOLD
+        }
+
+        self.income = {
+            'left': PASSIVE_GOLD,
+            'right': PASSIVE_GOLD
+        }
+
+        self.action_left = Wait('left')
+        self.action_right = Wait('right')
 
     def __update_soldiers(self) -> None:
         self.soldiers['left'].fight(self.soldiers['right'])
+        self.soldiers['right'].fight(self.soldiers['left'])
 
         self.soldiers['left'].move()
         self.soldiers['right'].move()
@@ -56,53 +67,74 @@ class Game:
         
     def __handle_actions_error(self) -> tuple[int, int]:
         def check_build_place(action: Action) -> int:
-            if self.gold[action.side] < COST['turret']['gold']:
+            if self.gold[action.side] < COST['turret']:
                 return -1
             if action.cords[0] < 0 or action.cords[0] >= self._map.MAP_SIZE_X or action.cords[1] < 0 or action.cords[1] >= self._map.MAP_SIZE_Y:
                 return -4
-            if action.cords in self._map.obstacles or action.cords in self._map.path:
-                return -4
+            
+            wrong_build_places = [
+                self._map.obstacles, 
+                self._map.path, 
+                self.turrets['left'], 
+                self.turrets['right'], 
+                self.farms['left'], 
+                self.farms['right']
+                ]
+
+            for place in wrong_build_places:
+                if action.cords in place:
+                    return -4
+                
             return 0
         
         def check_spawn_soldier(action: Action) -> int:
-            if self.gold[action.side] < COST['soldier']['gold']:
+            soldier_name = action.name
+            if self.gold[action.side] < SOLDIERS_STATS[soldier_name]['cost']:
                 return -1
             if not self.soldiers[action.side].can_spawn():
                 return -5
             return 0
 
         # if same build place
-        if isinstance(self.action_left, actions.BuildTurret) and isinstance(self.action_right, actions.BuildTurret):
+        if isinstance(self.action_left, BuildTurret) and isinstance(self.action_right, BuildTurret):
             if self.action_left.cords == self.action_right.cords:
                 return (-3, -3)
             
         left_error = None
         right_error = None
 
-        left_error = check_build_place(self.action_left) if isinstance(self.action_left, actions.BuildTurret) else 0
-        right_error = check_build_place(self.action_right) if isinstance(self.action_right, actions.BuildTurret) else 0
+        left_error = check_build_place(self.action_left) if isinstance(self.action_left, BuildAction) else 0
+        right_error = check_build_place(self.action_right) if isinstance(self.action_right, BuildAction) else 0
         
-        left_error = check_spawn_soldier(self.action_left) if isinstance(self.action_left, actions.SpawnSoldier) else left_error
-        right_error = check_spawn_soldier(self.action_right) if isinstance(self.action_right, actions.SpawnSoldier) else right_error
+        left_error = check_spawn_soldier(self.action_left) if isinstance(self.action_left, SpawnSoldier) else left_error
+        right_error = check_spawn_soldier(self.action_right) if isinstance(self.action_right, SpawnSoldier) else right_error
 
-        self.action_left = actions.Wait('left') if left_error else self.action_left
-        self.action_right = actions.Wait('right') if right_error else self.action_right
+        self.action_left = Wait('left') if left_error else self.action_left
+        self.action_right = Wait('right') if right_error else self.action_right
 
         return (left_error, right_error)
 
     def __execute_actions(self) -> None:
         def build(action: Action) -> None:
-            self.gold[action.side] -= COST['turret']['gold']
-            self.turrets[action.side].spawn(action.cords)
-
+            if isinstance(action, BuildTurret):
+                self.gold[action.side] -= COST['turret']
+                self.turrets[action.side].spawn(action.cords)
+                return
+            if isinstance(action, BuildFarm):
+                self.gold[action.side] -= COST['farm']
+                self.farms[action.side].spawn(action.cords)
+                return
+            
         def spawn(action: Action) -> None:
-            self.gold[action.side] -= COST['soldier']['gold']
-            self.soldiers[action.side].spawn()
+            soldier_name = action.name
+            self.gold[action.side] -= SOLDIERS_STATS[soldier_name]['cost']
+            self.soldiers[action.side].spawn(soldier_name)
 
         action_to_function = {
-            actions.BuildTurret: build,
-            actions.SpawnSoldier: spawn,
-            actions.Wait: lambda action: None
+            BuildTurret: build,
+            BuildFarm: build,
+            SpawnSoldier: spawn,
+            Wait: lambda action: None
         }
 
         action_to_function[self.action_left.__class__](self.action_left)
@@ -122,6 +154,9 @@ class Game:
         return None
 
     def update(self, action_left: Action, action_right: Action) -> tuple[str, str]:
+        self.income['left'] += len(self.farms['left']) * 2
+        self.income['right'] += len(self.farms['right']) * 2
+
         self.__update_soldiers()
         self.__shoot_turrets()
         self.soldiers['left'].clear_dead()
@@ -131,8 +166,11 @@ class Game:
         self.action_right = action_right
         Error = self.__handle_actions_error()
         self.__execute_actions()
-        WinLog = self.__is_win()
+        
+        self.gold['left'] += self.income['left']
+        self.gold['right'] += self.income['right']
 
+        WinLog = self.__is_win()
         if WinLog:
             self.update = lambda action_left, action_right: self.__is_win()
             return WinLog
@@ -148,21 +186,30 @@ class Game:
     def get_map_size(self) -> tuple[int, int]:
         return (self._map.MAP_SIZE_X, self._map.MAP_SIZE_Y)
 
-    def get_turrets(self) -> dict[str, list[Turret]]:
-        return {
-            'left': self.turrets["left"].turrets,
-            'right': self.turrets["right"].turrets
-        }
-
     def get_soldiers(self) -> dict[str, list[Soldier]]:
         return {
             'left': self.soldiers['left'].soldiers,
             'right': self.soldiers['right'].soldiers
         }
 
-    def get_stats(self) -> dict[str, int]:
+    def get_turrets(self) -> dict[str, list[Turret]]:
+        return {
+            'left': self.turrets["left"].turrets,
+            'right': self.turrets["right"].turrets
+        }
+
+    def get_farms(self) -> dict[str, list[Farm]]:
+        return {
+            'left': self.farms['left'].farms,
+            'right': self.farms['right'].farms
+        }
+
+    def get_gold(self) -> dict[str, int]:
         return self.gold
     
+    def get_income(self) -> dict[str, int]:
+        return self.income
+
     def display(self) -> None:
         for turret in self.turrets['left'].turrets:
             print(turret.cords, end=' ')
