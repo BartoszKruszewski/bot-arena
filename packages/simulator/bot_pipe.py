@@ -2,60 +2,63 @@ import subprocess
 import json
 
 class BotPipe:
-
-    def __init__(self,bot :str):
+    def __init__(self, bot: str):
         self.bot = bot
-
         self.bot_process = None
-        self.bot_to_game = None
-        self.game_to_bot = None
 
-    def start(self):
         try:
-            self.bot_process = subprocess.Popen(self.bot, stdin=subprocess.PIPE,
-                                                stdout=subprocess.PIPE, text=True)
-
-            self.bot_to_game = self.bot_process.stdout
-            self.game_to_bot = self.bot_process.stdin
-
+            self.bot_process = subprocess.Popen(
+                'python3 '+self.bot,
+                stdin=subprocess.PIPE,
+                stdout=subprocess.PIPE,
+                shell=True,
+                text=True  # Dodaj flagę 'text=True' dla poprawnego przesyłania tekstu
+            )
         except FileNotFoundError as e:
             print(f"Bot file not found: {str(e)}")
-        except BrokenPipeError as e:
-            print(f"Broken pipe error: {str(e)}")
+        except Exception as e:
+            print(f"Error: {str(e)}")
 
     def stop(self):
         if self.bot_process is not None:
             self.bot_process.kill()
 
-    def bot_message(self, message: json):
-        self.game_to_bot.write(message)
+    def bot_message(self, message: str):
+        if self.bot_process is not None:
+            self.bot_process.stdin.write(message + "\n")
+            self.bot_process.stdin.flush()
 
-    def get_response(self) -> json:
-        try:
-            response = self.bot_to_game.communicate()
-            if type(response) is not json:
-                return response
-            else:
-                raise Exception("Invalid file format")
+    def get_response(self) -> str:
+        if self.bot_process is not None:
+            response = self.bot_process.stdout.readline()
+            return response
+        else:
+            return None
 
-        except Exception as e:
-            print(f"File format error. {str(e)}")
-
-    def listen(self) -> json:
+    def listen(self) -> str:
         response = self.get_response()
         while response is None:
             response = self.get_response()
-
         return response
 
-    def get_request(self, message: json) -> json:
-        msg = json.loads(message)
-        msg = {'GET': msg}
-        self.bot_message(json.dumps(msg))
-
+    def get_request(self, message: str) -> str:
+        if message is json:
+            msg = json.loads(message)
+        else:
+            msg = message
+        self.bot_message(json.dumps({'GET': msg}))
         return self.listen()
 
-    def post_request(self, message: json):
-        msg = json.loads(message)
-        msg = {'POST': msg}
-        self.bot_message(json.dumps(msg))
+    def post_request(self, message: str):
+        if message is json:
+            msg = json.loads(message)
+        else:
+            msg = message
+        self.bot_message(json.dumps({'POST': msg}))
+
+
+if __name__ == '__main__':
+    bot = BotPipe('./bots/random_bot.py')
+    response = bot.post_request({'game_status' : {'xd':'wow'}})
+
+    print(response)

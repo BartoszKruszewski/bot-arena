@@ -59,14 +59,14 @@ class GameController:
 
             self.log.update(left_command.upper() + '|' + right_command.upper())
 
-            left_action = self.command_to_action(left_command)
-            right_action = self.command_to_action(right_command)
-
-            self.game.update(left_action, right_action)
+            # left_action = self.command_to_action(left_command,'left')
+            # right_action = self.command_to_action(right_command, 'right')
+            #
+            # self.game.update(left_action, right_action)
 
         self.log.close()
 
-    def command_to_action(move: str, side: str):
+    def command_to_action(self, move: str, side: str):
         if side not in ['left', 'right']:
             raise ValueError("Invalid side, please use 'left' or 'right'.")
 
@@ -87,22 +87,17 @@ class GameController:
 
     def get_command(self, bot: BotPipe) -> str:
         responseJson = bot.get_request('move')
+        response = json.loads(responseJson)
 
-        if responseJson is not None:
-            response = json.loads(responseJson)
-
-            if 'move' in response and response['move'][0] in valid_moves:
-                return response['move']
+        if 'move' in response and response['move'][0] in valid_moves:
+            return response['move']
 
         return 'W'
 
     def post_game_data(self, bot:BotPipe):
-        msg = {
-            'game_data': Serializer.get(self.game),
-        }
-        msgJson = json.dumps(msg)
+        game_data = {'game_data': Serializer.get(self.game)}
+        bot.post_request(game_data)
 
-        bot.post_request(msgJson)
 
 
 

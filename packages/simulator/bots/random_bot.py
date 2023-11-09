@@ -2,40 +2,45 @@
 
 import random
 import json
-
+import sys
 
 class RandomBot:
     def __init__(self):
-        self.valid_moves = ['W', 'A', 'S', 'D']
+        self.valid_moves = ['W', 'S', 'T']
         self.game_data = {}
 
-    def random_move(self):
-        return random.choice(self.valid_moves)
 
     def handle_request(self):
-        input_data = input()
-        request = json.loads(input_data)
+        request = sys.stdin.readline()
 
         if 'GET' in request:
-            self.handle_get_request(request['GET'])
-        else:
-            response = json.dumps({'error': 'invalid request'})
-            print(response)
+            requestJson = json.loads(request)
+            self.handle_get_request(requestJson['GET'])
+        elif 'POST' in request:
+            requestJson = json.loads(request)
+            self.handle_post_request(requestJson['POST'])
 
-    def handle_get_request(self, request: dict):
-        if 'move' in request:
+    def handle_get_request(self, request: str):
+        if 'move' == request:
             move = self.random_move()
             response = json.dumps({'move': move})
             print(response)
         else:
-            response = json.dumps({'error': f'Invalid get request: missing "move" key'})
-            print(response)
+            print({'error': f'Invalid get request: missing "game_data" key'})
+
+    def handle_post_request(self, request: dict):
+        if 'game_data' in request:
+            self.game_data = request['game_data']
+        else:
+            print({'error': f'Invalid get request: missing "game_data" key'})
+
 
     def run(self):
         while True:
             self.handle_request()
 
+    def random_move(self):
+        return random.choice(self.valid_moves)
 
-if __name__ == "__main__":
-    bot = RandomBot()
-    bot.run()
+bot = RandomBot()
+bot.run()
