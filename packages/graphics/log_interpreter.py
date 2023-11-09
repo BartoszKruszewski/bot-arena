@@ -27,6 +27,10 @@ class LogInterpreter:
     def __parse_log(self):
         self.log = [line.strip().split() for line in self.log]
         for line_index, line in enumerate(self.log):
+            if line[0] == "#": 
+                self.log[line_index] = None; 
+                continue
+            
             left_side, right_side = line[:line.index("|")], line[line.index("|")+1:]
             left_action, right_action = left_side[0], right_side[0]
             left_args, right_args = ["left"] + left_side[1:], ["right"] + right_side[1:]
@@ -46,6 +50,6 @@ class LogInterpreter:
         actions = self.log[self.index]
         self.index += 1
 
-        return actions
+        return actions if actions != None else self.get_next_actions()
 
         

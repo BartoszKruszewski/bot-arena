@@ -1,4 +1,4 @@
-from os import listdir
+from os import listdir, name as os_name
 from pygame.image import load as image_load
 from pygame import Surface, Rect
 from pygame.transform import flip
@@ -20,7 +20,14 @@ class AssetsLoader:
                 return self.__cut_spritesheet(image)
             return image
         
-        return {path.split('.')[0] : self.load(dir_path + '/' + path, type) for path in listdir(dir_path)}
+        if os_name == 'posix':
+            if "./packages/graphics" not in dir_path:
+                dir_path = "./packages/graphics" + dir_path
+
+
+        path = {path.split('.')[0] : self.load(dir_path + '/' + path, type) for path in listdir(dir_path)}
+        
+        return path
     
     def __cut_spritesheet(self, sheet: Surface) -> dict[str:dict[str:dict[str:Surface]]]:
         size_x, size_y = sheet.get_size()

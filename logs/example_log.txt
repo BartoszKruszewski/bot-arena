@@ -1,7 +1,38 @@
+T 13 13 | S
+W | T 14 14
 S | W
-T 5 5 | S
-W | T 6 6
+W | S
+W | S
+W | W
+W | S
+T 0 1 | W
+T 1 0 | W
+# comment example
+# a lot of wait's for breake 
+W | W
+W | W
+W | W
+W | W
+W | W
+W | W
+W | W
+W | W
+W | W
+W | W
+W | W
+W | W
+W | W
+W | W
+W | W
+W | W
+W | W
+W | W
+W | W
 W | W
 S | W
-W | W
+S | W
+S | W
+S | W
+S | W
+S | W
 S | W

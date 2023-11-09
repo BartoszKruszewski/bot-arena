@@ -7,6 +7,7 @@ from pygame.transform import scale
 from .const import SCREEN_SIZE, FRAMERATE, STANDARD_FRAMERATE, ROUND_LEN
 from .engine import Engine
 from ..game_logic.game import Game
+from os import name as os_name
 
 from .log_interpreter import LogInterpreter
 
@@ -22,6 +23,8 @@ class Main:
         self.tick = 0
         
         path = "/".join([dir for dir in __file__.split('\\') if dir != ''][:-1]) + "/../../logs/" + log_name
+        if os_name == 'posix':
+            path = "./logs/" + log_name
 
         log_interpreter = LogInterpreter(path)
 
