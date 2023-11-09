@@ -51,27 +51,32 @@ class GameController:
         self.log.open()
 
         while not game_over:
-            self.post_game_data(self.bot_left)
-            self.post_game_data(self.bot_right)
+            game_dataJson = json.dumps(Serializer.get(self.game))
+            response_left = self.bot_left.request(method='POST', data= game_dataJson)
+            response_right = self.bot_right.request(method='POST',data= game_dataJson)
 
+            self.log.update(response_left + ' | ' + response_right)
 
-            right_command = self.get_command(self.bot_right)
-            left_command = self.get_command(self.bot_left)
+            left_action = self.command_to_action(response_left,'left')
+            right_action = self.command_to_action(response_right, 'right')
 
-            self.log.update(left_command.upper() + '|' + right_command.upper())
-
-            left_action = self.command_to_action(left_command,'left')
-            right_action = self.command_to_action(right_command, 'right')
-
-            self.game.update(left_action, right_action)
+            game_status = self.game.update(left_action, right_action)
+            game_over = self.is_game_over(game_status)
 
         self.log.close()
+
+    def is_game_over(self, game_status: tuple[str, str]):
+        if game_status[0] in ['Left win', 'Right win', 'Tie']:
+            return True
+        else:
+            return False
 
     def command_to_action(self, move: str, side: str):
         if side not in ['left', 'right']:
             raise ValueError("Invalid side, please use 'left' or 'right'.")
 
         move = move.upper()
+        print(move)
 
         if move == 'W':
             return Wait(side)
@@ -85,30 +90,6 @@ class GameController:
         else:
             print("Wrong command")
             return Wait(side)
-
-    def get_command(self, bot: BotPipe) -> str:
-        responseJson = bot.GET('move')
-        print(json.loads(responseJson))
-        response = None
-
-        if responseJson is not None:
-            response = json.loads(responseJson)
-
-        while 'error' in response:
-            responseJson = bot.GET('move')
-            print(responseJson)
-
-            if responseJson is not None:
-                response = json.loads(responseJson)
-
-        return response['move']
-
-    def post_game_data(self, bot:BotPipe):
-        game_data = json.dumps({'game_data': Serializer.get(self.game)})
-        bot.POST(game_data)
-
-
-
 
 
 if __name__ == '__main__':

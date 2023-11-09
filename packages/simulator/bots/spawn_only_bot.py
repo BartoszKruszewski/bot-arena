@@ -6,7 +6,6 @@ import sys
 
 class Bot:
     def __init__(self):
-        self.valid_moves = ['W', 'S', 'T']
         self.game_data = {}
 
     def handle_request(self, method, data=None):
@@ -16,8 +15,7 @@ class Bot:
         elif method == 'POST':
             if data:
                 self.game_data = self.process_data(data)
-            move = self.random_move()
-            return move
+            return 'S'
         else:
             return "Unsupported method"
 
@@ -45,18 +43,15 @@ class Bot:
                 print(response)
 
     def random_move(self):
-        random_num = random.randint(1, 100)
-        if random_num <= 80:
-            return 'W'
-        elif 80 < random_num <= 95:
-            return 'S'
-        else:
+        move = random.choice(self.valid_moves)
+        if move == 'T':
             maxX = self.game_data['arena']['map_size'][0]
             maxY = self.game_data['arena']['map_size'][1]
+
             x = random.randint(0, maxX)
             y = random.randint(0, maxY)
             return f'T {x} {y}'
-
+        return move
 
 bot = Bot()
 bot.run()

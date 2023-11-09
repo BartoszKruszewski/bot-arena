@@ -8,15 +8,20 @@ from packages.simulator.serializer import Serializer
 class BotPipe:
     def __init__(self, bot_path: str):
         self.bot_process = None
+        self.bot_in = None
+        self.bot_out = None
 
         try:
             self.bot_process = subprocess.Popen(
-                'python3 '+self.bot_path,
+                'python3 ./bots/random_bot.py',
                 stdin=subprocess.PIPE,
                 stdout=subprocess.PIPE,
                 shell=True,
                 text=True
             )
+
+            self.bot_in = self.bot_process.stdin
+            self.bot_out = self.bot_process.stdout
 
         except FileNotFoundError as e:
             print(f"Bot file not found: {str(e)}")
@@ -25,16 +30,16 @@ class BotPipe:
 
     def request(self, method, data=None):
         if method == 'GET':
-            self.stdin.write("GET\n")
-            self.stdin.flush()
-            response = self.stdout.readline().strip()
+            self.bot_process.stdin.write('GET\n')
+            self.bot_process.stdin.flush()
+            response = self.bot_out.readline().strip()
             return response
         elif method == 'POST':
-            self.stdin.write("POST\n")
+            self.bot_process.stdin.write('POST\n')
             if data:
-                self.stdin.write(data + "\n")
-            self.stdin.flush()
-            response = self.stdout.readline().strip()
+                self.bot_process.stdin.write(data + "\n")
+            self.bot_process.stdin.flush()
+            response = self.bot_out.readline().strip()
             return response
         else:
             return "Unsupported method"
@@ -46,7 +51,10 @@ class BotPipe:
 
 
 if __name__ == '__main__':
+    # Dev test
     bot = BotPipe('./bots/random_bot.py')
+    game = Game()
 
-
+    dataJson = json.dumps(Serializer.get(game))
+    response = bot.request(method='POST', data=dataJson)
     print(response)
