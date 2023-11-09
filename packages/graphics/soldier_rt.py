@@ -13,6 +13,7 @@ class SoldierRT():
         self.id = id
         self.name = name
         self.side = side
+        self.hp_rate = 1
 
         # state
         self.frame = 0

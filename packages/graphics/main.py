@@ -11,7 +11,7 @@ from ..game_logic.game import Game
 from .log_interpreter import LogInterpreter
 
 class Main:
-    def __init__(self):
+    def __init__(self, log_name: str):
         init()
         self.screen = display_set_mode(SCREEN_SIZE)
         self.is_running = True
@@ -20,8 +20,10 @@ class Main:
         self.game = Game()
         self.engine = Engine(self.game)
         self.tick = 0
+        
+        path = "/".join([dir for dir in __file__.split('\\') if dir != ''][:-1]) + "/../../logs/" + log_name
 
-        log_interpreter = LogInterpreter()
+        log_interpreter = LogInterpreter(path)
 
         while self.is_running:
             self.is_running = WINDOWCLOSE not in map(lambda e: e.type, get_event())

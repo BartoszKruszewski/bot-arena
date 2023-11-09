@@ -1,6 +1,8 @@
 class Soldier():
     def __init__(self, id, position) -> None:
         self.id = id
+        self.max_hp = 100
+        
         self.hp = 100
         self.damage = 10
 
