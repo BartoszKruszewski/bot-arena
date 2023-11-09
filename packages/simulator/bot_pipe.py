@@ -13,7 +13,7 @@ class BotPipe:
 
         try:
             self.bot_process = subprocess.Popen(
-                'python3 ./bots/random_bot.py',
+                'python3 '+bot_path,
                 stdin=subprocess.PIPE,
                 stdout=subprocess.PIPE,
                 shell=True,
