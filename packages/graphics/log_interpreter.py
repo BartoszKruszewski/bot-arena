@@ -18,7 +18,6 @@ class LogInterpreter:
         self.__parse_log()
 
         self.index = 0
-        self.log_size = len(self.log)
         
     def __load_log(self, log_path: str):
         with open(log_path, "r") as log:
@@ -26,11 +25,10 @@ class LogInterpreter:
     
     def __parse_log(self):
         self.log = [line.strip().split() for line in self.log]
-        for line_index, line in enumerate(self.log):
-            if line[0] == "#": 
-                self.log[line_index] = None; 
-                continue
-            
+        action_log = []
+        for line in self.log:
+            if line[0] == "#": continue
+
             left_side, right_side = line[:line.index("|")], line[line.index("|")+1:]
             left_action, right_action = left_side[0], right_side[0]
             left_args, right_args = ["left"] + left_side[1:], ["right"] + right_side[1:]
@@ -41,15 +39,16 @@ class LogInterpreter:
             left_action = left_action(*left_args)
             right_action = right_action(*right_args)
            
-            self.log[line_index] = (left_action, right_action)
+            action_log.append((left_action, right_action))
+
+        self.log = action_log
 
     def get_next_actions(self) -> tuple[Action, Action]:
-        if self.index >= self.log_size:
+        if self.index >= len(self.log):
             return (Wait('left'), Wait('right'))
         
         actions = self.log[self.index]
         self.index += 1
 
-        return actions if actions != None else self.get_next_actions()
-
+        return actions
         
