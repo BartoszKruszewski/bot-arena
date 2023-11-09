@@ -10,7 +10,7 @@ valid_moves = ['S', 'T', 'W', 's', 'w', 't']
 
 class Log:
     def __init__(self):
-        self.log_file_name = 'game_log.txt'
+        self.log_file_name = 'logs/game_log.txt'
 
         if os.path.exists(self.log_file_name):
             base_name, ext = os.path.splitext(self.log_file_name)
@@ -93,7 +93,7 @@ class GameController:
 
 
 if __name__ == '__main__':
-    game = GameController('./bots/random_bot.py','./bots/random_bot.py')
+    game = GameController('/bots/random_bot.py','/bots/random_bot.py')
     game.run()
 
 
