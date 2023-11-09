@@ -2,3 +2,4 @@
 __pycache__
 .pytest_cache
 main.py
+game_log*
