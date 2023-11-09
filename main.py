@@ -1,4 +1,5 @@
 import sys
+from os import remove, listdir
 
 def game_logic_main():
     from packages.game_logic.main import TestRun
@@ -26,6 +27,11 @@ def main():
         graphics_main()
     elif sys.argv[1] == '3':
         simulator_main()
+    elif sys.argv[1] == 'clear':
+        for file in listdir('./logs'):
+            if file != 'example_log.txt':
+                remove('./logs/'+file)
+        
 
 if __name__ == '__main__':
     main()
