@@ -1,5 +1,3 @@
-import json
-
 from packages.game_logic.game import Game
 from packages.game_logic.actions import *
 
@@ -52,9 +50,6 @@ class Serializer:
 
 if __name__ == '__main__':
     game = Game()
-
-    log = game.update(BuildTurret('left', (0, 3)),Wait('right'))
-    log = game.update(BuildTurret('right', (1, 3)), Wait('left'))
 
     game = Serializer.get(game)
     print(game)

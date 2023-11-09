@@ -9,38 +9,50 @@ class RandomBot:
         self.valid_moves = ['W', 'S', 'T']
         self.game_data = {}
 
-
     def handle_request(self):
-        request = sys.stdin.readline()
+        while True:
+            request = sys.stdin.readline()
+            if not request:
+                break
 
-        if 'GET' in request:
-            requestJson = json.loads(request)
-            self.handle_get_request(requestJson['GET'])
-        elif 'POST' in request:
-            requestJson = json.loads(request)
-            self.handle_post_request(requestJson['POST'])
+            request_data = json.loads(request)
+            if 'GET' in request_data:
+                self.handle_get_request(request_data['GET'])
+            elif 'POST' in request_data:
+                self.handle_post_request(request_data['POST'])
+
 
     def handle_get_request(self, request: str):
         if 'move' == request:
             move = self.random_move()
             response = json.dumps({'move': move})
-            print(response)
+            print(response+"\n")
+            sys.stdout.flush()
+        if 'game_data' in request:
+            response = json.dumps({'game_data': self.game_data})
+            i
+            print(response + "\n")
+            sys.stdout.flush()
         else:
-            print({'error': f'Invalid get request: missing "game_data" key'})
+            print({'error': f'Invalid get request: missing "move" or "game_data" key'})
 
     def handle_post_request(self, request: dict):
         if 'game_data' in request:
-            self.game_data = request['game_data']
+            self.game_data = json.loads(request)['game_data']
         else:
             print({'error': f'Invalid get request: missing "game_data" key'})
 
 
-    def run(self):
-        while True:
-            self.handle_request()
-
     def random_move(self):
-        return random.choice(self.valid_moves)
+        move = random.choice(self.valid_moves)
+        if move == 'T':
+            maxX = self.game_data['arena']['map_size'][0]
+            maxY = self.game_data['arena']['map_size'][1]
+
+            x = random.randint(0, maxX)
+            y = random.randint(0, maxY)
+            return f'T {x} {y}'
+        return move
 
 bot = RandomBot()
-bot.run()
+bot.handle_request()

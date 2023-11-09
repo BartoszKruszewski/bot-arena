@@ -54,15 +54,16 @@ class GameController:
             self.post_game_data(self.bot_left)
             self.post_game_data(self.bot_right)
 
-            left_command = self.get_command(self.bot_left)
+
             right_command = self.get_command(self.bot_right)
+            left_command = self.get_command(self.bot_left)
 
             self.log.update(left_command.upper() + '|' + right_command.upper())
 
-            # left_action = self.command_to_action(left_command,'left')
-            # right_action = self.command_to_action(right_command, 'right')
-            #
-            # self.game.update(left_action, right_action)
+            left_action = self.command_to_action(left_command,'left')
+            right_action = self.command_to_action(right_command, 'right')
+
+            self.game.update(left_action, right_action)
 
         self.log.close()
 
@@ -86,21 +87,32 @@ class GameController:
             return Wait(side)
 
     def get_command(self, bot: BotPipe) -> str:
-        responseJson = bot.get_request('move')
-        response = json.loads(responseJson)
+        responseJson = bot.GET('move')
+        print(json.loads(responseJson))
+        response = None
 
-        if 'move' in response and response['move'][0] in valid_moves:
-            return response['move']
+        if responseJson is not None:
+            response = json.loads(responseJson)
 
-        return 'W'
+        while 'error' in response:
+            responseJson = bot.GET('move')
+            print(responseJson)
+
+            if responseJson is not None:
+                response = json.loads(responseJson)
+
+        return response['move']
 
     def post_game_data(self, bot:BotPipe):
-        game_data = {'game_data': Serializer.get(self.game)}
-        bot.post_request(game_data)
+        game_data = json.dumps({'game_data': Serializer.get(self.game)})
+        bot.POST(game_data)
 
 
 
 
 
+if __name__ == '__main__':
+    game = GameController('./bots/random_bot.py','./bots/random_bot.py')
+    game.run()
 
 
