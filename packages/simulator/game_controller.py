@@ -76,7 +76,6 @@ class GameController:
             raise ValueError("Invalid side, please use 'left' or 'right'.")
 
         move = move.upper()
-        print(move)
 
         if move == 'W':
             return Wait(side)
