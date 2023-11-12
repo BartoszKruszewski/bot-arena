@@ -1,4 +1,4 @@
-from pygame import Surface, SRCALPHA, Rect, Vector2
+from pygame import Surface, SRCALPHA, Rect, Vector2, Color
 from pygame.draw import rect as draw_rect
 from random import choice
 
@@ -72,7 +72,11 @@ class MapRenderer:
         
         for cord in grass_cords:
             self.__ground_texture.blit(
-                assets['tiles']['tile_grass_' + self.__get_grass_turn(cord, path)], cord * TILE_SIZE)
+                self.__randomize_grass(
+                    assets['tiles']['tile_grass_' + self.__get_grass_turn(cord, path)]
+                ),
+                cord * TILE_SIZE
+            )
     
     def __get_grass_turn(self, cord: Vector2, path: list[tuple[int, int]]) -> str:
         '''Returns name of grass turn based on neighboring tiles.
@@ -221,3 +225,27 @@ class MapRenderer:
         surf.fill(COLOR)
         for cord in obstacles:
             self.__map_texture.blit(surf, Vector2(cord) * TILE_SIZE)
+
+    def __randomize_grass(self, texture: Surface) -> Surface:
+        '''Radomize grass texture color
+        '''
+        return self.__randomize_color(
+            texture, Color(160, 177, 89),
+            [
+                Color(160, 177, 89),
+                Color(158, 178, 91),
+                Color(156, 172, 93),
+                Color(164, 181, 86)
+            ])
+
+    def __randomize_color(self, texture: Surface, key: Color, colors: list[Color]) -> Surface:
+        '''Change key color of texture to random colors from list
+        '''
+        
+        new_texture = texture.copy()
+        [
+            new_texture.set_at((x, y), choice(colors))
+            for x in range(TILE_SIZE) for y in range(TILE_SIZE)
+            if texture.get_at((x, y)) == key
+        ]
+        return new_texture
