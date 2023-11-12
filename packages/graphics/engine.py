@@ -36,7 +36,7 @@ class Engine():
         self.__map_texture = self.__map_renderer.render(self.__assets, game)
         self.__soldier_tracker.update_tracker(game.get_soldiers())
 
-    def render(self, game: Game) -> Surface:
+    def render(self, game: Game, game_speed: float) -> Surface:
         '''Main rendering function.
 
         Refereshes once per frame.
@@ -45,9 +45,9 @@ class Engine():
         # update staff
         self.__camera.update()
         self.__soldier_tracker.update_tracker(game.get_soldiers())
-        self.__soldier_tracker.update_soldiers()
+        self.__soldier_tracker.update_soldiers(game_speed)
         self.__turret_tracker.update_tracker(game.get_turrets())
-        self.__turret_tracker.update_turrets()
+        self.__turret_tracker.update_turrets(game_speed)
 
         # reset frame
         self.__draw_screen.fill((0, 0, 0))

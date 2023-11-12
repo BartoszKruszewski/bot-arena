@@ -86,12 +86,12 @@ class SoldierTracker:
         update_soldiers_hp_rate(soldiers['left'], 'left')
         update_soldiers_hp_rate(soldiers['right'], 'right')
 
-    def update_soldiers(self) -> None:
+    def update_soldiers(self, game_speed: float) -> None:
         '''Updates every real time soldier.
         '''
 
         for soldier in self.get_soldiers():
-            soldier.update()
+            soldier.update(game_speed)
 
     def get_soldiers(self) -> list[SoldierRT]:
         '''Real time soldiers getter.

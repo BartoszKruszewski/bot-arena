@@ -25,12 +25,12 @@ class TurretTracker():
                     turret.id
                 )
 
-    def update_turrets(self) -> None:
+    def update_turrets(self, game_speed: float) -> None:
         '''Updates every real time turret.
         '''
 
         for turret in self.get_turrets():
-            turret.update()
+            turret.update(game_speed)
     
     def get_turrets(self) -> list[TurretRT]:
         '''Real time turrets getter.

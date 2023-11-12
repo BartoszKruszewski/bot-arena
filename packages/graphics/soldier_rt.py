@@ -24,15 +24,15 @@ class SoldierRT():
         self.real_pos = Vector2(SoldierRT.path[path_pos]) * TILE_SIZE
         self.path_pos = path_pos
 
-    def update(self):
+    def update(self, game_speed: float):
         '''Main update function.
 
         Refreshes once per frame.
         '''
 
-        self.__update_frame()
+        self.__update_frame(game_speed)
         self.__update_direction()
-        self.__update_real_pos()
+        self.__update_real_pos(game_speed)
         self.__update_animation()
 
     def set_path_position(self, pos: int):
@@ -88,23 +88,23 @@ class SoldierRT():
             self.direction = Vector2(SoldierRT.path[self.path_pos - 1]) \
                 - Vector2(SoldierRT.path[self.path_pos])
 
-    def __update_real_pos(self):
+    def __update_real_pos(self, game_speed: float):
         '''Updates actual real position.
 
         Position is in float px value.
         '''
         if self.state == 'walk':
-            self.real_pos += self.direction * TILE_SIZE * 1000 / ROUND_LEN / FRAMERATE
+            self.real_pos += self.direction * TILE_SIZE * game_speed / FRAMERATE
         else:
             self.real_pos = Vector2(SoldierRT.path[self.path_pos]) * TILE_SIZE
 
-    def __update_frame(self):
+    def __update_frame(self, game_speed: float):
         '''Updates actual animation frame.
         '''
 
         if not self.state == 'idle':
             self.tick += 1
-            if self.tick > FRAMERATE // ANIMATION_SPEED:
+            if self.tick > FRAMERATE // ANIMATION_SPEED / game_speed:
                 self.tick = 0
                 self.frame += 1
                 if self.frame >= ANIMATION_LEN:

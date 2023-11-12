@@ -16,20 +16,20 @@ class TurretRT():
         self.frame = 0
         self.tick = 0
 
-    def update(self):
+    def update(self, game_speed: float):
         '''Main update function.
 
         Refreshes once per frame.
         '''
 
-        self.__update_frame()
+        self.__update_frame(game_speed)
 
-    def __update_frame(self):
+    def __update_frame(self, game_speed: float):
         '''Updates actual animation frame.
         '''
 
         self.tick += 1
-        if self.tick > FRAMERATE // ANIMATION_SPEED:
+        if self.tick > FRAMERATE // ANIMATION_SPEED / game_speed:
             self.tick = 0
             self.frame += 1
             if self.frame >= ANIMATION_LEN:
