@@ -1,4 +1,4 @@
-from pygame import Surface
+from pygame import Surface, SRCALPHA
 from pygame import Vector2
 
 from .const import DRAW_SCREEN_SIZE, DRAW_SCREEN_SIZE_X, DRAW_SCREEN_SIZE_Y, \
@@ -11,6 +11,7 @@ from .soldier_rt import SoldierRT
 from .soldier_tracker import SoldierTracker
 from .turret_rt import TurretRT
 from .turret_tracker import TurretTracker
+from .particle import ParticleController, Particle, BloodParticle
 
 class Engine():
     '''Main graphics class.
@@ -25,6 +26,7 @@ class Engine():
         self.__map_renderer = MapRenderer(game)
         self.__soldier_tracker = SoldierTracker(game.get_path())
         self.__turret_tracker = TurretTracker()
+        self.__particle_controller = ParticleController()
         self.__camera = Camera(game.get_map_size())
 
         # assets
@@ -34,7 +36,6 @@ class Engine():
 
         # first render
         self.__map_texture = self.__map_renderer.render(self.__assets, game)
-        self.__soldier_tracker.update_tracker(game.get_soldiers())
 
     def render(self, game: Game, game_speed: float) -> Surface:
         '''Main rendering function.
@@ -44,10 +45,11 @@ class Engine():
 
         # update staff
         self.__camera.update()
-        self.__soldier_tracker.update_tracker(game.get_soldiers())
+        self.__soldier_tracker.update_tracker(game.get_soldiers(), self.__particle_controller)
         self.__soldier_tracker.update_soldiers(game_speed)
         self.__turret_tracker.update_tracker(game.get_turrets())
         self.__turret_tracker.update_turrets(game_speed)
+        self.__particle_controller.update_particles(game_speed)
 
         # reset frame
         self.__draw_screen.fill((0, 0, 0))
@@ -60,6 +62,10 @@ class Engine():
         # drawing turrets
         for turret in self.__turret_tracker.get_turrets():
             self.__draw_turret(turret)
+
+        # drawing particles
+        for particle in self.__particle_controller.get_particles():
+            self.__draw_particle(particle)
 
         return self.__draw_screen
 
@@ -120,6 +126,12 @@ class Engine():
             surf.set_alpha(70)
             surf.fill((255, 0, 0))
             self.__draw(surf, Vector2(turret.cords))
+
+    def __draw_particle(self, particle: Particle):
+        pos, color, size = particle.get_data()
+        surf = Surface((size, size), SRCALPHA)
+        surf.fill(color)
+        self.__draw(surf, pos)
 
     def __draw(self, texture: Surface, pos: Vector2) -> None:
         '''Draw texture with camera offset.

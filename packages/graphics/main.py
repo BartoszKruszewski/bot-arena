@@ -21,7 +21,7 @@ class Main:
         self.__game = Game()
         self.__engine = Engine(self.__game)
         self.__tick = 0
-        self.__game_speed = 4
+        self.__game_speed = 2
         
         path = "/".join([dir for dir in __file__.split('\\') if dir != ''][:-1]) + "/../../logs/" + log_name
         if os_name == 'posix':

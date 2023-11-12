@@ -1,5 +1,6 @@
 from .soldier_rt import SoldierRT
 from ..game_logic.objects.soldiers import Soldier
+from .particle import ParticleController, BloodParticle
 
 class SoldierTracker:
     '''Soldier objects tracker.
@@ -13,7 +14,7 @@ class SoldierTracker:
         SoldierRT.path = path
         self.soldiers_rt = {'left': {}, 'right': {}}
     
-    def update_tracker(self, soldiers: dict[str, list[Soldier]]) -> None:
+    def update_tracker(self, soldiers: dict[str, list[Soldier]], particle_controller: ParticleController) -> None:
         '''Update number and state of real time soldiers,
         based on soldiers from game logic.
 
@@ -58,6 +59,12 @@ class SoldierTracker:
         if is_fight:
             self.soldiers_rt['left'][soldiers['left'][0].id].set_state('fight')
             self.soldiers_rt['right'][soldiers['right'][0].id].set_state('fight')
+            particle_controller.add_particles(
+                BloodParticle,
+                (self.soldiers_rt['left'][soldiers['left'][0].id].real_pos +
+                self.soldiers_rt['right'][soldiers['right'][0].id].real_pos) / 2,
+                10
+            )
         else:
             if LEFT_EXISTS: self.soldiers_rt['left'][soldiers['left'][0].id].set_state('walk')
             if RIGHT_EXISTS: self.soldiers_rt['right'][soldiers['right'][0].id].set_state('walk')
