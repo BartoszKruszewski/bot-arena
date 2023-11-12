@@ -1,6 +1,8 @@
+from pygame import Vector2
 from .soldier_rt import SoldierRT
 from ..game_logic.objects.soldiers import Soldier
 from .particle import ParticleController, BloodParticle
+from .const import TILE_SIZE
 
 class SoldierTracker:
     '''Soldier objects tracker.
@@ -61,9 +63,15 @@ class SoldierTracker:
             self.soldiers_rt['right'][soldiers['right'][0].id].set_state('fight')
             particle_controller.add_particles(
                 BloodParticle,
-                (self.soldiers_rt['left'][soldiers['left'][0].id].real_pos +
-                self.soldiers_rt['right'][soldiers['right'][0].id].real_pos) / 2,
-                10
+                self.soldiers_rt['left'][soldiers['left'][0].id].real_pos + Vector2(TILE_SIZE, TILE_SIZE) // 2,
+                amount = 4,
+                direction = -1 * self.soldiers_rt['left'][soldiers['left'][0].id].direction
+            )
+            particle_controller.add_particles(
+                BloodParticle,
+                self.soldiers_rt['right'][soldiers['right'][0].id].real_pos + Vector2(TILE_SIZE, TILE_SIZE) // 2,
+                amount = 4,
+                direction = -1 * self.soldiers_rt['right'][soldiers['right'][0].id].direction
             )
         else:
             if LEFT_EXISTS: self.soldiers_rt['left'][soldiers['left'][0].id].set_state('walk')
