@@ -1,5 +1,4 @@
-from pygame import Surface, SRCALPHA, Rect
-from pygame import Vector2
+from pygame import Surface, SRCALPHA, Rect, Vector2
 from pygame.draw import rect as draw_rect
 from random import choice
 

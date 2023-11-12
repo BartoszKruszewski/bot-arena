@@ -1,8 +1,9 @@
 from os import listdir, name as os_name
 from pygame.image import load as image_load
-from pygame import Surface, Rect
+from pygame import Surface, Rect, Color
 from pygame.transform import flip
-from .const import SPRITE_SIZE, ANIMATION_LEN, ANIMATION_NAMES, ANIMATION_DIRECTIONS
+from .const import SPRITE_SIZE, ANIMATION_LEN, ANIMATION_NAMES, ANIMATION_DIRECTIONS, TILE_SIZE
+from random import choice
 
 class AssetsLoader:
     def __init__(self) -> None:
@@ -18,6 +19,8 @@ class AssetsLoader:
             image = image_load(dir_path)
             if 'soldiers' in dir_path:
                 return self.__cut_spritesheet(image)
+            elif 'grass' in dir_path:
+                return self.__randomize_grass(image)
             return image
         
         if os_name == 'posix':
@@ -54,4 +57,28 @@ class AssetsLoader:
             all_textures[name] = animation_textures
 
         return all_textures
+    
+    def __randomize_grass(self, texture: Surface) -> Surface:
+        '''Radomize grass texture color
+        '''
+        return self.__randomize_color(
+            texture, Color(160, 177, 89),
+            [
+                Color(160, 177, 89),
+                Color(158, 178, 91),
+                Color(156, 172, 93),
+                Color(164, 181, 86)
+            ])
+
+    def __randomize_color(self, texture: Surface, key: Color, colors: list[Color]) -> Surface:
+        '''Change key color of texture to random colors from list
+        '''
+        
+        new_texture = Surface(texture.get_size())
+        [
+            new_texture.set_at((x, y), choice(colors))
+            for x in TILE_SIZE for y in TILE_SIZE
+            if texture.get_at((x, y)) == key
+        ]
+        return new_texture
         
