@@ -23,7 +23,8 @@ class TurretTracker():
                 self.turrets_rt[side][turret.id] = TurretRT(
                     Vector2(turret.cords),
                     turret.id,
-                    'turret'
+                    'turret',
+                    side
                 )
 
     def update_turrets(self, game_speed: float) -> None:

@@ -6,7 +6,7 @@ class ObjectRT():
     '''Real time object class used in graphics rendering.
     '''
 
-    def __init__(self, cords: Vector2, id: int, name: str, side = str):
+    def __init__(self, cords: Vector2, id: int, name: str, side: str):
 
         # data
         self.cords = cords * TILE_SIZE
@@ -24,7 +24,7 @@ class ObjectRT():
 
         Refreshes once per frame.
         '''
-        
+
         if self.state != 'idle':
             self.__update_frame(game_speed)
 

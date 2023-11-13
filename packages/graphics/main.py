@@ -34,7 +34,6 @@ class Main:
             self.__tick += 1
             if self.__tick > FRAMERATE / self.__game_speed:
                 game_output = self.__game.update(*log_interpreter.get_next_actions())
-                print(__name__, game_output)
                 self.__tick = 0
             self.__screen_update()
 

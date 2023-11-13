@@ -36,9 +36,9 @@
 # S | W
 # S | W
 # S | W
-F 0 11 | W
-F 0 9 | W
-F 0 7 | W
+F 5 3 | W
+F 5 9 | W
+F 5 7 | W
 S basic | W
 S basic | S basic
 S range | W
