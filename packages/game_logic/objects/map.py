@@ -1,4 +1,4 @@
-from random import choice
+from random import shuffle
 from ..stats import MAP_SIZE_X, MAP_SIZE_Y, OBSTACLES_AMOUNT
 
 class Map():
@@ -6,14 +6,53 @@ class Map():
         self._start = (0, 0)
         self._end = (MAP_SIZE_X - 1, MAP_SIZE_Y - 1)
 
-        self.path = [self._start]
+        self.path = []
         self.obstacles = []
         self.__generate_map()
 
         self.MAP_SIZE_X = MAP_SIZE_X
         self.MAP_SIZE_Y = MAP_SIZE_Y
 
-    def __generate_path(self) -> None:
+
+
+    def __generate_path(self, pos) -> None:
+        print(self.path)
+        # generate path without loops using backtracking
+        if pos in self.path:
+            return False
+        if pos == self._end:
+            return True
+        
+        if pos[0] < 0 or pos[0] >= MAP_SIZE_X or pos[1] < 0 or pos[1] >= MAP_SIZE_Y:
+            return False
+        
+        neighbours = [(pos[0] + 1, pos[1]), (pos[0], pos[1] + 1), (pos[0] - 1, pos[1]), (pos[0], pos[1] - 1)]
+    
+        neighbours_in_path = 0
+        for neighbour in neighbours:
+            if neighbour in self.path:
+                neighbours_in_path += 1
+
+        if neighbours_in_path > 1:
+            return False
+        
+        # Path can't go left
+        neighbours.remove(neighbours[2])
+        shuffle(neighbours)
+
+        self.path.append(pos)
+
+        for neighbour in neighbours:
+            if self.__generate_path(neighbour):
+                return True
+            
+        self.path.remove(pos)
+        return False
+        
+
+         
+
+    def __generate_path_old(self) -> None:
         path = [self._start]
 
         while path[-1] != self._end:
@@ -40,6 +79,6 @@ class Map():
             not_path.remove(self.obstacles[-1])
 
     def __generate_map(self) -> None:
-        self.__generate_path()
+        self.__generate_path(self._start)
         self.__generate_obstacles()
 

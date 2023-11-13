@@ -36,12 +36,12 @@
 # S | W
 # S | W
 # S | W
+F 0 11 | W
+F 0 9 | W
+F 0 7 | W
 S basic | W
 S basic | S basic
 S range | W
 T 0 1 | W
 T 1 0 | W
 F 1 1 | W
-F 2 2 | W
-F 3 3 | W
-F 4 4 | W
