@@ -1,11 +1,12 @@
 from packages.game_logic.stats import SOLDIERS_STATS
 
 class Soldier():
-    def __init__(self, id, position, stats) -> None:
+    def __init__(self, id, position, stats, name) -> None:
         self.id = id
         self.max_hp = stats['max_hp']
         self.damage = stats['damage']
         self.range = stats['range']
+        self.name = name
 
         self.hp = self.max_hp
         self.did_move = False
@@ -100,10 +101,10 @@ class Soldiers():
 
             soldier.position = new_position
             
-    def spawn(self, name='basic') -> None:
+    def spawn(self, name='swordsman') -> None:
         if self.can_spawn():
             MY_BASE = 0 if self.side == 'left' else len(self.path) - 1
-            new_soldier = Soldier(self.next_id, MY_BASE, SOLDIERS_STATS[name])
+            new_soldier = Soldier(self.next_id, MY_BASE, SOLDIERS_STATS[name], name)
             self.soldiers.append(new_soldier)
             self.next_id += 1
 

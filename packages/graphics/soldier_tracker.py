@@ -33,7 +33,7 @@ class SoldierTracker:
                     self.soldiers_rt[side][soldier.id] = SoldierRT(
                         soldier.id,
                         soldier.position,
-                        'swordsman',
+                        soldier.name,
                         side
                     )
 

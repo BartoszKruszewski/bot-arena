@@ -7,13 +7,13 @@ START_GOLD = 10000
 PASSIVE_GOLD = 100
 
 SOLDIERS_STATS = {
-    'basic': {
+    'swordsman': {
         'max_hp': 100,
         'damage': 10,
         'range': 1,
         'cost': 100,
     },
-    'range': {
+    'archer': {
         'max_hp': 30,
         'damage': 10,
         'range': 3,

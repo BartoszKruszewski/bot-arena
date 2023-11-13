@@ -39,9 +39,9 @@
 F 5 3 | W
 F 5 9 | W
 F 5 7 | W
-S basic | W
-S basic | S basic
-S range | W
+S swordsman | W
+S swordsman | S swordsman
+S archer | W
 T 0 1 | W
 T 1 0 | W
 F 1 1 | W
