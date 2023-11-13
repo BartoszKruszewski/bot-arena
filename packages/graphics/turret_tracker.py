@@ -22,7 +22,8 @@ class TurretTracker():
             if turret not in self.turrets_rt:
                 self.turrets_rt[side][turret.id] = TurretRT(
                     Vector2(turret.cords),
-                    turret.id
+                    turret.id,
+                    'turret'
                 )
 
     def update_turrets(self, game_speed: float) -> None:

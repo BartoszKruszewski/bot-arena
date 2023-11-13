@@ -1,26 +1,23 @@
 from pygame import Vector2
 from .const import TILE_SIZE, ROUND_LEN, FRAMERATE, ANIMATION_NAMES, ANIMATION_SPEED, ANIMATION_LEN
+from .object_rt import ObjectRT
 
-class SoldierRT():
+class SoldierRT(ObjectRT):
     '''Real time soldier graphics class.
     '''
 
     path = [] 
 
     def __init__(self, id: int, path_pos: int, name: str, side: str):
+        
+        super().__init__(Vector2(SoldierRT.path[path_pos]), id, name, side)
 
         # data
-        self.id = id
-        self.name = name
-        self.side = side
         self.hp_rate = 1
 
         # state
-        self.frame = 0
-        self.tick = 0
         self.direction = Vector2(0, 0)
         self.animation = 'walk'
-        self.state = 'walk'
         self.real_pos = Vector2(SoldierRT.path[path_pos]) * TILE_SIZE
         self.path_pos = path_pos
 
@@ -30,7 +27,7 @@ class SoldierRT():
         Refreshes once per frame.
         '''
 
-        self.__update_frame(game_speed)
+        super().update(game_speed)
         self.__update_direction()
         self.__update_real_pos(game_speed)
         self.__update_animation()
@@ -97,18 +94,6 @@ class SoldierRT():
             self.real_pos += self.direction * TILE_SIZE * game_speed / FRAMERATE
         else:
             self.real_pos = Vector2(SoldierRT.path[self.path_pos]) * TILE_SIZE
-
-    def __update_frame(self, game_speed: float):
-        '''Updates actual animation frame.
-        '''
-
-        if not self.state == 'idle':
-            self.tick += 1
-            if self.tick > FRAMERATE // ANIMATION_SPEED / game_speed:
-                self.tick = 0
-                self.frame += 1
-                if self.frame >= ANIMATION_LEN:
-                    self.frame = 0
 
     def __str__(self):
         return f'<{self.side}:{self.id} {self.real_pos}>'

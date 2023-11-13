@@ -20,7 +20,7 @@ class SoldierTracker:
         '''Update number and state of real time soldiers,
         based on soldiers from game logic.
 
-        Impact on graphics state:
+        Impact on graphics state:   
             - adding new real time soldiers
             - removing soldiers that should be dead
             - updating path position of real time soldiers
@@ -64,13 +64,13 @@ class SoldierTracker:
             particle_controller.add_particles(
                 BloodParticle,
                 self.soldiers_rt['left'][soldiers['left'][0].id].real_pos + Vector2(TILE_SIZE, TILE_SIZE) // 2,
-                amount = 4,
+                amount = 1,
                 direction = -1 * self.soldiers_rt['left'][soldiers['left'][0].id].direction
             )
             particle_controller.add_particles(
                 BloodParticle,
                 self.soldiers_rt['right'][soldiers['right'][0].id].real_pos + Vector2(TILE_SIZE, TILE_SIZE) // 2,
-                amount = 4,
+                amount = 1,
                 direction = -1 * self.soldiers_rt['right'][soldiers['right'][0].id].direction
             )
         else:
