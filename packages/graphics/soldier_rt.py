@@ -1,5 +1,5 @@
 from pygame import Vector2
-from .const import TILE_SIZE, ROUND_LEN, FRAMERATE, ANIMATION_NAMES, ANIMATION_SPEED, ANIMATION_LEN
+from .const import TILE_SIZE, ROUND_LEN, FRAMERATE, ANIMATION_NAMES, ANIMATION_SPEED, ANIMATION_LEN, HP_BAR_SMOOTH
 from .object_rt import ObjectRT
 
 class SoldierRT(ObjectRT):
@@ -8,18 +8,20 @@ class SoldierRT(ObjectRT):
 
     path = [] 
 
-    def __init__(self, id: int, path_pos: int, name: str, side: str):
+    def __init__(self, id: int, path_pos: int, name: str, side: str, hp: int):
         
         super().__init__(Vector2(SoldierRT.path[path_pos]), id, name, side)
 
         # data
-        self.hp_rate = 1
+        self.actual_hp_rate = 1
 
         # state
         self.direction = Vector2(0, 0)
         self.animation = 'walk'
         self.real_pos = Vector2(SoldierRT.path[path_pos]) * TILE_SIZE
         self.path_pos = path_pos
+        self.max_hp = hp
+        self.actual_hp = hp
 
     def update(self, game_speed: float):
         '''Main update function.
@@ -31,6 +33,12 @@ class SoldierRT(ObjectRT):
         self.__update_direction()
         self.__update_real_pos(game_speed)
         self.__update_animation()
+        self.__update_hp_rate()
+        
+    def set_hp(self, value):
+        if value > self.max_hp or value < 0:
+            raise Exception('Invalid HP value!')
+        self.actual_hp = value
 
     def set_path_position(self, pos: int):
         '''Soldier in path position setter.
@@ -94,6 +102,10 @@ class SoldierRT(ObjectRT):
             self.real_pos += self.direction * TILE_SIZE * game_speed / FRAMERATE
         else:
             self.real_pos = Vector2(SoldierRT.path[self.path_pos]) * TILE_SIZE
+
+    def __update_hp_rate(self):
+        target = self.actual_hp / self.max_hp
+        self.actual_hp_rate -= abs(target - self.actual_hp_rate) / HP_BAR_SMOOTH
 
     def __str__(self):
         return f'<{self.side}:{self.id} {self.real_pos}>'

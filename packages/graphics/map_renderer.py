@@ -236,16 +236,25 @@ class MapRenderer:
                 Color(158, 178, 91),
                 Color(156, 172, 93),
                 Color(164, 181, 86)
-            ])
+            ], 5)
 
-    def __randomize_color(self, texture: Surface, key: Color, colors: list[Color]) -> Surface:
+    def __randomize_color(self, texture: Surface, key: Color, colors: list[Color], tolerance: int = 0) -> Surface:
         '''Change key color of texture to random colors from list
         '''
         
+        def color_in_tolerance(color: Color):
+            return all((
+                abs(color.r - key.r) <= tolerance,
+                abs(color.g - key.g) <= tolerance,
+                abs(color.b - key.b) <= tolerance,
+            ))
+        
+        size_x, size_y = texture.get_size()
+
         new_texture = texture.copy()
         [
             new_texture.set_at((x, y), choice(colors))
-            for x in range(TILE_SIZE) for y in range(TILE_SIZE)
-            if texture.get_at((x, y)) == key
+            for x in range(size_x) for y in range(size_y)
+            if color_in_tolerance(texture.get_at((x, y)))
         ]
         return new_texture

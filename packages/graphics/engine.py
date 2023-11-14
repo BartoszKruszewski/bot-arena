@@ -100,14 +100,14 @@ class Engine():
             - Vector2(texture.get_size()) // 2
         )
 
-        if soldier.hp_rate != 3:
-                bar = Surface((TILE_SIZE - 4, 1))
-                bar.fill((255, 0, 0))
-                self.__draw(bar, soldier.real_pos - Vector2(-1, 4))
+        size = texture.get_size()[0] -4
+        bar = Surface((size, 1))
+        bar.fill((255, 0, 0))
+        self.__draw(bar, soldier.real_pos - Vector2(-1, 4))
 
-                bar = Surface((soldier.hp_rate * (TILE_SIZE - 4), 1))
-                bar.fill((0, 255, 0))
-                self.__draw(bar, soldier.real_pos - Vector2(-1, 4))
+        bar = Surface((soldier.actual_hp_rate * size, 1))
+        bar.fill((0, 255, 0))
+        self.__draw(bar, soldier.real_pos - Vector2(-1, 4))
 
         # real pos
         if SHOW_SOLDIERS_REAL_POS:

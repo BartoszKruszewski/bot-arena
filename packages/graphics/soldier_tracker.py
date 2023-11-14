@@ -34,7 +34,8 @@ class SoldierTracker:
                         soldier.id,
                         soldier.position,
                         soldier.name,
-                        side
+                        side,
+                        soldier.hp
                     )
 
         spawn_new_soldiers(soldiers['left'], 'left')
@@ -94,12 +95,12 @@ class SoldierTracker:
         update_soldiers_state(soldiers['left'], 'left')
         update_soldiers_state(soldiers['right'], 'right')
 
-        def update_soldiers_hp_rate(side_soldiers: list[Soldier], side: str):
+        def update_soldiers_hp(side_soldiers: list[Soldier], side: str):
             for soldier in side_soldiers:
-                self.soldiers_rt[side][soldier.id].hp_rate = soldier.hp / soldier.max_hp
+                self.soldiers_rt[side][soldier.id].set_hp(soldier.hp)
 
-        update_soldiers_hp_rate(soldiers['left'], 'left')
-        update_soldiers_hp_rate(soldiers['right'], 'right')
+        update_soldiers_hp(soldiers['left'], 'left')
+        update_soldiers_hp(soldiers['right'], 'right')
 
     def update_soldiers(self, game_speed: float) -> None:
         '''Updates every real time soldier.

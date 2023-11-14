@@ -1,7 +1,7 @@
 from os import listdir, name as os_name
 from pygame.image import load as image_load
 from pygame import Surface, Rect
-from pygame.transform import flip
+from pygame.transform import flip, scale
 from .const import SPRITE_SIZE, ANIMATION_LEN, ANIMATION_NAMES, ANIMATION_DIRECTIONS, TILE_SIZE
 
 class AssetsLoader:
@@ -18,7 +18,7 @@ class AssetsLoader:
             image = image_load(dir_path)
             if 'soldiers' in dir_path:
                 return self.__cut_spritesheet(image)
-            return image
+            return scale(image, (TILE_SIZE, TILE_SIZE))
         
         if os_name == 'posix':
             if "./packages/graphics" not in dir_path:
