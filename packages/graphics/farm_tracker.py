@@ -19,7 +19,7 @@ class FarmTracker():
 
     def spawn_new_farms(self, side_farms: list[Farm], side: str):
         for farm in side_farms:
-            if farm not in self.farms_rt:
+            if farm.id not in self.farms_rt[side]:
                 self.farms_rt[side][farm.id] = FarmRT(
                     Vector2(farm.cords),
                     farm.id,
@@ -27,12 +27,12 @@ class FarmTracker():
                     side
                 )
 
-    def update_farms(self, game_speed: float) -> None:
+    def update_farms(self, game_speed: float, mouse_pos: Vector2) -> None:
         '''Updates every real time farm.
         '''
 
         for farm in self.get_farms():
-            farm.update(game_speed)
+            farm.update(game_speed, mouse_pos)
     
     def get_farms(self) -> list[FarmRT]:
         '''Real time farms getter.

@@ -64,13 +64,13 @@ class SoldierTracker:
             self.soldiers_rt['right'][soldiers['right'][0].id].set_state('fight')
             particle_controller.add_particles(
                 BloodParticle,
-                self.soldiers_rt['left'][soldiers['left'][0].id].real_pos + Vector2(TILE_SIZE, TILE_SIZE) // 2,
+                self.soldiers_rt['left'][soldiers['left'][0].id].cords + Vector2(TILE_SIZE, TILE_SIZE) // 2,
                 amount = 1,
                 direction = -1 * self.soldiers_rt['left'][soldiers['left'][0].id].direction
             )
             particle_controller.add_particles(
                 BloodParticle,
-                self.soldiers_rt['right'][soldiers['right'][0].id].real_pos + Vector2(TILE_SIZE, TILE_SIZE) // 2,
+                self.soldiers_rt['right'][soldiers['right'][0].id].cords + Vector2(TILE_SIZE, TILE_SIZE) // 2,
                 amount = 1,
                 direction = -1 * self.soldiers_rt['right'][soldiers['right'][0].id].direction
             )
@@ -102,12 +102,12 @@ class SoldierTracker:
         update_soldiers_hp(soldiers['left'], 'left')
         update_soldiers_hp(soldiers['right'], 'right')
 
-    def update_soldiers(self, game_speed: float) -> None:
+    def update_soldiers(self, game_speed: float, mouse_pos: Vector2) -> None:
         '''Updates every real time soldier.
         '''
 
         for soldier in self.get_soldiers():
-            soldier.update(game_speed)
+            soldier.update(game_speed, mouse_pos)
 
     def get_soldiers(self) -> list[SoldierRT]:
         '''Real time soldiers getter.

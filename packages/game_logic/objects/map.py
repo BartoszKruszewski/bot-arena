@@ -16,7 +16,6 @@ class Map():
 
 
     def __generate_path(self, pos) -> None:
-        print(self.path)
         # generate path without loops using backtracking
         if pos in self.path:
             return False

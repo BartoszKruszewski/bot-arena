@@ -19,6 +19,9 @@ class Camera:
     def get_offset(self) -> Vector2:
         return self.__camera_offset
 
+    def get_mouse_pos(self) -> Vector2:
+        return self.__mouse.pos - self.__camera_offset
+
     def __update_camera_offset(self):
         
         if self.__mouse.pos.x > DRAW_SCREEN_SIZE_X - CAMERA_OFFSET_MOVE_AREA:

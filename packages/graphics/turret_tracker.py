@@ -19,7 +19,7 @@ class TurretTracker():
 
     def spawn_new_turrets(self, side_turrets: list[Turret], side: str):
         for turret in side_turrets:
-            if turret not in self.turrets_rt:
+            if turret.id not in self.turrets_rt[side]:
                 self.turrets_rt[side][turret.id] = TurretRT(
                     Vector2(turret.cords),
                     turret.id,
@@ -27,12 +27,12 @@ class TurretTracker():
                     side
                 )
 
-    def update_turrets(self, game_speed: float) -> None:
+    def update_turrets(self, game_speed: float, mouse_pos: Vector2) -> None:
         '''Updates every real time turret.
         '''
 
         for turret in self.get_turrets():
-            turret.update(game_speed)
+            turret.update(game_speed, mouse_pos)
     
     def get_turrets(self) -> list[TurretRT]:
         '''Real time turrets getter.
