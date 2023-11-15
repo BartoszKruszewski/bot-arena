@@ -4,7 +4,7 @@ from pygame.time import Clock
 from pygame.event import get as get_event
 from pygame.transform import scale 
 
-from .const import SCREEN_SIZE, FRAMERATE, STANDARD_FRAMERATE, ROUND_LEN
+from .const import SCREEN_SIZE, FRAMERATE, STANDARD_FRAMERATE
 from .engine import Engine
 from ..game_logic.game import Game
 from os import name as os_name
@@ -21,7 +21,7 @@ class Main:
         self.__game = Game()
         self.__engine = Engine(self.__game)
         self.__tick = 0
-        self.__game_speed = 2
+        self.__game_speed = 1
         
         path = "/".join([dir for dir in __file__.split('\\') if dir != ''][:-1]) + "/../../logs/" + log_name
         if os_name == 'posix':

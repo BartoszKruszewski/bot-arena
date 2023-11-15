@@ -60,7 +60,11 @@ class MapRenderer:
         filled_cords = []
 
         for cord in path:
-            self.__ground_texture.blit(assets['tiles']['path_' + self.__get_path_turn(cord, path)], Vector2(cord) * TILE_SIZE)
+            self.__ground_texture.blit(
+                self.__randomize_grass(
+                    assets['tiles']['path_' + self.__get_path_turn(cord, path)]),
+                Vector2(cord) * TILE_SIZE
+            )
             filled_cords.append(cord)
 
         grass_cords = [
@@ -241,7 +245,7 @@ class MapRenderer:
                 Color(158, 178, 91),
                 Color(156, 172, 93),
                 Color(164, 181, 86)
-            ], 5)
+            ], 8)
 
     def __randomize_color(self, texture: Surface, key: Color, colors: list[Color], tolerance: int = 0) -> Surface:
         '''Change key color of texture to random colors from list

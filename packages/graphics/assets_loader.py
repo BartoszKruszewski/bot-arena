@@ -35,7 +35,7 @@ class AssetsLoader:
         all_textures = {}
 
         textures = [
-            sheet.subsurface(Rect(x * SPRITE_SIZE, 0, 32, 32))
+            sheet.subsurface(Rect(x * SPRITE_SIZE, 0, SPRITE_SIZE, SPRITE_SIZE))
             for x in range(size_x // SPRITE_SIZE)
         ]
 

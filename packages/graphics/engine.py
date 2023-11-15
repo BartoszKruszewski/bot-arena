@@ -111,7 +111,7 @@ class Engine():
         )
         
         if object.__class__ == SoldierRT:
-            size = texture.get_size()[0] -4
+            size = texture.get_size()[0] // 2
             bar = Surface((size, 1))
             bar.fill((255, 0, 0))
             self.__draw(bar, object.cords - Vector2(-1, 4))
