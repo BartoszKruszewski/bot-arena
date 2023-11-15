@@ -60,7 +60,7 @@ class MapRenderer:
         filled_cords = []
 
         for cord in path:
-            self.__ground_texture.blit(assets['tiles']['tile_path'], Vector2(cord) * TILE_SIZE)
+            self.__ground_texture.blit(assets['tiles']['path_' + self.__get_path_turn(cord, path)], Vector2(cord) * TILE_SIZE)
             filled_cords.append(cord)
 
         grass_cords = [
@@ -73,32 +73,37 @@ class MapRenderer:
         for cord in grass_cords:
             self.__ground_texture.blit(
                 self.__randomize_grass(
-                    assets['tiles']['tile_grass_' + self.__get_grass_turn(cord, path)]
+                    assets['tiles']['grass']
                 ),
                 cord * TILE_SIZE
             )
     
-    def __get_grass_turn(self, cord: Vector2, path: list[tuple[int, int]]) -> str:
+    def __get_path_turn(self, cord: Vector2, path: list[tuple[int, int]]) -> str:
         '''Returns name of grass turn based on neighboring tiles.
         '''
 
-        is_path = self.__get_neighbouring_tiles(cord, path, only_offset = True, diagonal = True)
-        
-        if not is_path:
-            return 'center'
+        is_path = tuple(
+            tuple(v) for v in 
+            self.__get_neighbouring_tiles(cord, path, only_offset = True)
+            if v != (0, 0)
+        )
 
-        turn = 'top' if (0, -1) in is_path else 'bot' if (0, 1) in is_path else ''
-        turn += 'left' if (-1, 0) in is_path else 'right' if (1, 0) in is_path else ''
+        CODING = {
+            ((1, 0),): 'h',
+            ((-1, 0),): 'h',
+            ((0, 1),): 'v',
+            ((0, -1),): 'v',
+            ((-1, 0), (1, 0)): 'h',
+            ((0, 1), (0, -1)): 'v',
+            ((0, 1), (1, 0)): 'd1',
+            ((-1, 0), (0, 1)): 'd2',
+            ((0, -1), (-1, 0)): 'd3',
+            ((1, 0), (0, -1)): 'd4',
+        }
 
-        if not turn:
-            turn += ([v for key, v in {
-                (-1, -1):   'd1',
-                (1, -1):    'd2',
-                (1, 1):     'd3',
-                (-1, 1):    'd4',
-            }.items() if key in is_path] + [''])[0]
-
-        return turn
+        if is_path not in CODING:
+            return CODING[(is_path[1], is_path[0])]
+        return CODING[is_path]
 
     def __render_obstacles(self, assets: dict) -> None:
         '''Rendering obstacles on obstacle texture.

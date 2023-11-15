@@ -1,5 +1,6 @@
 from random import shuffle
 from ..stats import MAP_SIZE_X, MAP_SIZE_Y, OBSTACLES_AMOUNT
+from random import choice
 
 class Map():
     def __init__(self) -> None:

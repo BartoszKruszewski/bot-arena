@@ -18,7 +18,7 @@ class AssetsLoader:
             image = image_load(dir_path)
             if 'soldiers' in dir_path:
                 return self.__cut_spritesheet(image)
-            return scale(image, (TILE_SIZE, TILE_SIZE))
+            return image
         
         if os_name == 'posix':
             if "./packages/graphics" not in dir_path:
