@@ -1,4 +1,4 @@
-from random import shuffle
+from random import shuffle, random
 from ..stats import MAP_SIZE_X, MAP_SIZE_Y, OBSTACLES_AMOUNT
 from random import choice
 
@@ -26,8 +26,12 @@ class Map():
         if pos[0] < 0 or pos[0] >= MAP_SIZE_X or pos[1] < 0 or pos[1] >= MAP_SIZE_Y:
             return False
         
-        neighbours = [(pos[0] + 1, pos[1]), (pos[0], pos[1] + 1), (pos[0] - 1, pos[1]), (pos[0], pos[1] - 1)]
-    
+        go_up = (pos[0], pos[1] + 1)
+        go_down = (pos[0], pos[1] - 1)
+        go_left = (pos[0] - 1, pos[1])
+        go_right = (pos[0] + 1, pos[1])
+        
+        neighbours = [go_up, go_down, go_left, go_right]
         neighbours_in_path = 0
         for neighbour in neighbours:
             if neighbour in self.path:
@@ -35,11 +39,17 @@ class Map():
 
         if neighbours_in_path > 1:
             return False
-        
-        # Path can't go left
-        neighbours.remove(neighbours[2])
-        shuffle(neighbours)
 
+        is_up_first = random() < 0.65
+        if is_up_first:
+            neighbours = [go_right, go_down]
+            shuffle(neighbours)
+            neighbours = [go_up] + neighbours
+        else:
+            neighbours = [go_right, go_down]
+            shuffle(neighbours)
+            neighbours = neighbours + [go_up]
+        
         self.path.append(pos)
 
         for neighbour in neighbours:
