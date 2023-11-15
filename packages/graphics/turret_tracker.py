@@ -24,7 +24,8 @@ class TurretTracker():
                     Vector2(turret.cords),
                     turret.id,
                     'turret',
-                    side
+                    side,
+                    turret.__dict__()
                 )
 
     def update_turrets(self, game_speed: float, mouse_pos: Vector2) -> None:

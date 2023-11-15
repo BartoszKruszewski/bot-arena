@@ -24,7 +24,8 @@ class FarmTracker():
                     Vector2(farm.cords),
                     farm.id,
                     'farm',
-                    side
+                    side,
+                    farm.__dict__()
                 )
 
     def update_farms(self, game_speed: float, mouse_pos: Vector2) -> None:

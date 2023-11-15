@@ -121,10 +121,7 @@ class Engine():
             self.__draw(bar, object.cords - Vector2(-1, 4))
 
         if object.select_time > 0:
-            infos = {
-                'name': object.name,
-                'id': object.id,
-            }
+            infos = object.stats
             text_surfaces = [
                 self.__font_renderer.render(f'{name}: {info}', 'small')
                 for name, info in infos.items()

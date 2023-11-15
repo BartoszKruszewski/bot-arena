@@ -8,9 +8,9 @@ class SoldierRT(ObjectRT):
 
     path = [] 
 
-    def __init__(self, id: int, path_pos: int, name: str, side: str, hp: int):
+    def __init__(self, id: int, path_pos: int, name: str, side: str, stats: dict):
         
-        super().__init__(Vector2(SoldierRT.path[path_pos]), id, name, side)
+        super().__init__(Vector2(SoldierRT.path[path_pos]), id, name, side, stats)
 
         # data
         self.actual_hp_rate = 1
@@ -20,8 +20,7 @@ class SoldierRT(ObjectRT):
         self.animation = 'walk'
         self.cords = Vector2(SoldierRT.path[path_pos]) * TILE_SIZE
         self.path_pos = path_pos
-        self.max_hp = hp
-        self.actual_hp = hp
+        self.actual_hp = self.stats['max_hp']
 
     def update(self, game_speed: float, mouse_pos: Vector2):
         '''Main update function.
@@ -36,7 +35,7 @@ class SoldierRT(ObjectRT):
         self.__update_hp_rate()
         
     def set_hp(self, value):
-        if value > self.max_hp or value < 0:
+        if value > self.stats['max_hp'] or value < 0:
             raise Exception('Invalid HP value!')
         self.actual_hp = value
 
@@ -104,7 +103,7 @@ class SoldierRT(ObjectRT):
             self.cords = Vector2(SoldierRT.path[self.path_pos]) * TILE_SIZE
 
     def __update_hp_rate(self):
-        target = self.actual_hp / self.max_hp
+        target = self.actual_hp / self.stats['max_hp']
         self.actual_hp_rate -= abs(target - self.actual_hp_rate) / HP_BAR_SMOOTH
 
     def __str__(self):

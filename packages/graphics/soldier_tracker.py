@@ -35,7 +35,7 @@ class SoldierTracker:
                         soldier.position,
                         soldier.name,
                         side,
-                        soldier.hp
+                        soldier.__dict__()
                     )
 
         spawn_new_soldiers(soldiers['left'], 'left')

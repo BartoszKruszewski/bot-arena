@@ -5,13 +5,14 @@ class ObjectRT():
     '''Real time object class used in graphics rendering.
     '''
 
-    def __init__(self, cords: Vector2, id: int, name: str, side: str):
+    def __init__(self, cords: Vector2, id: int, name: str, side: str, stats: dict):
 
         # data
         self.cords = cords * TILE_SIZE
         self.id = id
         self.name = name
         self.side = side
+        self.stats = stats
 
         # state
         self.frame = 0
