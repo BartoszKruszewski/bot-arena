@@ -1,5 +1,5 @@
 from pygame import Vector2
-from .const import TILE_SIZE, FRAMERATE, ANIMATION_SPEED, ANIMATION_LEN, MOUSE_TARGET_RADIUS
+from .const import TILE_SIZE, FRAMERATE, ANIMATION_SPEED, ANIMATION_LEN, MOUSE_TARGET_RADIUS, INFO_TAB_SHOW_SMOOTH, INFO_TAB_SHOW_TIME
 
 class ObjectRT():
     '''Real time object class used in graphics rendering.
@@ -18,7 +18,10 @@ class ObjectRT():
         self.frame = 0
         self.tick = 0
         self.state = 'idle'
+        
+        # info
         self.select_time = 0
+        self.view_rate = [0] * (5 + len(self.stats))
 
     def update(self, game_speed: float, mouse_pos: Vector2): 
         '''Main update function.
@@ -43,8 +46,14 @@ class ObjectRT():
                 self.frame = 0
 
     def __update_select_time(self, mouse_pos: Vector2):
-        if mouse_pos.distance_to(self.cords) < MOUSE_TARGET_RADIUS:
+        if mouse_pos.distance_to(self.cords + Vector2(TILE_SIZE, TILE_SIZE) // 2) < MOUSE_TARGET_RADIUS:
             self.select_time += 1
         else:
             self.select_time = 0
+
+        for i in range(5 + len(self.stats)):
+            target = max(min(1, (self.select_time - i * INFO_TAB_SHOW_TIME // (5 + len(self.stats))) / INFO_TAB_SHOW_TIME), 0)
+            self.view_rate[i] += (target - self.view_rate[i]) / INFO_TAB_SHOW_SMOOTH
+            if self.view_rate[i] < 0.1:
+                self.view_rate[i] = 0
         

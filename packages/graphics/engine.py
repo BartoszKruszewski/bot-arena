@@ -1,10 +1,10 @@
-from pygame import Surface, SRCALPHA, Rect
+from pygame import Surface, SRCALPHA, Rect, Color
 from pygame import Vector2
-from pygame.draw import rect as draw_rect
+from pygame.draw import rect as draw_rect, line as draw_line
 
 from .const import DRAW_SCREEN_SIZE, DRAW_SCREEN_SIZE_X, DRAW_SCREEN_SIZE_Y, \
     TILE_SIZE, SHOW_SOLDIERS_REAL_POS, SHOW_FARMS_REAL_POS, \
-    SPRITE_SIZE, SHOW_TURRETS_REAL_POS, MOUSE_TARGET_RADIUS, INFO_TAB_SHOW_TIME, SHOW_REAL_POS
+    SPRITE_SIZE, SHOW_TURRETS_REAL_POS, MOUSE_TARGET_RADIUS, INFO_TAB_SHOW_TIME, SHOW_REAL_POS, INFO_TAB_MARGIN
 from .camera import Camera
 from .assets_loader import AssetsLoader
 from .map_renderer import MapRenderer
@@ -44,6 +44,7 @@ class Engine():
 
         # first render
         self.__map_texture = self.__map_renderer.render(self.__assets, game)
+        self.__ui_texture = Surface(DRAW_SCREEN_SIZE, SRCALPHA)
 
     def render(self, game: Game, game_speed: float) -> Surface:
         '''Main rendering function.
@@ -63,6 +64,7 @@ class Engine():
 
         # reset frame
         self.__draw_screen.fill((0, 0, 0))
+        self.__ui_texture.fill((0, 0, 0, 0))
         self.__draw_screen.blit(self.__map_texture, self.__camera.get_offset())
 
         # drawing soldiers and their health bars
@@ -81,6 +83,8 @@ class Engine():
         for particle in self.__particle_controller.get_particles():
             self.__draw_particle(particle)
         
+        self.__draw_screen.blit(self.__ui_texture, (0, 0))
+
         return self.__draw_screen
 
     def __draw_object_rt(self, object: ObjectRT):
@@ -120,31 +124,54 @@ class Engine():
             bar.fill((0, 255, 0))
             self.__draw(bar, object.cords - Vector2(-1, 4))
 
-        if object.select_time > 0:
+        if object.view_rate[0] > 0:
             infos = object.stats
             text_surfaces = [
                 self.__font_renderer.render(f'{name}: {info}', 'small')
                 for name, info in infos.items()
             ]
-            info_tab = Surface((
-                max(s.get_size()[0] for s in text_surfaces),
-                sum((s.get_size()[1] for s in text_surfaces))
-            ), SRCALPHA)
-            info_tab.fill((0, 0, 0, 255))
+
+            info_tab_size = Vector2(
+                max(s.get_size()[0] for s in text_surfaces) + INFO_TAB_MARGIN * 2,
+                sum((s.get_size()[1] for s in text_surfaces)) + INFO_TAB_MARGIN * 2,
+            )
+
+            info_tab = Surface(info_tab_size, SRCALPHA)
+
+            info_tab.fill((0, 0, 0, 120))
             [
-                info_tab.blit(s, (0, sum(s.get_size()[1] for s in text_surfaces[:i])))
+                info_tab.blit(s.subsurface(Rect(0, 0, object.view_rate[4 + i] * s.get_size()[0], s.get_size()[1])), (INFO_TAB_MARGIN, INFO_TAB_MARGIN + sum(s.get_size()[1] for s in text_surfaces[:i])))
                 for i, s in enumerate(text_surfaces)
             ]
 
             draw_rect(info_tab, (0, 0, 0, 0), Rect(
-                0, 0, 
-                info_tab.get_size()[0] * (1 - min(1, object.select_time / INFO_TAB_SHOW_TIME)),
-                info_tab.get_size()[1]
+                0, info_tab_size.y * object.view_rate[4] + 1, 
+                info_tab_size.x,
+                info_tab_size.y
             ))
+
+            draw_points = (
+                Vector2(0, 1),
+                Vector2(info_tab_size.x + 1, 1),
+                Vector2(info_tab_size.x + 1, -info_tab_size.y),
+                Vector2(0, -info_tab_size.y),
+                Vector2(0, 0),
+            )
+            
+            for i in range(1, len(draw_points)):
+
+                self.__draw_line(
+                    object.cords - draw_points[i - 1],
+                    object.cords - draw_points[i],
+                    Color(255, 255, 255),
+                    object.view_rate[i],
+                    True
+                )
 
             self.__draw(
                 info_tab,
-                object.cords - Vector2(info_tab.get_size()[0], 0)
+                object.cords - Vector2(info_tab.get_size()[0], 0),
+                True
             )
 
         # real pos
@@ -158,14 +185,40 @@ class Engine():
         surf = Surface((size, size), SRCALPHA)
         surf.fill(color)
         self.__draw(surf, pos)
+    
+    def __draw_line(self, pos1: Vector2, pos2: Vector2, color: Color, len: float = 1, ui: bool = False):
+        '''Draw line with camera offset.
 
-    def __draw(self, texture: Surface, pos: Vector2) -> None:
+        Function only draw objects, which are visible on the screen.
+        '''
+
+        pos2_real = pos1.move_towards(pos2, pos1.distance_to(pos2) * len)
+
+        size = Vector2(
+            abs(pos1.x - pos2_real.x),
+            abs(pos1.y - pos2_real.y),
+        )
+
+        if all((
+            -size.x <= pos1.x + self.__camera.get_offset().x <= DRAW_SCREEN_SIZE_X,
+            -size.y <= pos1.y + self.__camera.get_offset().y <= DRAW_SCREEN_SIZE_Y, 
+            -size.x <= pos2_real.x + self.__camera.get_offset().x <= DRAW_SCREEN_SIZE_X,
+            -size.y <= pos2_real.y + self.__camera.get_offset().y <= DRAW_SCREEN_SIZE_Y,
+        )):
+            draw_line(self.__ui_texture if ui else self.__draw_screen, color, pos1 + self.__camera.get_offset(), pos2_real + self.__camera.get_offset())
+
+    def __draw(self, texture: Surface, pos: Vector2, ui: bool = False) -> None:
         '''Draw texture with camera offset.
 
         Function only draw objects, which are visible on the screen.
         '''
 
         size = Vector2(texture.get_size())
-        if -size.x <= pos.x + self.__camera.get_offset().x <= DRAW_SCREEN_SIZE_X and \
-            -size.y <= pos.y + self.__camera.get_offset().y <= DRAW_SCREEN_SIZE_Y:
-            self.__draw_screen.blit(texture, pos + self.__camera.get_offset())
+        if all((
+            -size.x <= pos.x + self.__camera.get_offset().x <= DRAW_SCREEN_SIZE_X,
+            -size.y <= pos.y + self.__camera.get_offset().y <= DRAW_SCREEN_SIZE_Y,
+        )):
+            if ui:
+                self.__ui_texture.blit(texture, pos + self.__camera.get_offset())
+            else:
+                self.__draw_screen.blit(texture, pos + self.__camera.get_offset())
