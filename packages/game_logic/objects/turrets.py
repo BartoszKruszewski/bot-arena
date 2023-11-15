@@ -17,8 +17,13 @@ class Turret():
                 soldier.hp -= self.attack
                 break
 
-    # def get_cords(self):
-    #     return self.cords
+    def __dict__(self) -> dict:
+        return {
+            "cords": self.cords,
+            "id": self.id,
+            "attack": self.attack,
+            "range": self.range
+        }
 
 class Turrets():
     def __init__(self, path) -> None:

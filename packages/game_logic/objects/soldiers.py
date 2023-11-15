@@ -12,6 +12,17 @@ class Soldier():
         self.did_move = False
         self.position = position
 
+        def __dict__(self) -> dict:
+            return {
+                "id": self.id,
+                "max_hp": self.max_hp,
+                "damage": self.damage,
+                "range": self.range,
+                "name": self.name,
+                "hp": self.hp,
+                "position": self.position
+            }
+
 class Soldiers():
     def __init__(self, side, path) -> None:
         self.side = side

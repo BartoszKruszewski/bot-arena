@@ -2,6 +2,12 @@ class Farm():
     def __init__(self, cords, id) -> None:
         self.cords = cords
         self.id = id
+    
+    def __dict__(self) -> dict:
+        return {
+            "cords": self.cords,
+            "id": self.id
+        }
 
 class Farms():
     def __init__(self, path) -> None:
