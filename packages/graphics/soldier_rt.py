@@ -33,6 +33,9 @@ class SoldierRT(ObjectRT):
         self.__update_cords(game_speed)
         self.__update_animation()
         self.__update_hp_rate()
+
+    def set_stats(self, stats: dict):
+        self.stats = stats
         
     def set_hp(self, value):
         if value > self.stats['max_hp'] or value < 0:
