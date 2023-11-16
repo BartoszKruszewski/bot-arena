@@ -159,20 +159,21 @@ class Engine():
             )
             
             for i in range(1, len(draw_points)):
-
-                self.__draw_line(
-                    object.cords - draw_points[i - 1],
-                    object.cords - draw_points[i],
-                    Color(255, 255, 255),
-                    object.view_rate[i],
+                if object.view_rate[i - 1] > 0:
+                    self.__draw_line(
+                        object.cords - draw_points[i - 1],
+                        object.cords - draw_points[i],
+                        Color(255, 255, 255),
+                        object.view_rate[i - 1],
+                        True
+                    )
+            
+            if object.view_rate[4] > 0:
+                self.__draw(
+                    info_tab,
+                    object.cords - Vector2(info_tab.get_size()[0], 0),
                     True
                 )
-
-            self.__draw(
-                info_tab,
-                object.cords - Vector2(info_tab.get_size()[0], 0),
-                True
-            )
 
         # real pos
         if SHOW_REAL_POS:
