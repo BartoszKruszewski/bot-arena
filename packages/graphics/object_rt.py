@@ -1,5 +1,5 @@
 from pygame import Vector2
-from .const import TILE_SIZE, FRAMERATE, ANIMATION_SPEED, ANIMATION_LEN, MOUSE_TARGET_RADIUS, INFO_TAB_SHOW_SMOOTH, INFO_TAB_SHOW_TIME
+from .const import TILE_SIZE, FRAMERATE, ANIMATION_SPEED, ANIMATION_LEN, MOUSE_TARGET_RADIUS, INFO_TAB_SHOW_SMOOTH, INFO_TAB_SHOW_TIME, INFO_TAB_HIDE_SPEED
 
 class ObjectRT():
     '''Real time object class used in graphics rendering.
@@ -48,12 +48,28 @@ class ObjectRT():
     def __update_select_time(self, mouse_pos: Vector2):
         if mouse_pos.distance_to(self.cords + Vector2(TILE_SIZE, TILE_SIZE) // 2) < MOUSE_TARGET_RADIUS:
             self.select_time += 1
+            for i in range(5 + len(self.stats)):
+                if i == 0 or self.view_rate[i - 1] > 0.9:
+                    target = max(min(1, (self.select_time - i * INFO_TAB_SHOW_TIME // (5 + len(self.stats))) / INFO_TAB_SHOW_TIME), 0)
+                else:
+                    target = 0
+                self.view_rate[i] += (target - self.view_rate[i]) / INFO_TAB_SHOW_SMOOTH
+                if self.view_rate[i] < 0.1:
+                    self.view_rate[i] = 0
         else:
-            self.select_time = 0
+            self.select_time = min(self.select_time, INFO_TAB_SHOW_TIME)
+            self.select_time -= INFO_TAB_HIDE_SPEED
+            self.select_time = max(self.select_time, 0)
+            for i in range(5 + len(self.stats)):
+                if i == 5 + len(self.stats) - 1 or self.view_rate[i + 1] == 0:
+                    target = max(min(1, (self.select_time - i * INFO_TAB_SHOW_TIME // (5 + len(self.stats))) / INFO_TAB_SHOW_TIME), 0)
+                else:
+                    target = 1
+                self.view_rate[i] += (target - self.view_rate[i]) / INFO_TAB_SHOW_SMOOTH
+                if self.view_rate[i] < 0.1:
+                    self.view_rate[i] = 0
 
-        for i in range(5 + len(self.stats)):
-            target = max(min(1, (self.select_time - i * INFO_TAB_SHOW_TIME // (5 + len(self.stats))) / INFO_TAB_SHOW_TIME), 0)
-            self.view_rate[i] += (target - self.view_rate[i]) / INFO_TAB_SHOW_SMOOTH
-            if self.view_rate[i] < 0.1:
-                self.view_rate[i] = 0
         
+        if self.name == 'farm' and self.id == 0:
+            print(self.view_rate)
+         

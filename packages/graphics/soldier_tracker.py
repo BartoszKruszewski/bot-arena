@@ -91,6 +91,7 @@ class SoldierTracker:
 
             for soldier in side_soldiers:
                 self.soldiers_rt[side][soldier.id].set_path_position(soldier.position)
+                self.soldiers_rt[side][soldier.id].set_stats(soldier.__dict__())
 
         update_soldiers_state(soldiers['left'], 'left')
         update_soldiers_state(soldiers['right'], 'right')

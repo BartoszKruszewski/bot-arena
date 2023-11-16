@@ -1,32 +1,43 @@
 import json
 import os
 
-from packages.game_logic.actions import *
-from packages.simulator.bot_pipe import BotPipe
-from packages.game_logic.game import Game
-from packages.simulator.serializer import Serializer
+
+from .bot_pipe import BotPipe
+from .serializer import Serializer
+from ..game_logic.game import Game
+from ..game_logic.actions import *
 
 valid_moves = ['S', 'T', 'W', 's', 'w', 't']
 
 class Log:
-    def __init__(self):
-        self.log_file_name = 'logs/game_log.txt'
+    def __init__(self, folder='logs'):
+        self.log_file_name = 'game_log.txt'
+        self.log_folder = os.path.join(os.getcwd(), folder)
 
-        if os.path.exists(self.log_file_name):
+        # Create the folder if it doesn't exist
+        if not os.path.exists(self.log_folder):
+            os.makedirs(self.log_folder)
+
+        # Check if the file already exists and rename if needed
+        log_path = os.path.join(self.log_folder, self.log_file_name)
+        if os.path.exists(log_path):
             base_name, ext = os.path.splitext(self.log_file_name)
             i = 1
-            while os.path.exists(self.log_file_name):
+            while os.path.exists(log_path):
                 self.log_file_name = f"{base_name}_{i}{ext}"
+                log_path = os.path.join(self.log_folder, self.log_file_name)
                 i += 1
 
         self.log_file = None
 
     def open(self):
-        self.log_file = open(self.log_file_name, 'a')
+        log_path = os.path.join(self.log_folder, self.log_file_name)
+        self.log_file = open(log_path, 'a')
 
     def close(self):
-        self.log_file.close()
-        self.log_file = None
+        if self.log_file is not None:
+            self.log_file.close()
+            self.log_file = None
 
     def update(self, message):
         try:
@@ -79,8 +90,10 @@ class GameController:
 
         if move == 'W':
             return Wait(side)
-        elif move == 'S':
-            return SpawnSoldier(side)
+        elif move[0] == 'S':
+            move = move.split(' ')
+            soldier_type = 'swordsman'
+            return SpawnSoldier(side, soldier_type)
         elif move[0] == 'T':
             move = move.split(' ')
             x = int(move[1])
@@ -92,7 +105,7 @@ class GameController:
 
 
 if __name__ == '__main__':
-    game = GameController('/bots/random_bot.py','/bots/random_bot.py')
+    game = GameController('./bots/random_bot.py','./bots/spawn_only_bot.py')
     game.run()
 
 

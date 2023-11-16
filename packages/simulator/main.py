@@ -1,4 +1,6 @@
-from packages.simulator.game_controller import GameController
+import sys, os
+
+from .game_controller import GameController
 
 def TestRun():
     random_bot_path = 'packages/simulator/bots/random_bot.py'
