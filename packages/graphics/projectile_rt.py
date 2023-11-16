@@ -1,7 +1,7 @@
 from pygame import Vector2
 from .soldier_rt import SoldierRT
 from .object_rt import ObjectRT
-from .const import FRAMERATE, TILE_SIZE, MOVE_PRECISION
+from .const import FRAMERATE, TILE_SIZE, MOVE_PRECISION, PROJECTILE_SPEED
 
 class ProjectileRT(ObjectRT):
     '''Real time projectile class used in graphics rendering.
@@ -23,7 +23,7 @@ class ProjectileRT(ObjectRT):
 
     def update(self, game_speed: float):
 
-        self.cords.move_towards_ip(self.target.cords, TILE_SIZE * game_speed / FRAMERATE)
+        self.cords.move_towards_ip(self.target.cords, PROJECTILE_SPEED * TILE_SIZE * game_speed / FRAMERATE)
         if self.cords.distance_to(self.target.cords) < MOVE_PRECISION:
             self.hit = True
 

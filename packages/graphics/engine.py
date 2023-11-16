@@ -56,18 +56,16 @@ class Engine():
         '''
 
         # update staff
-        if (is_new_turn): # Trackers need to be updated only once per turn.
-            self.__soldier_tracker.update_tracker(game.get_soldiers(), self.__particle_controller)
-            self.__turret_tracker.update_tracker(game.get_turrets())
-            self.__farm_tracker.update_tracker(game.get_farms())
-            self.__projectile_tracker.update_tracker(game.get_soldiers(), self.__soldier_tracker, game.get_turrets())
-
         self.__camera.update()
         
+        self.__soldier_tracker.update_tracker(game.get_soldiers(), self.__particle_controller)
         self.__soldier_tracker.update_soldiers(game_speed, self.__camera.get_mouse_pos())
+        self.__turret_tracker.update_tracker(game.get_turrets())
         self.__turret_tracker.update_turrets(game_speed, self.__camera.get_mouse_pos())
+        self.__farm_tracker.update_tracker(game.get_farms())
         self.__farm_tracker.update_farms(game_speed, self.__camera.get_mouse_pos())
-        self.__projectile_tracker.update_projectiles(2 * game_speed)
+        self.__projectile_tracker.update_tracker(game.get_soldiers(), self.__soldier_tracker, game.get_turrets(), is_new_turn)
+        self.__projectile_tracker.update_projectiles(game_speed)
         self.__particle_controller.update_particles(game_speed)
 
         # reset frame

@@ -12,7 +12,7 @@ class ProjectileTracker:
         self.next_id = 0
         self.path = path
 
-    def update_tracker(self, soldiers: list[Soldier], soldier_tracker:SoldierTracker, turrets: list[Turret]):
+    def update_tracker(self, soldiers: list[Soldier], soldier_tracker:SoldierTracker, turrets: list[Turret], is_new_turn):
         def spawn_new_projectiles(soldiers: list[Soldier], soldier_tracker: SoldierTracker, turrets: list[Turret], turret_side: str, soldier_side: str):
             for turret in turrets[turret_side]:
                 for soldier in soldiers[soldier_side]:
@@ -27,9 +27,9 @@ class ProjectileTracker:
                         )
                         self.next_id += 1
                         break
-
-        spawn_new_projectiles(soldiers, soldier_tracker, turrets, "left", "right")
-        spawn_new_projectiles(soldiers, soldier_tracker, turrets, "right", "left")
+        if is_new_turn:
+            spawn_new_projectiles(soldiers, soldier_tracker, turrets, "left", "right")
+            spawn_new_projectiles(soldiers, soldier_tracker, turrets, "right", "left")
 
         def remove_projectiles(side: str):
             projectiles_to_remove = []
