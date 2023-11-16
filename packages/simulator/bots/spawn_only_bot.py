@@ -7,6 +7,7 @@ import sys
 class Bot:
     def __init__(self):
         self.game_data = {}
+        self.soldier_names = ['swordsman', 'archer']
 
     def handle_request(self, method, data=None):
         if method == 'GET':
@@ -15,7 +16,8 @@ class Bot:
         elif method == 'POST':
             if data:
                 self.game_data = self.process_data(data)
-            return 'S'
+            soldier_name = random.choice(self.soldier_names)
+            return f'S {soldier_name}'
         else:
             return "Unsupported method"
 
@@ -41,6 +43,7 @@ class Bot:
                     data = None
                 response = self.handle_request(method, data)
                 print(response)
+                sys.stdout.flush()
 
     def random_move(self):
         move = random.choice(self.valid_moves)

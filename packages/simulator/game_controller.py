@@ -1,16 +1,17 @@
 import json
 import os
 
-from packages.game_logic.actions import *
-from packages.simulator.bot_pipe import BotPipe
-from packages.game_logic.game import Game
-from packages.simulator.serializer import Serializer
+
+from .bot_pipe import BotPipe
+from .serializer import Serializer
+from ..game_logic.game import Game
+from ..game_logic.actions import *
 
 valid_moves = ['S', 'T', 'W', 's', 'w', 't']
 
 class Log:
     def __init__(self):
-        self.log_file_name = 'logs/game_log.txt'
+        self.log_file_name = 'game_log.txt'
 
         if os.path.exists(self.log_file_name):
             base_name, ext = os.path.splitext(self.log_file_name)
@@ -79,8 +80,10 @@ class GameController:
 
         if move == 'W':
             return Wait(side)
-        elif move == 'S':
-            return SpawnSoldier(side)
+        elif move[0] == 'S':
+            move = move.split(' ')
+            soldier_type = 'swordsman'
+            return SpawnSoldier(side, soldier_type)
         elif move[0] == 'T':
             move = move.split(' ')
             x = int(move[1])
@@ -92,7 +95,7 @@ class GameController:
 
 
 if __name__ == '__main__':
-    game = GameController('/bots/random_bot.py','/bots/random_bot.py')
+    game = GameController('./bots/random_bot.py','./bots/spawn_only_bot.py')
     game.run()
 
 

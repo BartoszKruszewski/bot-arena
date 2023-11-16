@@ -7,6 +7,7 @@ import sys
 class Bot:
     def __init__(self):
         self.valid_moves = ['W', 'S', 'T']
+        self.soldier_names = ['swordsman', 'archer']
         self.game_data = {}
 
     def handle_request(self, method, data=None):
@@ -43,13 +44,15 @@ class Bot:
                     data = None
                 response = self.handle_request(method, data)
                 print(response)
+                sys.stdout.flush()
 
     def random_move(self):
         random_num = random.randint(1, 100)
         if random_num <= 80:
             return 'W'
         elif 80 < random_num <= 95:
-            return 'S'
+            soldier_name = random.choice(self.soldier_names)
+            return f'S {soldier_name}'
         else:
             maxX = self.game_data['arena']['map_size'][0]
             maxY = self.game_data['arena']['map_size'][1]

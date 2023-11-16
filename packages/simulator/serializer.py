@@ -1,5 +1,4 @@
-from packages.game_logic.game import Game
-from packages.game_logic.actions import *
+from ..game_logic.game import Game
 
 class Serializer:
     def __init__(self):
@@ -39,11 +38,11 @@ class Serializer:
         turrets_cords = []
 
         for turret in turrets_data:
-            turrets_cords.append(turret.get_cords())
+            turrets_cords.append(turret.cords)
 
         player_data = {
             'turrets': turrets_cords,
-            'stats': game.get_stats()[player_side]
+            'gold': game.get_gold()[player_side]
         }
         return player_data
 

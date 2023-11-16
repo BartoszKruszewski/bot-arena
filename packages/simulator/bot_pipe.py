@@ -1,8 +1,9 @@
 import subprocess
 import json
 
-from packages.game_logic.game import Game
-from packages.simulator.serializer import Serializer
+from .serializer import Serializer
+from ..game_logic.game import Game
+
 
 
 class BotPipe:
