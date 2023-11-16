@@ -39,6 +39,7 @@
 F 5 3 | W
 F 5 9 | W
 F 5 7 | W
+W | T 3 3
 S swordsman | W
 S swordsman | S swordsman
 S archer | W

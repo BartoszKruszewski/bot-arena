@@ -16,6 +16,8 @@ from .turret_rt import TurretRT
 from .turret_tracker import TurretTracker
 from .farm_rt import FarmRT
 from .farm_tracker import FarmTracker
+from .projectile_rt import ProjectileRT
+from .projectile_tracker import ProjectileTracker
 from .particle import ParticleController, Particle, BloodParticle
 from .font_renderer import FontRenderer
 
@@ -33,6 +35,7 @@ class Engine():
         self.__soldier_tracker = SoldierTracker(game.get_path())
         self.__turret_tracker = TurretTracker()
         self.__farm_tracker = FarmTracker()
+        self.__projectile_tracker = ProjectileTracker(game.get_path())
         self.__particle_controller = ParticleController()
         self.__font_renderer = FontRenderer()
         self.__camera = Camera(game.get_map_size())
@@ -46,20 +49,25 @@ class Engine():
         self.__map_texture = self.__map_renderer.render(self.__assets, game)
         self.__ui_texture = Surface(DRAW_SCREEN_SIZE, SRCALPHA)
 
-    def render(self, game: Game, game_speed: float) -> Surface:
+    def render(self, game: Game, game_speed: float, is_new_turn: bool) -> Surface:
         '''Main rendering function.
 
         Refereshes once per frame.
         '''
 
         # update staff
+        if (is_new_turn): # Trackers need to be updated only once per turn.
+            self.__soldier_tracker.update_tracker(game.get_soldiers(), self.__particle_controller)
+            self.__turret_tracker.update_tracker(game.get_turrets())
+            self.__farm_tracker.update_tracker(game.get_farms())
+            self.__projectile_tracker.update_tracker(game.get_soldiers(), self.__soldier_tracker, game.get_turrets())
+
         self.__camera.update()
-        self.__soldier_tracker.update_tracker(game.get_soldiers(), self.__particle_controller)
+        
         self.__soldier_tracker.update_soldiers(game_speed, self.__camera.get_mouse_pos())
-        self.__turret_tracker.update_tracker(game.get_turrets())
         self.__turret_tracker.update_turrets(game_speed, self.__camera.get_mouse_pos())
-        self.__farm_tracker.update_tracker(game.get_farms())
         self.__farm_tracker.update_farms(game_speed, self.__camera.get_mouse_pos())
+        self.__projectile_tracker.update_projectiles(2 * game_speed)
         self.__particle_controller.update_particles(game_speed)
 
         # reset frame
@@ -79,6 +87,16 @@ class Engine():
         for farm in self.__farm_tracker.get_farms():
             self.__draw_object_rt(farm)
 
+        #drawing projectiles
+        for projectile in self.__projectile_tracker.get_projectiles():
+            texture = self.__assets["projectiles"]["arrow"]
+            size = texture.get_size()
+            self.__draw(
+                texture,
+                projectile.cords + \
+                Vector2(TILE_SIZE // 2, TILE_SIZE - size[1]) \
+                - Vector2(size[0], 0) // 2
+            )
         # drawing particles
         for particle in self.__particle_controller.get_particles():
             self.__draw_particle(particle)
@@ -103,7 +121,7 @@ class Engine():
         elif object.__class__ == FarmRT:
             texture = self.__assets["farms"]["farm"]
         elif object.__class__ == TurretRT:
-            texture = self.__assets["turrets"]["turret"]
+            texture = self.__assets["turrets"]["turret"]            
 
         size = texture.get_size()
 

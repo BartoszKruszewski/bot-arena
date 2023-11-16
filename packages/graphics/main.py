@@ -22,6 +22,7 @@ class Main:
         self.__engine = Engine(self.__game)
         self.__tick = 0
         self.__game_speed = 1
+        self.__is_new_turn = False
         
         path = "/".join([dir for dir in __file__.split('\\') if dir != ''][:-1]) + "/../../logs/" + log_name
         if os_name == 'posix':
@@ -32,7 +33,8 @@ class Main:
         while self.__is_running:
             self.__is_running = WINDOWCLOSE not in map(lambda e: e.type, get_event())
             self.__tick += 1
-            if self.__tick > FRAMERATE / self.__game_speed:
+            self.__is_new_turn = self.__tick > FRAMERATE / self.__game_speed
+            if self.__is_new_turn:
                 game_output = self.__game.update(*log_interpreter.get_next_actions())
                 self.__tick = 0
             self.__screen_update()
@@ -42,7 +44,7 @@ class Main:
         '''
 
         self.__dt = self.__clock.tick(FRAMERATE) * STANDARD_FRAMERATE / 1000
-        self.__screen.blit(scale(self.__engine.render(self.__game, self.__game_speed), SCREEN_SIZE), (0, 0))
+        self.__screen.blit(scale(self.__engine.render(self.__game, self.__game_speed, self.__is_new_turn), SCREEN_SIZE), (0, 0))
         display_update()
 
     def set_game_speed(self, value: float) -> None:
