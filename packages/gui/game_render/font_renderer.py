@@ -1,11 +1,11 @@
 from pygame.font import Font
 from pygame import Surface
-from .const import FONT_COLOR, FONT_SIZE
+from ..const import FONT_COLOR, FONT_SIZE
 
 class FontRenderer:
     def __init__(self):
         self.__fonts = {
-            name: Font('./packages/game_render/font.ttf', size)
+            name: Font('./assets/font.ttf', size)
             for name, size in FONT_SIZE.items()
         }
 

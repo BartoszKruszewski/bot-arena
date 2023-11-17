@@ -1,8 +1,9 @@
 from os import listdir, name as os_name
 from pygame.image import load as image_load
 from pygame import Surface, Rect
-from pygame.transform import flip, scale
-from .const import SPRITE_SIZE, ANIMATION_LEN, ANIMATION_NAMES, ANIMATION_DIRECTIONS, TILE_SIZE
+from pygame.transform import flip
+
+from ..const import SPRITE_SIZE, ANIMATION_LEN, ANIMATION_NAMES, ANIMATION_DIRECTIONS
 
 class AssetsLoader:
     def __init__(self) -> None:
@@ -21,8 +22,8 @@ class AssetsLoader:
             return image
         
         if os_name == 'posix':
-            if "./packages/game_render" not in dir_path:
-                dir_path = "./packages/game_render" + dir_path
+            if "./assets/textures" not in dir_path:
+                dir_path = "./assets/textures" + dir_path
 
 
         path = {path.split('.')[0] : self.load(dir_path + '/' + path, type) for path in listdir(dir_path)}

@@ -1,5 +1,7 @@
 from pygame import Vector2
-from .const import TILE_SIZE, FRAMERATE, ANIMATION_SPEED, ANIMATION_LEN, MOUSE_TARGET_RADIUS, INFO_TAB_SHOW_SMOOTH, INFO_TAB_SHOW_TIME, INFO_TAB_HIDE_SPEED
+from ...const import TILE_SIZE, FRAMERATE, ANIMATION_SPEED, \
+    ANIMATION_LEN, MOUSE_TARGET_RADIUS, INFO_TAB_SHOW_SMOOTH, \
+    INFO_TAB_SHOW_TIME, INFO_TAB_HIDE_SPEED
 
 class ObjectRT():
     '''Real time object class used in game_render rendering.
@@ -23,23 +25,23 @@ class ObjectRT():
         self.select_time = 0
         self.view_rate = [0] * (5 + len(self.stats))
 
-    def update(self, game_speed: float, mouse_pos: Vector2): 
+    def update(self, dt: float, mouse_pos: Vector2): 
         '''Main update function.
 
         Refreshes once per frame.
         '''
 
         if self.state != 'idle':
-            self.__update_frame(game_speed)
+            self.__update_frame(dt)
 
         self.__update_select_time(mouse_pos)
 
-    def __update_frame(self, game_speed: float):
+    def __update_frame(self, dt: float):
         '''Updates actual animation frame.
         '''
 
         self.tick += 1
-        if self.tick > FRAMERATE // ANIMATION_SPEED / game_speed:
+        if self.tick > FRAMERATE // ANIMATION_SPEED * dt:
             self.tick = 0
             self.frame += 1
             if self.frame >= ANIMATION_LEN:
@@ -68,8 +70,4 @@ class ObjectRT():
                 self.view_rate[i] += (target - self.view_rate[i]) / INFO_TAB_SHOW_SMOOTH
                 if self.view_rate[i] < 0.1:
                     self.view_rate[i] = 0
-
-        
-        if self.name == 'farm' and self.id == 0:
-            print(self.view_rate)
          

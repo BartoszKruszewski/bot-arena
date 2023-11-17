@@ -1,8 +1,6 @@
 from pygame.mouse import get_pos, get_pressed
 from pygame import Vector2
 
-from .const import SCREEN_SIZE_X, DRAW_SCREEN_SIZE_X, SCREEN_SIZE_Y, DRAW_SCREEN_SIZE_Y
-
 class Mouse:
     def __init__(self) -> None:
         self.pos = Vector2(0, 0)
@@ -17,12 +15,7 @@ class Mouse:
         Buttons states are active for max one frame time. 
         '''
 
-        x, y = get_pos()
-        scale_x = DRAW_SCREEN_SIZE_X / SCREEN_SIZE_X
-        scale_y = DRAW_SCREEN_SIZE_Y / SCREEN_SIZE_Y
-        self.pos.x = x * scale_x
-        self.pos.y = y * scale_y
-
+        self.pos.x, self.pos.y = get_pos()
         left, middle, right = get_pressed()
 
         if left:

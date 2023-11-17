@@ -1,6 +1,7 @@
 from pygame import Vector2
+from ....game_logic.objects.farms import Farm
 from .farm_rt import FarmRT
-from ..game_logic.objects.farms import Farm
+
 
 class FarmTracker():
     '''Farm objects tracker.
@@ -28,12 +29,12 @@ class FarmTracker():
                     farm.__dict__()
                 )
 
-    def update_farms(self, game_speed: float, mouse_pos: Vector2) -> None:
+    def update_farms(self, dt: float, mouse_pos: Vector2) -> None:
         '''Updates every real time farm.
         '''
 
         for farm in self.get_farms():
-            farm.update(game_speed, mouse_pos)
+            farm.update(dt, mouse_pos)
     
     def get_farms(self) -> list[FarmRT]:
         '''Real time farms getter.

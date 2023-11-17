@@ -1,6 +1,7 @@
 from pygame import Vector2
+from ....game_logic.objects.turrets import Turret
 from .turret_rt import TurretRT
-from ..game_logic.objects.turrets import Turret
+
 
 class TurretTracker():
     '''Turret objects tracker.
@@ -28,12 +29,12 @@ class TurretTracker():
                     turret.__dict__()
                 )
 
-    def update_turrets(self, game_speed: float, mouse_pos: Vector2) -> None:
+    def update_turrets(self, dt: float, mouse_pos: Vector2) -> None:
         '''Updates every real time turret.
         '''
 
         for turret in self.get_turrets():
-            turret.update(game_speed, mouse_pos)
+            turret.update(dt, mouse_pos)
     
     def get_turrets(self) -> list[TurretRT]:
         '''Real time turrets getter.

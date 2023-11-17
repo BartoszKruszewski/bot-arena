@@ -1,8 +1,9 @@
 from pygame import Vector2
+from ....game_logic.objects.soldiers import Soldier
+from ...const import TILE_SIZE
+from ..particle import ParticleController, BloodParticle
 from .soldier_rt import SoldierRT
-from ..game_logic.objects.soldiers import Soldier
-from .particle import ParticleController, BloodParticle
-from .const import TILE_SIZE
+
 
 class SoldierTracker:
     '''Soldier objects tracker.
@@ -103,12 +104,12 @@ class SoldierTracker:
         update_soldiers_hp(soldiers['left'], 'left')
         update_soldiers_hp(soldiers['right'], 'right')
 
-    def update_soldiers(self, game_speed: float, mouse_pos: Vector2) -> None:
+    def update_soldiers(self, dt: float, mouse_pos: Vector2) -> None:
         '''Updates every real time soldier.
         '''
 
         for soldier in self.get_soldiers():
-            soldier.update(game_speed, mouse_pos)
+            soldier.update(dt, mouse_pos)
 
     def get_soldiers(self) -> list[SoldierRT]:
         '''Real time soldiers getter.

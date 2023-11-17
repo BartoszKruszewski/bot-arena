@@ -2,24 +2,25 @@ from pygame import Surface, SRCALPHA, Rect, Color
 from pygame import Vector2
 from pygame.draw import rect as draw_rect, line as draw_line
 
-from .const import DRAW_SCREEN_SIZE, DRAW_SCREEN_SIZE_X, DRAW_SCREEN_SIZE_Y, \
-    TILE_SIZE, SHOW_SOLDIERS_REAL_POS, SHOW_FARMS_REAL_POS, \
-    SPRITE_SIZE, SHOW_TURRETS_REAL_POS, MOUSE_TARGET_RADIUS, INFO_TAB_SHOW_TIME, SHOW_REAL_POS, INFO_TAB_MARGIN
+from ...game_logic.game import Game
+
+from ..const import TILE_SIZE, SHOW_REAL_POS, INFO_TAB_MARGIN
+from ..mouse import Mouse
+
 from .camera import Camera
 from .assets_loader import AssetsLoader
 from .map_renderer import MapRenderer
-from ..game_logic.game import Game
-from .soldier_rt import SoldierRT
-from .object_rt import ObjectRT
-from .soldier_tracker import SoldierTracker
-from .turret_rt import TurretRT
-from .turret_tracker import TurretTracker
-from .farm_rt import FarmRT
-from .farm_tracker import FarmTracker
-from .projectile_rt import ProjectileRT
-from .projectile_tracker import ProjectileTracker
-from .particle import ParticleController, Particle, BloodParticle
+from .particle import ParticleController, Particle
 from .font_renderer import FontRenderer
+
+from .objects_rt.soldier_rt import SoldierRT
+from .objects_rt.object_rt import ObjectRT
+from .objects_rt.soldier_tracker import SoldierTracker
+from .objects_rt.turret_rt import TurretRT
+from .objects_rt.turret_tracker import TurretTracker
+from .objects_rt.farm_rt import FarmRT
+from .objects_rt.farm_tracker import FarmTracker
+from .objects_rt.projectile_tracker import ProjectileTracker
 
 class Engine():
     '''Main game_render class.
@@ -27,9 +28,6 @@ class Engine():
 
     def __init__(self, game: Game):
 
-        # render surface
-        self.__draw_screen = Surface(DRAW_SCREEN_SIZE)
-        
         # initialize modules
         self.__map_renderer = MapRenderer(game)
         self.__soldier_tracker = SoldierTracker(game.get_path())
@@ -39,38 +37,37 @@ class Engine():
         self.__particle_controller = ParticleController()
         self.__font_renderer = FontRenderer()
         self.__camera = Camera(game.get_map_size())
+        self.__draw_screen = None
+        self.__ui_texture = None
 
         # assets
         self.__assets_loader = AssetsLoader()
-        path = "/".join([dir for dir in __file__.split('\\') if dir != ''][:-1]) + '/' + 'textures'
-        self.__assets = self.__assets_loader.load(path, '.png')
+        self.__assets = self.__assets_loader.load('./assets/textures', '.png')
 
         # first render
         self.__map_texture = self.__map_renderer.render(self.__assets, game)
-        self.__ui_texture = Surface(DRAW_SCREEN_SIZE, SRCALPHA)
-
-    def render(self, game: Game, game_speed: float, is_new_turn: bool) -> Surface:
+        
+    def render(self, game: Game, dt: float, is_new_turn: bool, draw_screen_size: Vector2, mouse: Mouse, screen_shift: Vector2) -> Surface:
         '''Main rendering function.
 
         Refereshes once per frame.
         '''
 
         # update staff
-        self.__camera.update()
-        
+        self.__camera.update(draw_screen_size, mouse, screen_shift)
         self.__soldier_tracker.update_tracker(game.get_soldiers(), self.__particle_controller)
-        self.__soldier_tracker.update_soldiers(game_speed, self.__camera.get_mouse_pos())
+        self.__soldier_tracker.update_soldiers(dt, self.__camera.get_mouse_pos())
         self.__turret_tracker.update_tracker(game.get_turrets())
-        self.__turret_tracker.update_turrets(game_speed, self.__camera.get_mouse_pos())
+        self.__turret_tracker.update_turrets(dt, self.__camera.get_mouse_pos())
         self.__farm_tracker.update_tracker(game.get_farms())
-        self.__farm_tracker.update_farms(game_speed, self.__camera.get_mouse_pos())
+        self.__farm_tracker.update_farms(dt, self.__camera.get_mouse_pos())
         self.__projectile_tracker.update_tracker(game.get_soldiers(), self.__soldier_tracker, game.get_turrets(), is_new_turn)
-        self.__projectile_tracker.update_projectiles(game_speed)
-        self.__particle_controller.update_particles(game_speed)
+        self.__projectile_tracker.update_projectiles(dt)
+        self.__particle_controller.update_particles(dt)
 
         # reset frame
-        self.__draw_screen.fill((0, 0, 0))
-        self.__ui_texture.fill((0, 0, 0, 0))
+        self.__draw_screen = Surface(draw_screen_size)
+        self.__ui_texture = Surface(draw_screen_size, SRCALPHA)
         self.__draw_screen.blit(self.__map_texture, self.__camera.get_offset())
 
         # drawing soldiers and their health bars
@@ -217,10 +214,10 @@ class Engine():
         )
 
         if all((
-            -size.x <= pos1.x + self.__camera.get_offset().x <= DRAW_SCREEN_SIZE_X,
-            -size.y <= pos1.y + self.__camera.get_offset().y <= DRAW_SCREEN_SIZE_Y, 
-            -size.x <= pos2_real.x + self.__camera.get_offset().x <= DRAW_SCREEN_SIZE_X,
-            -size.y <= pos2_real.y + self.__camera.get_offset().y <= DRAW_SCREEN_SIZE_Y,
+            -size.x <= pos1.x + self.__camera.get_offset().x <= self.__draw_screen.get_size()[0],
+            -size.y <= pos1.y + self.__camera.get_offset().y <= self.__draw_screen.get_size()[1], 
+            -size.x <= pos2_real.x + self.__camera.get_offset().x <= self.__draw_screen.get_size()[0],
+            -size.y <= pos2_real.y + self.__camera.get_offset().y <= self.__draw_screen.get_size()[1],
         )):
             draw_line(self.__ui_texture if ui else self.__draw_screen, color, pos1 + self.__camera.get_offset(), pos2_real + self.__camera.get_offset())
 
@@ -232,8 +229,8 @@ class Engine():
 
         size = Vector2(texture.get_size())
         if all((
-            -size.x <= pos.x + self.__camera.get_offset().x <= DRAW_SCREEN_SIZE_X,
-            -size.y <= pos.y + self.__camera.get_offset().y <= DRAW_SCREEN_SIZE_Y,
+            -size.x <= pos.x + self.__camera.get_offset().x <= self.__draw_screen.get_size()[0],
+            -size.y <= pos.y + self.__camera.get_offset().y <= self.__draw_screen.get_size()[1],
         )):
             if ui:
                 self.__ui_texture.blit(texture, pos + self.__camera.get_offset())

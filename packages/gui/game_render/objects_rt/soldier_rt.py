@@ -1,5 +1,5 @@
 from pygame import Vector2
-from .const import TILE_SIZE, FRAMERATE, ANIMATION_NAMES, ANIMATION_SPEED, ANIMATION_LEN, HP_BAR_SMOOTH
+from ...const import TILE_SIZE, FRAMERATE, ANIMATION_NAMES, HP_BAR_SMOOTH
 from .object_rt import ObjectRT
 
 class SoldierRT(ObjectRT):

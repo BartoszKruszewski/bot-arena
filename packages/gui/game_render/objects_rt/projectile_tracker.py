@@ -1,9 +1,10 @@
 from pygame import Vector2
-from ..game_logic.objects.turrets import Turret
-from ..game_logic.objects.soldiers import Soldier
+from ....game_logic.objects.turrets import Turret
+from ....game_logic.objects.soldiers import Soldier
+from ...const import TILE_SIZE
 from .soldier_tracker import SoldierTracker
 from .projectile_rt import ProjectileRT
-from .const import TILE_SIZE
+
 
 class ProjectileTracker:
 
@@ -42,9 +43,9 @@ class ProjectileTracker:
         remove_projectiles("left")
         remove_projectiles("right")
 
-    def update_projectiles(self, game_speed: float):
+    def update_projectiles(self, dt: float):
         for projectile in self.get_projectiles():
-            projectile.update(game_speed)
+            projectile.update(dt)
 
     def get_projectiles(self) -> list[ProjectileRT]:
         '''Real time projectiles getter.
