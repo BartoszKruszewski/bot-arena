@@ -22,17 +22,17 @@ class SoldierRT(ObjectRT):
         self.path_pos = path_pos
         self.actual_hp = self.stats['max_hp']
 
-    def update(self, game_speed: float, mouse_pos: Vector2):
+    def update(self, dt: float, mouse_pos: Vector2):
         '''Main update function.
 
         Refreshes once per frame.
         '''
 
-        super().update(game_speed, mouse_pos)
+        super().update(dt, mouse_pos)
         self.__update_direction()
-        self.__update_cords(game_speed)
+        self.__update_cords(dt)
         self.__update_animation()
-        self.__update_hp_rate()
+        self.__update_hp_rate(dt)
 
     def set_stats(self, stats: dict):
         self.stats = stats
@@ -85,29 +85,27 @@ class SoldierRT(ObjectRT):
         '''
 
         if self.side == 'left':
-            if self.path_pos == len(SoldierRT.path) - 1: return
-                
-            self.direction = Vector2(SoldierRT.path[self.path_pos + 1]) \
-                - Vector2(SoldierRT.path[self.path_pos])
+            if self.path_pos != len(SoldierRT.path) - 1: 
+                self.direction = Vector2(SoldierRT.path[self.path_pos + 1]) \
+                    - Vector2(SoldierRT.path[self.path_pos])
         else:
-            if self.path_pos == 0: return
+            if self.path_pos != 0: 
+                self.direction = Vector2(SoldierRT.path[self.path_pos - 1]) \
+                    - Vector2(SoldierRT.path[self.path_pos])
 
-            self.direction = Vector2(SoldierRT.path[self.path_pos - 1]) \
-                - Vector2(SoldierRT.path[self.path_pos])
-
-    def __update_cords(self, game_speed: float):
+    def __update_cords(self, dt: float):
         '''Updates actual real position.
 
         Position is in float px value.
         '''
         if self.state == 'walk':
-            self.cords += self.direction * TILE_SIZE * game_speed / FRAMERATE
+            self.cords += self.direction * TILE_SIZE * dt / FRAMERATE
         else:
             self.cords = Vector2(SoldierRT.path[self.path_pos]) * TILE_SIZE
 
-    def __update_hp_rate(self):
+    def __update_hp_rate(self, dt):
         target = self.actual_hp / self.stats['max_hp']
-        self.actual_hp_rate -= abs(target - self.actual_hp_rate) / HP_BAR_SMOOTH
+        self.actual_hp_rate -= abs(target - self.actual_hp_rate) / HP_BAR_SMOOTH * dt
 
     def __str__(self):
         return f'<{self.side}:{self.id} {self.cords}>'

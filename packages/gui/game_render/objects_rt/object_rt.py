@@ -34,7 +34,7 @@ class ObjectRT():
         if self.state != 'idle':
             self.__update_frame(dt)
 
-        self.__update_select_time(mouse_pos)
+        self.__update_select_time(mouse_pos, dt)
 
     def __update_frame(self, dt: float):
         '''Updates actual animation frame.
@@ -47,27 +47,27 @@ class ObjectRT():
             if self.frame >= ANIMATION_LEN:
                 self.frame = 0
 
-    def __update_select_time(self, mouse_pos: Vector2):
+    def __update_select_time(self, mouse_pos: Vector2, dt: float):
         if mouse_pos.distance_to(self.cords + Vector2(TILE_SIZE, TILE_SIZE) // 2) < MOUSE_TARGET_RADIUS:
-            self.select_time += 1
+            self.select_time += dt
             for i in range(5 + len(self.stats)):
                 if i == 0 or self.view_rate[i - 1] > 0.9:
                     target = max(min(1, (self.select_time - i * INFO_TAB_SHOW_TIME // (5 + len(self.stats))) / INFO_TAB_SHOW_TIME), 0)
                 else:
                     target = 0
-                self.view_rate[i] += (target - self.view_rate[i]) / INFO_TAB_SHOW_SMOOTH
+                self.view_rate[i] += (target - self.view_rate[i]) / INFO_TAB_SHOW_SMOOTH * dt
                 if self.view_rate[i] < 0.1:
                     self.view_rate[i] = 0
         else:
             self.select_time = min(self.select_time, INFO_TAB_SHOW_TIME)
-            self.select_time -= INFO_TAB_HIDE_SPEED
+            self.select_time -= INFO_TAB_HIDE_SPEED * dt
             self.select_time = max(self.select_time, 0)
             for i in range(5 + len(self.stats)):
                 if i == 5 + len(self.stats) - 1 or self.view_rate[i + 1] == 0:
                     target = max(min(1, (self.select_time - i * INFO_TAB_SHOW_TIME // (5 + len(self.stats))) / INFO_TAB_SHOW_TIME), 0)
                 else:
                     target = 1
-                self.view_rate[i] += (target - self.view_rate[i]) / INFO_TAB_SHOW_SMOOTH * INFO_TAB_HIDE_SPEED
+                self.view_rate[i] += (target - self.view_rate[i]) / INFO_TAB_SHOW_SMOOTH * INFO_TAB_HIDE_SPEED * dt
                 if self.view_rate[i] < 0.1:
                     self.view_rate[i] = 0
          
