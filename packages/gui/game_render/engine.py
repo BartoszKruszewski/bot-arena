@@ -1,7 +1,7 @@
 from pygame import Surface, SRCALPHA, Rect, Color
 from pygame import Vector2
 from pygame.draw import rect as draw_rect, line as draw_line
-
+from pygame.transform import scale
 from ...game_logic.game import Game
 
 from ..const import TILE_SIZE, SHOW_REAL_POS, INFO_TAB_MARGIN
@@ -47,14 +47,14 @@ class Engine():
         # first render
         self.__map_texture = self.__map_renderer.render(self.__assets, game)
         
-    def render(self, game: Game, dt: float, is_new_turn: bool, draw_screen_size: Vector2, mouse: Mouse, screen_shift: Vector2) -> Surface:
+    def render(self, game: Game, dt: float, is_new_turn: bool, draw_screen_size: Vector2, mouse: Mouse, screen_shift: Vector2, zoom: float) -> Surface:
         '''Main rendering function.
 
         Refereshes once per frame.
         '''
 
         # update staff
-        self.__camera.update(draw_screen_size, mouse, screen_shift)
+        self.__camera.update(draw_screen_size, mouse, screen_shift, zoom)
         self.__soldier_tracker.update_tracker(game.get_soldiers(), self.__particle_controller)
         self.__soldier_tracker.update_soldiers(dt, self.__camera.get_mouse_pos())
         self.__turret_tracker.update_tracker(game.get_turrets())
@@ -66,8 +66,8 @@ class Engine():
         self.__particle_controller.update_particles(dt)
 
         # reset frame
-        self.__draw_screen = Surface(draw_screen_size)
-        self.__ui_texture = Surface(draw_screen_size, SRCALPHA)
+        self.__draw_screen = Surface(draw_screen_size // zoom)
+        self.__ui_texture = Surface(draw_screen_size // zoom, SRCALPHA)
         self.__draw_screen.blit(self.__map_texture, self.__camera.get_offset())
 
         # drawing soldiers and their health bars
@@ -98,7 +98,7 @@ class Engine():
         
         self.__draw_screen.blit(self.__ui_texture, (0, 0))
 
-        return self.__draw_screen
+        return scale(self.__draw_screen, Vector2(self.__draw_screen.get_size()) * zoom)
 
     def __draw_object_rt(self, object: ObjectRT):
         
@@ -138,6 +138,7 @@ class Engine():
             self.__draw(bar, object.cords - Vector2(-1, 4))
 
         if object.view_rate[0] > 0:
+
             infos = object.stats
             text_surfaces = [
                 self.__font_renderer.render(f'{name}: {info}', 'small')

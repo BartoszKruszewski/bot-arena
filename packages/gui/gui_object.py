@@ -3,6 +3,7 @@ from .game_render.engine import Engine
 from abc import ABC
 from ..game_logic.game import Game
 from .mouse import Mouse
+from .const import ZOOM_INTERWAL, MIN_ZOOM, MAX_ZOOM
 
 class GUIobject(ABC):
     def __init__(self, sub_objects: list['GUIobject'], pos: tuple[float, float], size: tuple[float, float], **kwargs):
@@ -34,6 +35,12 @@ class GUIobject(ABC):
             for object in self.sub_objects:
                 object.calc_pos(self.real_size, self.global_pos)
 
+    def in_mouse_range(self, mouse):
+        return all((
+            self.global_pos.x <= mouse.pos.x <= self.global_pos.x + self.real_size.x,
+            self.global_pos.y <= mouse.pos.y <= self.global_pos.y + self.real_size.y,
+        ))
+
 class Window(GUIobject):
     def __init__(self, sub_objects: list[GUIobject], pos: tuple[float, float], size: tuple[float, float], **kwargs):
         super().__init__(sub_objects, pos, size, **kwargs)
@@ -59,17 +66,32 @@ class Button(GUIElement):
         surf.fill(Color(0, 0, 0))
         surf.fill(
             Color(255, 0, 0),
-            Rect(1, 1, self.real_size.x - 1, self.real_size.x - 1)
+            Rect(1, 1, self.real_size.x - 1, self.real_size.y - 1)
         )
         return surf
 
 class GameRender(GUIElement):
     def __init__(self, pos: tuple[float, float], size: tuple[float, float], game: Game, **kwargs):
         super().__init__(pos, size, **kwargs)
-        self.__game = Game()
+        self.__game = game
         self.__engine = Engine(self.__game)
-        
+        self.__zoom = 1
+    
+    def set_zoom(self, value):
+        self.__zoom = max(MIN_ZOOM, min(MAX_ZOOM, value))
+
     def render(self, dt: float, mouse: Mouse) -> Surface:
-        return self.__engine.render(self.__game, dt, False, self.real_size, mouse, self.global_pos)
+        if self.in_mouse_range(mouse):
+            self.set_zoom(self.__zoom + mouse.wheel * ZOOM_INTERWAL * self.__zoom)
+
+        return self.__engine.render(
+                self.__game,
+                dt,
+                False,
+                self.real_size,
+                mouse,
+                self.global_pos,
+                self.__zoom
+            )
 
 

@@ -67,7 +67,7 @@ class ObjectRT():
                     target = max(min(1, (self.select_time - i * INFO_TAB_SHOW_TIME // (5 + len(self.stats))) / INFO_TAB_SHOW_TIME), 0)
                 else:
                     target = 1
-                self.view_rate[i] += (target - self.view_rate[i]) / INFO_TAB_SHOW_SMOOTH
+                self.view_rate[i] += (target - self.view_rate[i]) / INFO_TAB_SHOW_SMOOTH * INFO_TAB_HIDE_SPEED
                 if self.view_rate[i] < 0.1:
                     self.view_rate[i] = 0
          
