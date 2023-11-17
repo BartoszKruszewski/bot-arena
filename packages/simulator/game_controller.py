@@ -10,7 +10,7 @@ from ..game_logic.actions import *
 valid_moves = ['S', 'T', 'W', 's', 'w', 't']
 
 class Log:
-    def __init__(self, folder='logs'):
+    def __init__(self, folder='logs') -> None:
         self.log_file_name = 'game_log.txt'
         self.log_folder = os.path.join(os.getcwd(), folder)
 
@@ -30,16 +30,16 @@ class Log:
 
         self.log_file = None
 
-    def open(self):
+    def open(self) -> None:
         log_path = os.path.join(self.log_folder, self.log_file_name)
         self.log_file = open(log_path, 'a')
 
-    def close(self):
+    def close(self) -> None:
         if self.log_file is not None:
             self.log_file.close()
             self.log_file = None
 
-    def update(self, message):
+    def update(self, message: str) -> None:
         try:
             if self.log_file is not None:
                 self.log_file.write(message + '\n')
@@ -50,14 +50,14 @@ class Log:
             print(e)
 class GameController:
 
-    def __init__(self, bot_left: str, bot_right: str):
+    def __init__(self, bot_left: str, bot_right: str) -> None:
         self.bot_left = BotPipe(bot_left)
         self.bot_right = BotPipe(bot_right)
 
         self.game = Game()
         self.log = Log()
 
-    def run(self):
+    def run(self) -> None:
         game_over = False
         self.log.open()
 
@@ -76,7 +76,7 @@ class GameController:
 
         self.log.close()
 
-    def is_game_over(self, game_status: tuple[str, str]):
+    def is_game_over(self, game_status: tuple[str, str]) -> bool:
         if game_status[0] in ['Left win', 'Right win', 'Tie']:
             return True
         else:
@@ -104,6 +104,7 @@ class GameController:
             return Wait(side)
 
 
+# Dev test
 if __name__ == '__main__':
     game = GameController('./bots/random_bot.py','./bots/spawn_only_bot.py')
     game.run()
