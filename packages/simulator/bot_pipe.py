@@ -3,11 +3,10 @@ import json
 
 from .serializer import Serializer
 from ..game_logic.game import Game
-
-
+from .command_selector import CommandSelector
 
 class BotPipe:
-    def __init__(self, bot_path: str):
+    def __init__(self, bot_path: str) -> None:
         self.bot_process = None
         self.bot_in = None
         self.bot_out = None
@@ -29,7 +28,7 @@ class BotPipe:
         except Exception as e:
             print(f"Error: {str(e)}")
 
-    def request(self, method, data=None):
+    def request(self, method : str, data=None) -> str:
         if method == 'GET':
             self.bot_process.stdin.write('GET\n')
             self.bot_process.stdin.flush()
@@ -45,14 +44,14 @@ class BotPipe:
         else:
             return "Unsupported method"
 
-    def stop(self):
+    def stop(self) -> None:
         if self.bot_process is not None:
             self.bot_process.kill()
 
 
 
+# dev test
 if __name__ == '__main__':
-    # Dev test
     bot = BotPipe('./bots/random_bot.py')
     game = Game()
 
