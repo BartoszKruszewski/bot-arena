@@ -4,7 +4,7 @@ from .object_rt import ObjectRT
 from .const import FRAMERATE, TILE_SIZE, MOVE_PRECISION, PROJECTILE_SPEED
 
 class ProjectileRT(ObjectRT):
-    '''Real time projectile class used in graphics rendering.
+    '''Real time projectile class used in game_render rendering.
     '''
 
     def __init__(self, cords: Vector2, id: int, side: str, target: SoldierRT):

@@ -7,7 +7,7 @@ class FarmTracker():
 
     Track Farm objects from game logic and
     synchronize them with real time FarmRT
-    objects in the graphics module. 
+    objects in the game_render module.
     '''
 
     def __init__(self):

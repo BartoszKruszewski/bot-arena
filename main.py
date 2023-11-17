@@ -7,7 +7,7 @@ def game_logic_main():
     TestRun()
 
 def graphics_main():
-    from packages.graphics.main import Main
+    from packages.game_render.main import Main
     Main("example_log.txt")
 
 def simulator_main():
@@ -17,7 +17,7 @@ def simulator_main():
 def main():
     if len(sys.argv) == 0:
         print('1 - game_logic')
-        print('2 - graphics')
+        print('2 - game_render')
         print('3 - simulator')
         return
     

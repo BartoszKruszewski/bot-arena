@@ -2,7 +2,7 @@ from .object_rt import ObjectRT
 from pygame import Vector2
 
 class TurretRT(ObjectRT):
-    '''Real time turret class used in graphics rendering.
+    '''Real time turret class used in game_render rendering.
     '''
 
     def __init__(self, cords: Vector2, id: int, name: str, side: str, stats: dict) -> None:

@@ -2,7 +2,7 @@ from pygame import Vector2
 from .const import TILE_SIZE, FRAMERATE, ANIMATION_SPEED, ANIMATION_LEN, MOUSE_TARGET_RADIUS, INFO_TAB_SHOW_SMOOTH, INFO_TAB_SHOW_TIME, INFO_TAB_HIDE_SPEED
 
 class ObjectRT():
-    '''Real time object class used in graphics rendering.
+    '''Real time object class used in game_render rendering.
     '''
 
     def __init__(self, cords: Vector2, id: int, name: str, side: str, stats: dict):

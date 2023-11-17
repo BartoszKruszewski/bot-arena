@@ -3,7 +3,7 @@ from .const import TILE_SIZE, FRAMERATE, ANIMATION_NAMES, ANIMATION_SPEED, ANIMA
 from .object_rt import ObjectRT
 
 class SoldierRT(ObjectRT):
-    '''Real time soldier graphics class.
+    '''Real time soldier game_render class.
     '''
 
     path = [] 

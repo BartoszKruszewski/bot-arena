@@ -9,7 +9,7 @@ class SoldierTracker:
 
     Track Soldier objects from game logic and
     synchronize them with real time soldier
-    objects in the graphics module. 
+    objects in the game_render module.
     '''
 
     def __init__(self, path: list[tuple[int, int]]):
@@ -20,7 +20,7 @@ class SoldierTracker:
         '''Update number and state of real time soldiers,
         based on soldiers from game logic.
 
-        Impact on graphics state:   
+        Impact on game_render state:
             - adding new real time soldiers
             - removing soldiers that should be dead
             - updating path position of real time soldiers

@@ -22,7 +22,7 @@ from .particle import ParticleController, Particle, BloodParticle
 from .font_renderer import FontRenderer
 
 class Engine():
-    '''Main graphics class.
+    '''Main game_render class.
     '''
 
     def __init__(self, game: Game):

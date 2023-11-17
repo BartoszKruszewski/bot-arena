@@ -21,8 +21,8 @@ class AssetsLoader:
             return image
         
         if os_name == 'posix':
-            if "./packages/graphics" not in dir_path:
-                dir_path = "./packages/graphics" + dir_path
+            if "./packages/game_render" not in dir_path:
+                dir_path = "./packages/game_render" + dir_path
 
 
         path = {path.split('.')[0] : self.load(dir_path + '/' + path, type) for path in listdir(dir_path)}
