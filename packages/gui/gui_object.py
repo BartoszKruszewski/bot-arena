@@ -4,6 +4,16 @@ from abc import ABC
 from .mouse import Mouse
 from pygame.locals import *
 
+###
+# GUIobject ABC
+#   Window
+#   GUIElement ABC
+#       Button ABC
+#           RectButton
+#           SquareButton
+#           GoBackButton
+#       InputField
+###
 
 class GUIobject(ABC):
     def __init__(self, sub_objects: list['GUIobject'], pos: tuple[float, float], size: tuple[float, float], **kwargs):
@@ -62,8 +72,17 @@ class GUIobject(ABC):
             self.global_pos.y <= mouse.pos.y <= self.global_pos.y + self.real_size.y,
         ))
 
-
 class Window(GUIobject):
+    """Window is a GUIobject that can contain other GUIobjects
+    
+        Args:
+            sub_objects (list[GUIobject]): List of GUIobjects that are contained in this Window
+            pos (tuple[float, float]): Position of this Window relative to parent size
+            size (tuple[float, float]): Size of this Window relative to parent size
+            
+        Kwargs:
+            color (tuple[int, int, int]): Color of this Window
+        """
     def __init__(self, sub_objects: list[GUIobject], pos: tuple[float, float], size: tuple[float, float], **kwargs):
         super().__init__(sub_objects, pos, size, **kwargs)
 
@@ -73,7 +92,7 @@ class Window(GUIobject):
             surf.blit(object.get_surface(dt, mouse), object.real_pos)   
         return surf
         
-class GUIElement(GUIobject):
+class GUIElement(GUIobject, ABC):
     def __init__(self, pos: tuple[float, float], size: tuple[float, float], **kwargs):
         super().__init__(None, pos, size, **kwargs)
 
@@ -102,14 +121,43 @@ class Button(GUIElement, ABC):
                 self.__out_click()
 
 class RectButton(Button):
+    """RectButton is a Button with rectangular shape
+
+    Args:
+        pos (tuple[float, float]): Position of this RectButton relative to parent size
+        size (tuple[float, float]): Size of this RectButton relative to parent size
+
+        Kwargs:
+            color (tuple[int, int, int]): Color of this RectButton
+            on_click (function): Function that is called when this RectButton is clicked
+            out_click (function): Function that is called when this RectButton is clicked outside
+            text (str): Text that is displayed on this RectButton
+    """
     pass
 
 class SquareButton(Button):
+    """SquareButton is a Button with square shape
+    
+    Args:
+        pos (tuple[float, float]): Position of this SquareButton relative to parent size
+        size (float): Size of this SquareButton relative to parent size
+        
+        Kwargs:
+        color (tuple[int, int, int]): Color of this SquareButton
+        on_click (function): Function that is called when this SquareButton is clicked
+        out_click (function): Function that is called when this SquareButton is clicked outside
+        text (str): Text that is displayed on this SquareButton
+    """
     def __init__(self, pos: tuple[float, float], size: float, **kwargs):
         super().__init__(pos, size, **kwargs)
         self.calc_pos = self.calc_square_pos
 
 class GoBackButton(SquareButton):
+    """GoBackButton is a SquareButton that closes the window when clicked
+    
+    Args:
+        Kwargs:
+            on_click (function): Function that is called when this GoBackButton is clicked"""
     def __init__(self, **kwargs):
         super().__init__((0.005, 0.005), 0.03, color=(0,255,0), **kwargs)
 
@@ -118,6 +166,17 @@ class GoBackButton(SquareButton):
         self.__on_click = self.properties.get('on_click', lambda: None)
         
 class InputField(Button):
+    """InputField is a Button that can be used to input text
+
+    Args:
+        pos (tuple[float, float]): Position of this InputField relative to parent size
+        size (tuple[float, float]): Size of this InputField relative to parent size
+
+        Kwargs:
+            color (tuple[int, int, int]): Color of this InputField
+            placeholder (str): Text that is displayed on this InputField when it is empty
+            collect_info (str): Name of the property in the info dict that is collected when this InputField is clicked
+    """
     def __init__(self, pos: tuple[float, float], size: tuple[float, float], **kwargs):
         super().__init__(
             pos, size,
