@@ -23,8 +23,8 @@ ErrorCode = {
 }
 
 class Game:
-    def __init__(self):
-        self._map = Map()
+    def __init__(self, map_path: str = None) -> None:
+        self._map = Map(map_path)
 
         self.turrets = {
             'left': Turrets(self._map.path),

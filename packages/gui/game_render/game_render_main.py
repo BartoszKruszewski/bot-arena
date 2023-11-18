@@ -15,6 +15,8 @@ from ..mouse import Mouse
 from ..const import SCREEN_SIZE, FRAMERATE, STANDARD_FRAMERATE
 from ..const import ZOOM_INTERWAL, MIN_ZOOM, MAX_ZOOM
 
+from packages import MAPS_DIRECTORY
+
 class GameRender(GUIElement):
     def __init__(self, pos: tuple[float, float], size: tuple[float, float], game: Game, **kwargs):
         super().__init__(pos, size, **kwargs)
@@ -41,13 +43,12 @@ class GameRender(GUIElement):
 
 class Main:
     def __init__(self, log_name: str):
-        init()
         self.__screen = display_set_mode(SCREEN_SIZE)
         self.__is_running = True
         self.__dt = 1
         self.__clock = Clock()
         self.__tick = 0
-        self.__game = Game()
+        self.__game = Game(MAPS_DIRECTORY + "/" + "example_map.json")
         self.__mouse = Mouse()
 
         path = "/".join([dir for dir in __file__.split('\\') 
@@ -58,17 +59,27 @@ class Main:
         self.__log_interpreter = LogInterpreter(path)
 
         self.__gui = Window([
-            Window([
-                SquareButton((0.1, 0.1), 0.2),
-                SquareButton((0.5, 0.5), 0.2),
-            ], (0, 0), (0.2, 1)),
-            Window([
-                GameRender((0, 0), (1, 1), self.__game)
-            ], (0.2, 0), (0.8, 0.8)),
-            Window([
-                RectButton((0.1, 0.1), (0.2, 0.2), on_click=lambda: print('click')),
-                RectButton((0.5, 0.5), (0.2, 0.2)),
-            ], (0.2, 0.8), (1, 0.2)),
+            Window(
+                [
+                    SquareButton((0.1, 0.1), 0.2, color=(0, 255,0)),
+                    SquareButton((0.5, 0.5), 0.2, color=(255, 0, 0)),
+                ], 
+                (0, 0), (0.2, 1),
+                color=(42, 42, 42)),
+            Window(
+                [ 
+                    GameRender((0, 0), (1, 1), self.__game)
+                ], 
+                (0.2, 0), (0.8, 0.8),
+                color=(84, 84, 84)
+            ),
+            Window(
+                [
+                    RectButton((0.1, 0.1), (0.2, 0.2), on_click=lambda: print('click')),
+                    RectButton((0.5, 0.5), (0.2, 0.2)),
+                ], 
+                (0.2, 0.8), (1, 0.2),
+                color=(126, 126, 126)),
             GoBackButton(on_click=self.__stop)
         ], (0, 0), (1, 1))
         
@@ -83,6 +94,7 @@ class Main:
                 game_output = self.__game.update(*self.__log_interpreter.get_next_actions())
                 self.__tick = 0
             self.__screen_update()
+            print(__name__)
 
     def __stop(self):
         self.__is_running = False

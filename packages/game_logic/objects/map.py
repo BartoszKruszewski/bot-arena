@@ -1,18 +1,38 @@
-from random import shuffle, random
+from random import shuffle, random, choice
+import json
+
 from ..stats import MAP_SIZE_X, MAP_SIZE_Y, OBSTACLES_AMOUNT
-from random import choice
 
 class Map():
-    def __init__(self) -> None:
-        self._start = (0, 0)
-        self._end = (MAP_SIZE_X - 1, MAP_SIZE_Y - 1)
+    def __init__(self, map_path: str) -> None:
+        self._start = None
+        self._end = None
 
         self.path = []
         self.obstacles = []
-        self.__generate_map()
 
-        self.MAP_SIZE_X = MAP_SIZE_X
-        self.MAP_SIZE_Y = MAP_SIZE_Y
+        self.MAP_SIZE_X = None
+        self.MAP_SIZE_Y = None
+
+        if map_path == None:
+            self._start = (0, 0)
+            self._end = (MAP_SIZE_X - 1, MAP_SIZE_Y - 1)
+            self.MAP_SIZE_X = MAP_SIZE_X
+            self.MAP_SIZE_Y = MAP_SIZE_Y
+            self.__generate_map()
+        else:
+            self.__load_map(map_path)
+
+    def __load_map(self, map_path: str) -> None:
+        with open(map_path, 'r') as f:
+            map_data = json.load(f)
+
+        self.MAP_SIZE_X = map_data['MAP_SIZE_X']
+        self.MAP_SIZE_Y = map_data['MAP_SIZE_Y']
+        self._start = tuple(map_data['start'])
+        self._end = (MAP_SIZE_X - 1, MAP_SIZE_Y - 1)
+        self.path = [tuple(pos) for pos in map_data['path']]
+        self.obstacles = [tuple(pos) for pos in map_data['obstacles']]
 
 
 
@@ -58,22 +78,6 @@ class Map():
             
         self.path.remove(pos)
         return False
-        
-
-         
-
-    def __generate_path_old(self) -> None:
-        path = [self._start]
-
-        while path[-1] != self._end:
-            next = path[-1]
-            where = choice(((0, 1), (1, 0)))
-            next = (next[0] + where[0], next[1] + where[1])
-
-            if next[0] < MAP_SIZE_X and next[1] < MAP_SIZE_Y:
-                path.append(next)
-
-        self.path = path
 
     def __generate_obstacles(self) -> None:
         def near_path(pos: tuple[int, int]) -> bool:
