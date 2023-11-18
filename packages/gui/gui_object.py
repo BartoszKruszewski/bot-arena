@@ -1,9 +1,7 @@
 from pygame import Vector2, Surface, Color, Rect
-from .game_render.engine import Engine
 from abc import ABC
-from ..game_logic.game import Game
 from .mouse import Mouse
-from .const import ZOOM_INTERWAL, MIN_ZOOM, MAX_ZOOM
+from pygame.locals import *
 
 class GUIobject(ABC):
     def __init__(self, sub_objects: list['GUIobject'], pos: tuple[float, float], size: tuple[float, float], **kwargs):
@@ -35,6 +33,14 @@ class GUIobject(ABC):
             for object in self.sub_objects:
                 object.calc_pos(self.real_size, self.global_pos)
 
+    def calc_square_pos(self, parent_size: Vector2, parent_global_pos: Vector2) -> None:
+        self.real_pos = Vector2(self.pos.x * parent_size.x, self.pos.y * parent_size.x)
+        self.real_size = Vector2(self.size.x * parent_size.x, self.size.x * parent_size.x)
+        self.global_pos = self.real_pos + parent_global_pos
+        if self.sub_objects is not None:
+            for object in self.sub_objects:
+                object.calc_square_pos(self.real_size, self.global_pos)
+
     def in_mouse_range(self, mouse):
         return all((
             self.global_pos.x <= mouse.pos.x <= self.global_pos.x + self.real_size.x,
@@ -60,7 +66,11 @@ class GUIElement(GUIobject):
     def __init__(self, pos: tuple[float, float], size: tuple[float, float], **kwargs):
         super().__init__(None, pos, size, **kwargs)
 
-class Button(GUIElement):
+class RectButton(GUIElement):
+    def __init__(self, pos: tuple[float, float], size: tuple[float, float], **kwargs):
+        super().__init__(pos, size, **kwargs)
+        self.__on_click = self.properties.get('on_click', lambda: None)
+
     def render(self, dt: float, mouse: Mouse) -> Surface:
         surf = Surface(self.real_size)
         surf.fill(Color(0, 0, 0))
@@ -68,30 +78,48 @@ class Button(GUIElement):
             Color(255, 0, 0),
             Rect(1, 1, self.real_size.x - 1, self.real_size.y - 1)
         )
+        self.check_click(mouse)
         return surf
 
-class GameRender(GUIElement):
-    def __init__(self, pos: tuple[float, float], size: tuple[float, float], game: Game, **kwargs):
-        super().__init__(pos, size, **kwargs)
-        self.__game = game
-        self.__engine = Engine(self.__game)
-        self.__zoom = 1
-    
-    def set_zoom(self, value):
-        self.__zoom = max(MIN_ZOOM, min(MAX_ZOOM, value))
+    def in_mouse_range(self, mouse: Mouse):
+        return all((
+            self.global_pos.x <= mouse.pos.x <= self.global_pos.x + self.real_size.x,
+            self.global_pos.y <= mouse.pos.y <= self.global_pos.y + self.real_size.y,
+        ))
 
-    def render(self, dt: float, mouse: Mouse) -> Surface:
+    def check_click(self, mouse: Mouse):
         if self.in_mouse_range(mouse):
-            self.set_zoom(self.__zoom + mouse.wheel * ZOOM_INTERWAL * self.__zoom)
+            if mouse.left_click:
+                self.__on_click()
 
-        return self.__engine.render(
-                self.__game,
-                dt,
-                False,
-                self.real_size,
-                mouse,
-                self.global_pos,
-                self.__zoom
-            )
+class SquareButton(RectButton):
+    def __init__(self, pos: tuple[float, float], size: float, **kwargs):
+        super().__init__(pos, size, **kwargs)
+        self.calc_pos = self.calc_square_pos
+
+class GoBackButton(SquareButton):
+    def __init__(self, **kwargs):
+        super().__init__((0.005, 0.005), 0.03, **kwargs)
+
+        if not 'on_click' in self.properties:
+            raise Exception('GoBackButton must have on_click property')
+        self.__on_click = self.properties.get('on_click', lambda: None)
+        
+    def render(self, dt: float, mouse: Mouse) -> Surface:
+        surf = super().render(dt, mouse)
+        surf.fill(Color(0,255,0))
+        return surf
+
+
+    
+
+
+
+
+
+    
+    
+        
+
 
 
