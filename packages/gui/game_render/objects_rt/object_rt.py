@@ -3,7 +3,7 @@ from ...const import TILE_SIZE, FRAMERATE, ANIMATION_SPEED, \
     ANIMATION_LEN, MOUSE_TARGET_RADIUS, INFO_TAB_SHOW_SMOOTH, \
     INFO_TAB_SHOW_TIME, INFO_TAB_HIDE_SPEED
 
-class ObjectRT():
+class ObjectRT:
     '''Real time object class used in game_render rendering.
     '''
 
@@ -35,6 +35,14 @@ class ObjectRT():
             self.__update_frame(dt)
 
         self.__update_select_time(mouse_pos, dt)
+
+    def set_stats(self, stats: dict):
+        self.stats = stats
+
+    def __getitem__(self, key):
+        if key not in self.stats:
+            raise Exception(f"Object doesn't have key stat: {key}")
+        return self.stats[key]
 
     def __update_frame(self, dt: float):
         '''Updates actual animation frame.
@@ -70,4 +78,7 @@ class ObjectRT():
                 self.view_rate[i] += (target - self.view_rate[i]) / INFO_TAB_SHOW_SMOOTH * INFO_TAB_HIDE_SPEED * dt
                 if self.view_rate[i] < 0.1:
                     self.view_rate[i] = 0
+
+    def __str__(self):
+        return f'<{self.side}:{self.id} {self.cords}>'
          

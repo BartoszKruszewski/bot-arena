@@ -4,7 +4,8 @@ from pygame.draw import rect as draw_rect, line as draw_line
 from pygame.transform import scale
 from ...game_logic.game import Game
 
-from ..const import TILE_SIZE, SHOW_REAL_POS, INFO_TAB_MARGIN, HEALTH_BAR_SIZE, HEALTH_BAR_COLOR_BACK, HEALTH_BAR_COLOR_FRONT
+from ..const import TILE_SIZE, SHOW_REAL_POS, INFO_TAB_MARGIN, HEALTH_BAR_SIZE, \
+    HEALTH_BAR_COLOR_BACK, HEALTH_BAR_COLOR_FRONT
 from ..mouse import Mouse
 
 from .camera import Camera
@@ -20,7 +21,6 @@ from .objects_rt.turret_rt import TurretRT
 from .objects_rt.turret_tracker import TurretTracker
 from .objects_rt.farm_rt import FarmRT
 from .objects_rt.farm_tracker import FarmTracker
-from .objects_rt.projectile_tracker import ProjectileTracker
 
 class Engine():
     '''Main game_render class.
@@ -30,24 +30,29 @@ class Engine():
 
         # initialize modules
         self.__map_renderer = MapRenderer(game)
+        self.__particle_controller = ParticleController()
+        self.__font_renderer = FontRenderer()
+        self.__assets_loader = AssetsLoader()
+        self.__camera = Camera(game.get_map_size())
+
         self.__soldier_tracker = SoldierTracker(game.get_path())
         self.__turret_tracker = TurretTracker()
         self.__farm_tracker = FarmTracker()
-        self.__projectile_tracker = ProjectileTracker(game.get_path())
-        self.__particle_controller = ParticleController()
-        self.__font_renderer = FontRenderer()
-        self.__camera = Camera(game.get_map_size())
+
         self.__draw_screen = None
         self.__ui_texture = None
 
         # assets
-        self.__assets_loader = AssetsLoader()
         self.__assets = self.__assets_loader.load('./assets/textures', '.png')
 
         # first render
         self.__map_texture = self.__map_renderer.render(self.__assets, game)
         
-    def render(self, game: Game, dt: float, is_new_turn: bool, draw_screen_size: Vector2, mouse: Mouse, screen_shift: Vector2, zoom: float) -> Surface:
+    def render(
+            self, game: Game, dt: float, draw_screen_size: Vector2,
+            mouse: Mouse, screen_shift: Vector2, zoom: float
+        ) -> Surface:
+
         '''Main rendering function.
 
         Refereshes once per frame.
@@ -55,14 +60,12 @@ class Engine():
 
         # update staff
         self.__camera.update(draw_screen_size, mouse, screen_shift, zoom)
-        self.__soldier_tracker.update_tracker(game.get_soldiers(), self.__particle_controller)
-        self.__soldier_tracker.update_soldiers(dt, self.__camera.get_mouse_pos())
-        self.__turret_tracker.update_tracker(game.get_turrets())
-        self.__turret_tracker.update_turrets(dt, self.__camera.get_mouse_pos())
-        self.__farm_tracker.update_tracker(game.get_farms())
-        self.__farm_tracker.update_farms(dt, self.__camera.get_mouse_pos())
-        self.__projectile_tracker.update_tracker(game.get_soldiers(), self.__soldier_tracker, game.get_turrets(), is_new_turn)
-        self.__projectile_tracker.update_projectiles(dt)
+        self.__soldier_tracker.update(
+            game.get_soldiers(), dt, self.__camera.get_mouse_pos())
+        self.__turret_tracker.update(
+            game.get_turrets(), dt, self.__camera.get_mouse_pos())
+        self.__farm_tracker.update(
+            game.get_farms(), dt, self.__camera.get_mouse_pos())
         self.__particle_controller.update_particles(dt)
 
         # reset frame
@@ -70,20 +73,25 @@ class Engine():
         self.__ui_texture = Surface(draw_screen_size // zoom, SRCALPHA)
         self.__draw_screen.blit(self.__map_texture, self.__camera.get_offset())
 
-        # drawing soldiers and their health bars
-        for soldier in self.__soldier_tracker.get_soldiers():
-            self.__draw_object_rt(soldier)
+        # draw objects
+        for tracker in self.__soldier_tracker, \
+         self.__farm_tracker, self.__turret_tracker:
+            for object in tracker.get_objects():
+                self.__draw_object_rt(object)
 
-        # drawing turrets
-        for turret in self.__turret_tracker.get_turrets():    
-            self.__draw_object_rt(turret)
+        # draw particles
+        for particle in self.__particle_controller.get_particles():
+            self.__draw_particle(particle)
+        
+        # draw ui
+        self.__draw_screen.blit(self.__ui_texture, (0, 0))
 
-        # drawing farms
-        for farm in self.__farm_tracker.get_farms():
-            self.__draw_object_rt(farm)
+        return scale(
+            self.__draw_screen,
+            Vector2(self.__draw_screen.get_size()) * zoom
+        )
 
-        #drawing projectiles
-        for projectile in self.__projectile_tracker.get_projectiles():
+    def __draw_projectile(self, projectile):
             texture = self.__assets["projectiles"]["arrow"]
             size = texture.get_size()
             self.__draw(
@@ -92,15 +100,9 @@ class Engine():
                 Vector2(TILE_SIZE // 2, TILE_SIZE - size[1]) \
                 - Vector2(size[0], 0) // 2
             )
-        # drawing particles
-        for particle in self.__particle_controller.get_particles():
-            self.__draw_particle(particle)
-        
-        self.__draw_screen.blit(self.__ui_texture, (0, 0))
-
-        return scale(self.__draw_screen, Vector2(self.__draw_screen.get_size()) * zoom)
 
     def __draw_object_rt(self, object: ObjectRT):
+        
         if object.__class__ == SoldierRT:
             direction = {
                 (0, 0):    'bot',
@@ -113,17 +115,20 @@ class Engine():
             texture = self.__assets['soldiers'][object.name] \
             [object.animation][direction][object.frame]
 
+            self.__draw_health_bar(object)
+
         elif object.__class__ == FarmRT:
             texture = self.__assets["farms"]["farm"]
         elif object.__class__ == TurretRT:
-            texture = self.__assets["turrets"]["turret"]            
+            texture = self.__assets["turrets"]["turret"]
+        else:
+            raise Exception(f'{object} is not a real time object!')        
 
         size = texture.get_size()
 
-        self.__draw(texture, object.cords + Vector2((TILE_SIZE - size[0]) // 2, TILE_SIZE - size[1]))
-        
-        if object.__class__ == SoldierRT:
-            self.__draw_health_bar(object)
+        self.__draw(texture,
+             object.cords + Vector2((TILE_SIZE - size[0]) // 2, TILE_SIZE - size[1]))
+            
         self.__draw_info_bar(object.stats, object.cords, object.view_rate)
 
         # real pos
@@ -140,14 +145,18 @@ class Engine():
         bar.fill(HEALTH_BAR_COLOR_BACK)
         bar.fill(
             HEALTH_BAR_COLOR_FRONT,
-            Rect(0, 0, soldier.actual_hp_rate * HEALTH_BAR_SIZE[0], HEALTH_BAR_SIZE[1])
+            Rect(0, 0,
+                soldier.actual_hp_rate * HEALTH_BAR_SIZE[0],
+                HEALTH_BAR_SIZE[1]
+            )
         )
         self.__draw(
             bar,
             soldier.cords + Vector2(TILE_SIZE - HEALTH_BAR_SIZE[0], -1) // 2
         )
     
-    def __draw_info_bar(self, info: dict[str, str], pos: Vector2, view_rate: list[float]):
+    def __draw_info_bar(self, info: dict[str, str], pos: Vector2,
+            view_rate: list[float]):
         '''Draws info bar with animation.
         
         info: {
@@ -176,7 +185,8 @@ class Engine():
             for i, s in enumerate(text_surfaces):
                 info_tab.blit(s.subsurface(
                     Rect(0, 0, view_rate[4 + i] * s.get_size()[0], s.get_size()[1])),
-                    (INFO_TAB_MARGIN, INFO_TAB_MARGIN + sum(s.get_size()[1] for s in text_surfaces[:i])
+                    (INFO_TAB_MARGIN, INFO_TAB_MARGIN + \
+                     sum(s.get_size()[1] for s in text_surfaces[:i])
                 ))
 
             draw_rect(info_tab, (0, 0, 0, 0), Rect(
@@ -223,12 +233,16 @@ class Engine():
                 )
 
     def __draw_particle(self, particle: Particle):
+        '''Draws particle.
+        '''
+
         pos, color, size = particle.get_data()
         surf = Surface((size, size), SRCALPHA)
         surf.fill(color)
         self.__draw(surf, pos)
     
-    def __draw_line(self, pos1: Vector2, pos2: Vector2, color: Color, len: float = 1, ui: bool = False):
+    def __draw_line(self, pos1: Vector2, pos2: Vector2, color: Color,
+            len: float = 1, ui: bool = False):
         '''Draw line with camera offset.
 
         Function only draw objects, which are visible on the screen.
@@ -240,14 +254,20 @@ class Engine():
             abs(pos1.x - pos2_real.x),
             abs(pos1.y - pos2_real.y),
         )
+        
+        ca = self.__camera.get_offset()
+        dss = self.__draw_screen.get_size()
 
         if all((
-            -size.x <= pos1.x + self.__camera.get_offset().x <= self.__draw_screen.get_size()[0],
-            -size.y <= pos1.y + self.__camera.get_offset().y <= self.__draw_screen.get_size()[1], 
-            -size.x <= pos2_real.x + self.__camera.get_offset().x <= self.__draw_screen.get_size()[0],
-            -size.y <= pos2_real.y + self.__camera.get_offset().y <= self.__draw_screen.get_size()[1],
+            -size.x <= pos1.x + ca.x <= dss[0],
+            -size.y <= pos1.y + ca.y <= dss[1], 
+            -size.x <= pos2_real.x + ca.x <= dss[0],
+            -size.y <= pos2_real.y + ca.y <= dss[1],
         )):
-            draw_line(self.__ui_texture if ui else self.__draw_screen, color, pos1 + self.__camera.get_offset(), pos2_real + self.__camera.get_offset())
+            draw_line(
+                self.__ui_texture if ui else self.__draw_screen,
+                color, pos1 + ca, pos2_real + ca
+            )
 
     def __draw(self, texture: Surface, pos: Vector2, ui: bool = False) -> None:
         '''Draw texture with camera offset.
@@ -255,12 +275,13 @@ class Engine():
         Function only draw objects, which are visible on the screen.
         '''
 
+        ca = self.__camera.get_offset()
+        dss = self.__draw_screen.get_size()
+
         size = Vector2(texture.get_size())
         if all((
-            -size.x <= pos.x + self.__camera.get_offset().x <= self.__draw_screen.get_size()[0],
-            -size.y <= pos.y + self.__camera.get_offset().y <= self.__draw_screen.get_size()[1],
+            -size.x <= pos.x + ca.x <= dss[0],
+            -size.y <= pos.y + ca.y <= dss[1],
         )):
-            if ui:
-                self.__ui_texture.blit(texture, pos + self.__camera.get_offset())
-            else:
-                self.__draw_screen.blit(texture, pos + self.__camera.get_offset())
+            if ui: self.__ui_texture.blit(texture, pos + ca)
+            else: self.__draw_screen.blit(texture, pos + ca)

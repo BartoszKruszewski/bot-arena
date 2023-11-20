@@ -1,123 +1,50 @@
 from pygame import Vector2
+
+from packages.gui.game_render.objects_rt.object_rt import ObjectRT
 from ....game_logic.objects.soldiers import Soldier
 from ...const import TILE_SIZE
 from ..particle import ParticleController, BloodParticle
 from .soldier_rt import SoldierRT
+from .object_tracker import ObjectTracker
 
-
-class SoldierTracker:
-    '''Soldier objects tracker.
-
-    Track Soldier objects from game logic and
-    synchronize them with real time soldier
-    objects in the game_render module.
-    '''
-
+class SoldierTracker(ObjectTracker):
     def __init__(self, path: list[tuple[int, int]]):
+        super().__init__()
         SoldierRT.path = path
-        self.soldiers_rt = {'left': {}, 'right': {}}
     
-    def update_tracker(self, soldiers: dict[str, list[Soldier]], particle_controller: ParticleController) -> None:
-        '''Update number and state of real time soldiers,
-        based on soldiers from game logic.
+    def get_new_object(self, logic_object: Soldier, side: str) -> ObjectRT:
+        return SoldierRT(
+            logic_object.id,
+            logic_object.position,
+            logic_object.name,
+            side,
+            logic_object.__dict__()
+        )
 
-        Impact on game_render state:
-            - adding new real time soldiers
-            - removing soldiers that should be dead
-            - updating path position of real time soldiers
-            - updating state of real time soldiers
-        '''
-
-        def spawn_new_soldiers(side_soldiers: list[Soldier], side: str):
-            for soldier in side_soldiers:
-                if soldier.id not in self.soldiers_rt[side]:
-                    self.soldiers_rt[side][soldier.id] = SoldierRT(
-                        soldier.id,
-                        soldier.position,
-                        soldier.name,
-                        side,
-                        soldier.__dict__()
-                    )
-
-        spawn_new_soldiers(soldiers['left'], 'left')
-        spawn_new_soldiers(soldiers['right'], 'right')
-
-        def remove_dead_soldiers(side_soldiers: list[Soldier], side: str):
-            ids_to_remove = []
-
-            for id in self.soldiers_rt[side]:
-                if id not in [s.id for s in side_soldiers]:
-                    ids_to_remove.append(id)
-            for id in ids_to_remove:
-                self.soldiers_rt[side].pop(id)
-                    
-        remove_dead_soldiers(soldiers['left'], 'left')
-        remove_dead_soldiers(soldiers['right'], 'right')
-
-        LEFT_EXISTS = len(soldiers['left']) > 0
-        RIGHT_EXISTS = len(soldiers['right']) > 0
-
-        is_fight = LEFT_EXISTS and RIGHT_EXISTS and \
-                    abs(soldiers['left'][0].position - soldiers['right'][0].position) <= 1
+    def update(self, logic_soldiers: dict[str, dict[Soldier]], dt: float, mouse_pos: Vector2) -> None:
         
-        if is_fight:
-            self.soldiers_rt['left'][soldiers['left'][0].id].set_state('fight')
-            self.soldiers_rt['right'][soldiers['right'][0].id].set_state('fight')
-            particle_controller.add_particles(
-                BloodParticle,
-                self.soldiers_rt['left'][soldiers['left'][0].id].cords + Vector2(TILE_SIZE, TILE_SIZE) // 2,
-                amount = 1,
-                direction = -1 * self.soldiers_rt['left'][soldiers['left'][0].id].direction
-            )
-            particle_controller.add_particles(
-                BloodParticle,
-                self.soldiers_rt['right'][soldiers['right'][0].id].cords + Vector2(TILE_SIZE, TILE_SIZE) // 2,
-                amount = 1,
-                direction = -1 * self.soldiers_rt['right'][soldiers['right'][0].id].direction
-            )
+        super().update(logic_soldiers, dt, mouse_pos)
+
+        first = {
+            side: None if not logic_soldiers[side] 
+            else self.objects_rt[side][logic_soldiers[side][0].id]
+            for side in ('left', 'right')
+        } 
+
+        if first['left'] is not None and first['right'] is not None:
+            distance = abs(first['left']['position'] - first['right']['position'])
+            for side in ('left', 'right'):
+                first[side].set_state('fight' if distance <= 1 else 'walk')
         else:
-            if LEFT_EXISTS: self.soldiers_rt['left'][soldiers['left'][0].id].set_state('walk')
-            if RIGHT_EXISTS: self.soldiers_rt['right'][soldiers['right'][0].id].set_state('walk')
+            for side in ('left', 'right'):
+                if first[side] is not None:
+                    first[side].set_state('walk')
 
-        def update_soldiers_state(side_soldiers: list[Soldier], side: str):
-            for i in range(1, len(side_soldiers)):
-                current_soldier = self.soldiers_rt[side][side_soldiers[i].id]
-                previous_soldier = self.soldiers_rt[side][side_soldiers[i-1].id]
-                position_difference = abs(side_soldiers[i].position - side_soldiers[i-1].position)
-
-                if position_difference < 1 or (position_difference == 1 and previous_soldier.state != 'walk'):
-                    current_soldier.set_state('idle')
-                else:
-                    current_soldier.set_state('walk')
-
-            for soldier in side_soldiers:
-                self.soldiers_rt[side][soldier.id].set_path_position(soldier.position)
-                self.soldiers_rt[side][soldier.id].set_stats(soldier.__dict__())
-
-        update_soldiers_state(soldiers['left'], 'left')
-        update_soldiers_state(soldiers['right'], 'right')
-
-        def update_soldiers_hp(side_soldiers: list[Soldier], side: str):
-            for soldier in side_soldiers:
-                self.soldiers_rt[side][soldier.id].set_hp(soldier.hp)
-
-        update_soldiers_hp(soldiers['left'], 'left')
-        update_soldiers_hp(soldiers['right'], 'right')
-
-    def update_soldiers(self, dt: float, mouse_pos: Vector2) -> None:
-        '''Updates every real time soldier.
-        '''
-
-        for soldier in self.get_soldiers():
-            soldier.update(dt, mouse_pos)
-
-    def get_soldiers(self) -> list[SoldierRT]:
-        '''Real time soldiers getter.
-        '''
-
-        return list(self.soldiers_rt['left'].values()) + \
-              list(self.soldiers_rt['right'].values())
-    
-    def __str__(self):
-        return f'[{", ".join(str(soldier) for soldier in self.get_soldiers())}]'
-
+        for side in ('left', 'right'):
+            for i in range(1, len(logic_soldiers[side])):
+                rt_soldier = self.objects_rt[side][logic_soldiers[side][i].id]
+                pre_rt_soldier = self.objects_rt[side][logic_soldiers[side][i - 1].id]
+                distance = abs(rt_soldier['position'] - pre_rt_soldier['position'])
+                rt_soldier.set_state(
+                    'idle' if distance == 0 or
+                    (distance == 1 and pre_rt_soldier.state != 'walk') else 'walk')

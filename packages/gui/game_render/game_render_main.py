@@ -32,14 +32,7 @@ class GameRender(GUIElement):
             self.set_zoom(self.__zoom + mouse.wheel * ZOOM_INTERWAL * self.__zoom)
 
         return self.__engine.render(
-                self.__game,
-                dt,
-                False,
-                self.real_size,
-                mouse,
-                self.global_pos,
-                self.__zoom
-            )
+            self.__game, dt, self.real_size, mouse, self.global_pos, self.__zoom)
 
 class Main:
     def __init__(self, log_name: str):
