@@ -8,10 +8,10 @@ class Main():
     def __init__(self, log_name: str):
         init()
         while True:
-            # GameRender('example_log.txt')
-            # sleep(1)
-            MapGenerate()
-            sleep(1)
+            GameRender('example_log.txt')
+            #sleep(1)
+            #MapGenerate()
+            #sleep(1)
 
 
         

@@ -94,7 +94,6 @@ class Main:
                 game_output = self.__game.update(*self.__log_interpreter.get_next_actions())
                 self.__tick = 0
             self.__screen_update()
-            print(__name__)
 
     def __stop(self):
         self.__is_running = False

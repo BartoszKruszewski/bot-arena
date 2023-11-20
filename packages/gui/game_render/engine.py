@@ -4,7 +4,7 @@ from pygame.draw import rect as draw_rect, line as draw_line
 from pygame.transform import scale
 from ...game_logic.game import Game
 
-from ..const import TILE_SIZE, SHOW_REAL_POS, INFO_TAB_MARGIN
+from ..const import TILE_SIZE, SHOW_REAL_POS, INFO_TAB_MARGIN, HEALTH_BAR_SIZE, HEALTH_BAR_COLOR_BACK, HEALTH_BAR_COLOR_FRONT
 from ..mouse import Mouse
 
 from .camera import Camera
@@ -101,7 +101,6 @@ class Engine():
         return scale(self.__draw_screen, Vector2(self.__draw_screen.get_size()) * zoom)
 
     def __draw_object_rt(self, object: ObjectRT):
-        
         if object.__class__ == SoldierRT:
             direction = {
                 (0, 0):    'bot',
@@ -109,10 +108,11 @@ class Engine():
                 (0, 1):    'bot',
                 (-1, 0):   'left',
                 (1, 0):    'right'
-            }[(int(object.direction.x), int(object.direction.y))]
+            }[tuple(object.direction)]
 
             texture = self.__assets['soldiers'][object.name] \
             [object.animation][direction][object.frame]
+
         elif object.__class__ == FarmRT:
             texture = self.__assets["farms"]["farm"]
         elif object.__class__ == TurretRT:
@@ -120,80 +120,107 @@ class Engine():
 
         size = texture.get_size()
 
-        self.__draw(
-            texture,
-            object.cords + \
-            Vector2(TILE_SIZE // 2, TILE_SIZE - size[1]) \
-            - Vector2(size[0], 0) // 2
-        )
+        self.__draw(texture, object.cords + Vector2((TILE_SIZE - size[0]) // 2, TILE_SIZE - size[1]))
         
         if object.__class__ == SoldierRT:
-            size = texture.get_size()[0] // 2
-            bar = Surface((size, 1))
-            bar.fill((255, 0, 0))
-            self.__draw(bar, object.cords - Vector2(-1, 4))
-
-            bar = Surface((object.actual_hp_rate * size, 1))
-            bar.fill((0, 255, 0))
-            self.__draw(bar, object.cords - Vector2(-1, 4))
-
-        if object.view_rate[0] > 0:
-
-            infos = object.stats
-            text_surfaces = [
-                self.__font_renderer.render(f'{name}: {info}', 'small')
-                for name, info in infos.items()
-            ]
-
-            info_tab_size = Vector2(
-                max(s.get_size()[0] for s in text_surfaces) + INFO_TAB_MARGIN * 2,
-                sum((s.get_size()[1] for s in text_surfaces)) + INFO_TAB_MARGIN * 2,
-            )
-
-            info_tab = Surface(info_tab_size, SRCALPHA)
-
-            info_tab.fill((0, 0, 0, 120))
-            [
-                info_tab.blit(s.subsurface(Rect(0, 0, object.view_rate[4 + i] * s.get_size()[0], s.get_size()[1])), (INFO_TAB_MARGIN, INFO_TAB_MARGIN + sum(s.get_size()[1] for s in text_surfaces[:i])))
-                for i, s in enumerate(text_surfaces)
-            ]
-
-            draw_rect(info_tab, (0, 0, 0, 0), Rect(
-                0, info_tab_size.y * object.view_rate[4] + 1, 
-                info_tab_size.x,
-                info_tab_size.y
-            ))
-
-            draw_points = (
-                Vector2(0, 1),
-                Vector2(info_tab_size.x + 1, 1),
-                Vector2(info_tab_size.x + 1, -info_tab_size.y),
-                Vector2(0, -info_tab_size.y),
-                Vector2(0, 0),
-            )
-            
-            for i in range(1, len(draw_points)):
-                if object.view_rate[i - 1] > 0:
-                    self.__draw_line(
-                        object.cords - draw_points[i - 1],
-                        object.cords - draw_points[i],
-                        Color(255, 255, 255),
-                        object.view_rate[i - 1],
-                        True
-                    )
-            
-            if object.view_rate[4] > 0:
-                self.__draw(
-                    info_tab,
-                    object.cords - Vector2(info_tab.get_size()[0], 0),
-                    True
-                )
+            self.__draw_health_bar(object)
+        self.__draw_info_bar(object.stats, object.cords, object.view_rate)
 
         # real pos
         if SHOW_REAL_POS:
             surf = Surface((1, 1))
             surf.fill((255, 0, 0))
             self.__draw(surf, object.cords)
+
+    def __draw_health_bar(self, soldier: SoldierRT):
+        '''Draws health bar above the soldier
+        '''
+
+        bar = Surface(HEALTH_BAR_SIZE)
+        bar.fill(HEALTH_BAR_COLOR_BACK)
+        bar.fill(
+            HEALTH_BAR_COLOR_FRONT,
+            Rect(0, 0, soldier.actual_hp_rate * HEALTH_BAR_SIZE[0], HEALTH_BAR_SIZE[1])
+        )
+        self.__draw(
+            bar,
+            soldier.cords + Vector2(TILE_SIZE - HEALTH_BAR_SIZE[0], -1) // 2
+        )
+    
+    def __draw_info_bar(self, info: dict[str, str], pos: Vector2, view_rate: list[float]):
+        '''Draws info bar with animation.
+        
+        info: {
+            'stat_name' : value
+            ...
+        }
+        pos: start point cords
+        view_rate: list of animation progres 0 -> 1 egz. [1, 1, 0.5, 0, 0, 0]
+        '''
+
+        if view_rate[0] > 0:
+
+            text_surfaces = [
+                self.__font_renderer.render(f'{name}: {info}', 'small')
+                for name, info in info.items()
+            ]
+
+            size = Vector2(
+                max(s.get_size()[0] for s in text_surfaces) + INFO_TAB_MARGIN * 2,
+                sum((s.get_size()[1] for s in text_surfaces)) + INFO_TAB_MARGIN * 2,
+            )
+
+            info_tab = Surface(size, SRCALPHA)
+            info_tab.fill((0, 0, 0, 120))
+
+            for i, s in enumerate(text_surfaces):
+                info_tab.blit(s.subsurface(
+                    Rect(0, 0, view_rate[4 + i] * s.get_size()[0], s.get_size()[1])),
+                    (INFO_TAB_MARGIN, INFO_TAB_MARGIN + sum(s.get_size()[1] for s in text_surfaces[:i])
+                ))
+
+            draw_rect(info_tab, (0, 0, 0, 0), Rect(
+                0, size.y * view_rate[4] + 1, 
+                size.x,
+                size.y
+            ))
+
+            direction = pos.x - size.x + self.__camera.get_offset().x > 0
+
+            draw_points = (
+                Vector2(0, -1),
+                Vector2(-size.x - 1, -1),
+                Vector2(-size.x - 1, size.y),
+                Vector2(0, size.y),
+                Vector2(0, 0),
+            ) if direction else (
+                Vector2(0, -1),
+                Vector2(size.x, -1),
+                Vector2(size.x, size.y),
+                Vector2(-1, size.y),
+                Vector2(-1, -1),
+            )
+            
+            frame_offset = Vector2(0, 0) if direction else Vector2(TILE_SIZE, 0)
+
+            for i in range(1, len(draw_points)):
+                if view_rate[i - 1] > 0:
+                    self.__draw_line(
+                        pos + frame_offset + draw_points[i - 1],
+                        pos + frame_offset + draw_points[i],
+                        Color(255, 255, 255),
+                        view_rate[i - 1],
+                        True
+                    )
+            
+            tab_offset = Vector2(-size.x, 0) if direction else Vector2(TILE_SIZE, 0)
+
+            if view_rate[4] > 0:
+                self.__draw(
+                    info_tab,
+                    pos + tab_offset ,
+                    True
+                )
 
     def __draw_particle(self, particle: Particle):
         pos, color, size = particle.get_data()
