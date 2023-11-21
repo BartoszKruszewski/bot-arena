@@ -60,11 +60,11 @@ class SoldierRT(ObjectRT):
 
     def __update_cords(self, dt: float):
         if self.state == 'walk':
-            self.cords += self.direction * TILE_SIZE * dt / FRAMERATE
+            self.cords += self.direction * (TILE_SIZE / FRAMERATE) * dt
         else:
             self.cords = Vector2(SoldierRT.path[self['position']]) * TILE_SIZE
 
     def __update_hp_rate(self, dt):
-        self.actual_hp_rate = self.stats['hp'] / self.stats['max_hp']
-        #self.actual_hp_rate += (self.actual_hp_rate - target) / HP_BAR_SMOOTH * dt
+        target = self.stats['hp'] / self.stats['max_hp']
+        self.actual_hp_rate += (target - self.actual_hp_rate) / HP_BAR_SMOOTH * dt
 

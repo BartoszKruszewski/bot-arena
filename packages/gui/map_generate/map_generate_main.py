@@ -5,7 +5,7 @@ from pygame.event import peek as event_peek
 from ..gui_object import Window, GUIElement, InputField
 from ..gui_object import RectButton, SquareButton, GoBackButton
 from ..mouse import Mouse
-from ..const import SCREEN_SIZE, FRAMERATE, STANDARD_FRAMERATE
+from ..const import SCREEN_SIZE
 
 from packages import MAPS_DIRECTORY
 

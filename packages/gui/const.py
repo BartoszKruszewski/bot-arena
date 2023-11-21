@@ -1,5 +1,4 @@
 SCREEN_SIZE = (SCREEN_SIZE_X, SCREEN_SIZE_Y) = (1280, 720)
-STANDARD_FRAMERATE = 60
 FRAMERATE = 60
 TILE_SIZE = 64
 CAMERA_OFFSET_MOVE_AREA = 0.1 # 0 -> 1 realtive to draw_screen_size
@@ -9,7 +8,7 @@ SPRITE_SIZE = 64
 ANIMATION_LEN = 5
 ANIMATION_NAMES = ('walk', 'fight')
 ANIMATION_DIRECTIONS = ('top','right','bot')
-ANIMATION_SPEED = 20 # frames per second
+ANIMATION_SPEED = 15 # frames per second
 SHOW_GRID = True
 SHOW_OBSTACLES_AREA = True
 SHOW_SOLDIERS_REAL_POS = False

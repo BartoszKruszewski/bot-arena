@@ -1,4 +1,4 @@
-from .game_render.game_render_main import Main as GameRender
+from .game_render.main import Main as GameRender
 from .map_generate.map_generate_main import Main as MapGenerate
 from pygame import init
 

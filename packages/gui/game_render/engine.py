@@ -60,7 +60,7 @@ class Engine():
         '''
 
         # update staff
-        self.__camera.update(draw_screen_size, mouse, screen_shift, zoom)
+        self.__camera.update(draw_screen_size, mouse, screen_shift, zoom, dt)
         self.__soldier_tracker.update(
             game.get_soldiers(), dt, self.__camera.get_mouse_pos())
         self.__turret_tracker.update(

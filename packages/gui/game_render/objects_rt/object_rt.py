@@ -47,15 +47,15 @@ class ObjectRT:
         '''Updates actual animation frame.
         '''
 
-        self.tick += 1
-        if self.tick > FRAMERATE // ANIMATION_SPEED * dt:
+        self.tick += dt
+        if self.tick > FRAMERATE / (ANIMATION_LEN if self.state == 'fight' else ANIMATION_SPEED):
             self.tick = 0
             self.frame += 1
             if self.frame >= ANIMATION_LEN:
                 self.frame = 0
 
     def __update_select_time(self, mouse_pos: Vector2, dt: float):
-        if mouse_pos.distance_to(self.cords + Vector2(TILE_SIZE, TILE_SIZE) // 2) < MOUSE_TARGET_RADIUS:
+        if mouse_pos.distance_to(self.cords + Vector2(TILE_SIZE) // 2) < MOUSE_TARGET_RADIUS:
             self.select_time += dt
         else:
             self.select_time -= dt * INFO_TAB_HIDE_SPEED

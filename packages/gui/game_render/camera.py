@@ -1,7 +1,7 @@
 from pygame import Vector2
 
 from ..const import CAMERA_OFFSET_MOVE_AREA, CAMERA_OFFSET_SPEED, TILE_SIZE, \
-    CAMERA_SMOOTH, FRAMERATE, STANDARD_FRAMERATE
+    CAMERA_SMOOTH
 from ..mouse import Mouse
 
 class Camera:
@@ -13,9 +13,9 @@ class Camera:
         self.__mouse_pos = Vector2(0, 0)
         
 
-    def update(self, draw_screen_size: Vector2, mouse: Mouse, screen_shift: Vector2, zoom: float):
+    def update(self, draw_screen_size: Vector2, mouse: Mouse, screen_shift: Vector2, zoom: float, dt: float):
         self.__update_mouse_pos(mouse, screen_shift, zoom)
-        self.__update_camera_offset(draw_screen_size, zoom)
+        self.__update_camera_offset(draw_screen_size, zoom, dt)
 
     def get_offset(self) -> Vector2:
         return self.__camera_offset
@@ -23,10 +23,10 @@ class Camera:
     def get_mouse_pos(self) -> Vector2:
         return self.__mouse_pos - self.__camera_offset
 
-    def __update_mouse_pos(self, mouse: Mouse, screen_shift: Vector2, zoom):
+    def __update_mouse_pos(self, mouse: Mouse, screen_shift: Vector2, zoom: float):
         self.__mouse_pos =  (mouse.pos - screen_shift) / zoom
 
-    def __update_camera_offset(self, draw_screen_size: Vector2, zoom: float):
+    def __update_camera_offset(self, draw_screen_size: Vector2, zoom: float, dt: float):
         
         camera_offset_move_area = draw_screen_size / zoom * CAMERA_OFFSET_MOVE_AREA
 
@@ -51,6 +51,6 @@ class Camera:
             self.__dest_camera_offset.y = min(self.__dest_camera_offset.y, 0)
 
         self.__real_camera_offset += (self.__dest_camera_offset - self.__real_camera_offset) \
-                                        / CAMERA_SMOOTH / FRAMERATE * STANDARD_FRAMERATE
+                                        / CAMERA_SMOOTH * dt 
         self.__camera_offset = Vector2(
             int(self.__real_camera_offset.x), int(self.__real_camera_offset.y)) 

@@ -12,7 +12,7 @@ from .engine import Engine
 from ..gui_object import Window, GUIElement
 from ..gui_object import RectButton, SquareButton, GoBackButton
 from ..mouse import Mouse
-from ..const import SCREEN_SIZE, FRAMERATE, STANDARD_FRAMERATE
+from ..const import SCREEN_SIZE, FRAMERATE
 from ..const import ZOOM_INTERWAL, MIN_ZOOM, MAX_ZOOM
 
 from packages import MAPS_DIRECTORY
@@ -94,7 +94,7 @@ class Main:
     def __screen_update(self):
         '''Refreshes screen and update frame clock.
         '''
-        self.__dt = self.__clock.tick(FRAMERATE) * STANDARD_FRAMERATE / 1000
+        self.__dt = self.__clock.tick(FRAMERATE) * FRAMERATE / 1000
         self.__screen.blit(self.__gui.get_surface(self.__dt, self.__mouse), (0, 0))
         display_update()
 
