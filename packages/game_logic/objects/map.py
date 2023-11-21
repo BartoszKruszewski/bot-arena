@@ -29,7 +29,7 @@ class Map():
 
         self.MAP_SIZE_X = map_data['MAP_SIZE_X']
         self.MAP_SIZE_Y = map_data['MAP_SIZE_Y']
-        self._start = tuple(map_data['start'])
+        self._start = (0, 0)
         self._end = (MAP_SIZE_X - 1, MAP_SIZE_Y - 1)
         self.path = [tuple(pos) for pos in map_data['path']]
         for cord in [tuple(pos) for pos in map_data['obstacles']]:

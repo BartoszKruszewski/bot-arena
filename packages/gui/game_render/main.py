@@ -35,13 +35,13 @@ class GameRender(GUIElement):
             self.__game, dt, self.real_size, mouse, self.global_pos, self.__zoom)
 
 class Main:
-    def __init__(self, log_name: str):
+    def __init__(self, log_name: str, game_name: str):
         self.__screen = display_set_mode(SCREEN_SIZE)
         self.__is_running = True
         self.__dt = 1
         self.__clock = Clock()
         self.__tick = 0
-        self.__game = Game(MAPS_DIRECTORY + "/" + "example_map.json")
+        self.__game = Game(MAPS_DIRECTORY + "/" + game_name)
         self.__mouse = Mouse()
 
         path = "/".join([dir for dir in __file__.split('\\') 

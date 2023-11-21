@@ -3,6 +3,7 @@ from pygame import event as pgevent, KEYDOWN, K_BACKSPACE, font
 from abc import ABC
 from .mouse import Mouse
 from pygame.locals import *
+from .const import SCREEN_SIZE
 
 ###
 # GUIobject ABC
@@ -71,6 +72,21 @@ class GUIobject(ABC):
             self.global_pos.x <= mouse.pos.x <= self.global_pos.x + self.real_size.x,
             self.global_pos.y <= mouse.pos.y <= self.global_pos.y + self.real_size.y,
         ))
+    
+    def __iter__(self):
+        yield self
+        if self.sub_objects is not None:
+            for object in self.sub_objects:
+                yield from object
+
+    def __str__(self):
+        return f'{self.__class__.__name__}{self.properties}'
+
+    def print(self, indent: int = 0):
+        print(' ' * indent + str(self))
+        if self.sub_objects is not None:
+            for object in self.sub_objects:
+                object.print(indent + 4)
 
 class Window(GUIobject):
     """Window is a GUIobject that can contain other GUIobjects
@@ -101,6 +117,7 @@ class Button(GUIElement, ABC):
         super().__init__(pos, size, **kwargs)
         self.__on_click = self.properties.get('on_click', lambda: None)
         self.__out_click = self.properties.get('out_click', lambda: None)
+        self.is_clicked = False
 
     def render(self, dt: float, mouse: Mouse) -> Surface:
         surf = super().render(dt, mouse)
@@ -116,9 +133,16 @@ class Button(GUIElement, ABC):
         if self.in_mouse_range(mouse):
             if mouse.left_click:
                 self.__on_click()
+                if self.properties.get('on_click_color', None) is not None:
+                    tmp = self.properties['color']
+                    self.properties['color'] = self.properties['on_click_color']
+                    self.properties['on_click_color'] = tmp
+                    self.is_clicked = not self.is_clicked
         else:
             if mouse.left_click:
                 self.__out_click()
+                if self.properties.get('out_click_color', None) is not None:
+                    self.properties['color'] = self.properties['out_click_color']
 
 class RectButton(Button):
     """RectButton is a Button with rectangular shape
@@ -159,12 +183,21 @@ class GoBackButton(SquareButton):
         Kwargs:
             on_click (function): Function that is called when this GoBackButton is clicked"""
     def __init__(self, **kwargs):
-        super().__init__((0.005, 0.005), 0.03, color=(0,255,0), **kwargs)
+        super().__init__((0.005, 0.005), 0.03, color=(0,255,0), text="   <", **kwargs)
 
         if not 'on_click' in self.properties:
             raise Exception('GoBackButton must have on_click property')
         self.__on_click = self.properties.get('on_click', lambda: None)
-        
+
+class SubmitButton(RectButton):
+    def __init__(self, **kwargs):
+        super().__init__(
+            (0.75, 0.85), (0.2, 0.1), 
+            text="Submit", 
+            color=(50,205,50),
+            **kwargs
+            )
+
 class InputField(Button):
     """InputField is a Button that can be used to input text
 
@@ -184,21 +217,16 @@ class InputField(Button):
             out_click=self.out_click,
             **kwargs
         )
-
-        self.is_clicked = False
+        self.is_last_clicked = False
         self.text = ''
 
     def render(self, dt: float, mouse: Mouse) -> Surface:
         self.check_click(mouse)
         self.check_text()
 
-        surf = Surface(self.real_size)
-        if self.is_clicked:
-            surf.fill(Color(128, 0, 0))
-        else:
-            surf.fill(Color(0, 0, 128))
+        surf = super().render(dt, mouse)
 
-        if self.text == '' and not self.is_clicked:
+        if self.text == '' and not self.is_last_clicked:
             self.text = self.properties.get('placeholder', '')
 
         surf.blit(
@@ -212,7 +240,7 @@ class InputField(Button):
         return self.text
         
     def check_text(self):
-        if self.is_clicked:
+        if self.is_last_clicked:
             for event in pgevent.get():
                 if event.type == KEYDOWN:
                     if event.key == K_BACKSPACE:
@@ -222,18 +250,33 @@ class InputField(Button):
 
     def on_click(self):
         if self.is_clicked: return
-        self.is_clicked = True
+        self.is_last_clicked = True
         pgevent.clear()
         self.text = ''
 
     def out_click(self):
-        self.is_clicked = False
+        self.is_last_clicked = False
 
+class ErrorWindow(Window):
+    def __init__(self, error: str, on_click: callable):
+        super().__init__(
+            [
+                RectButton(
+                    (0.1, 0.4), (0.8, 0.1),
+                    color=(255, 0, 0), 
+                    text=error,
+                ),
+                GoBackButton(
+                    on_click=on_click,
+                )
+            ],
+            (0, 0), (1, 1),
+        )
+        self.calc_pos(Vector2(SCREEN_SIZE), Vector2(0, 0))
 
-
-
-
-
+    def render(self, dt: float, mouse: Mouse) -> Surface:
+        surf = super().render(dt, mouse)
+        return surf
     
     
         
