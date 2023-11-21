@@ -3,13 +3,13 @@ from pygame import Vector2
 from packages.gui.game_render.objects_rt.object_rt import ObjectRT
 from ....game_logic.objects.soldiers import Soldier
 from ...const import TILE_SIZE
-from ..particle import ParticleController, BloodParticle
+from ..particle import BloodParticle, ParticleController
 from .soldier_rt import SoldierRT
 from .object_tracker import ObjectTracker
 
 class SoldierTracker(ObjectTracker):
-    def __init__(self, path: list[tuple[int, int]]):
-        super().__init__()
+    def __init__(self, path: list[tuple[int, int]], particle_controller: ParticleController):
+        super().__init__(particle_controller)
         SoldierRT.path = path
     
     def get_new_object(self, logic_object: Soldier, side: str) -> ObjectRT:
@@ -35,6 +35,7 @@ class SoldierTracker(ObjectTracker):
             distance = abs(first['left']['position'] - first['right']['position'])
             for side in ('left', 'right'):
                 first[side].set_state('fight' if distance <= 1 else 'walk')
+                
         else:
             for side in ('left', 'right'):
                 if first[side] is not None:

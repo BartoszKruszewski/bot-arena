@@ -1,9 +1,11 @@
 from pygame import Vector2
 from .object_rt import ObjectRT
+from ..particle import ParticleController
 
 class ObjectTracker:
-    def __init__(self):
+    def __init__(self, particle_controller: ParticleController):
         self.objects_rt = {'left': {}, 'right': {}}
+        ObjectRT.particle_controller = particle_controller
 
     def update(self, logic_objects, dt: float, mouse_pos: Vector2, game_speed: float):
         self.__add_new_objects(logic_objects)

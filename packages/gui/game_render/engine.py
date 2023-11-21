@@ -38,10 +38,10 @@ class Engine():
         self.__assets_loader = AssetsLoader()
         self.__camera = Camera(game.get_map_size())
 
-        self.__soldier_tracker = SoldierTracker(game.get_path())
-        self.__turret_tracker = TurretTracker()
-        self.__farm_tracker = FarmTracker()
-        self.__obstacle_tracker = ObstacleTracker()
+        self.__soldier_tracker = SoldierTracker(game.get_path(), self.__particle_controller)
+        self.__turret_tracker = TurretTracker(self.__particle_controller)
+        self.__farm_tracker = FarmTracker(self.__particle_controller)
+        self.__obstacle_tracker = ObstacleTracker(self.__particle_controller)
 
         # assets
         self.__assets = self.__assets_loader.load('./assets/textures', '.png')

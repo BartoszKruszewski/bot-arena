@@ -47,8 +47,8 @@ class Particle:
         Refreshes once per frame.
         '''
 
-        self.__tick += 1
-        if self.__tick > FRAMERATE * dt / 10:
+        self.__tick += dt
+        if self.__tick > FRAMERATE / 10:
             self.__time -= 1
             self.__tick = 0
         self.__speed *= self.__acc * dt

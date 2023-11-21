@@ -1,12 +1,13 @@
 from pygame import Vector2
-from ...const import TILE_SIZE, FRAMERATE, ANIMATION_NAMES, HP_BAR_SMOOTH
+from ...const import TILE_SIZE, FRAMERATE, HP_BAR_SMOOTH, ANIMATION_LEN
 from .object_rt import ObjectRT
+from ..particle import BloodParticle
 
 class SoldierRT(ObjectRT):
     '''Real time soldier game_render class.
     '''
 
-    path = [] 
+    path = []
 
     def __init__(self, id: int, path_pos: int, name: str, side: str, stats: dict):
         
@@ -26,6 +27,7 @@ class SoldierRT(ObjectRT):
         self.__update_cords(dt, game_speed)
         self.__update_animation()
         self.__update_hp_rate(dt)
+        self.__update_particles()
 
     def set_state(self, state: str):
         '''Soldier state setter.
@@ -68,3 +70,11 @@ class SoldierRT(ObjectRT):
         target = self.stats['hp'] / self.stats['max_hp']
         self.actual_hp_rate += (target - self.actual_hp_rate) / HP_BAR_SMOOTH * dt
 
+    def __update_particles(self):
+        if self.state == 'fight' and self.frame == ANIMATION_LEN - 1:
+            ObjectRT.particle_controller.add_particles(
+                BloodParticle,
+                pos = self.cords + Vector2(TILE_SIZE) // 2,
+                amount = 10,
+                direction = -self.direction
+            )

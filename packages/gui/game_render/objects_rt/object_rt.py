@@ -6,6 +6,7 @@ from ...const import TILE_SIZE, FRAMERATE, ANIMATION_SPEED, \
 class ObjectRT:
     '''Real time object class used in game_render rendering.
     '''
+    particle_controller = None
 
     def __init__(self, cords: Vector2, id: int, name: str, side: str, stats: dict):
 
