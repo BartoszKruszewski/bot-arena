@@ -18,11 +18,12 @@ from ..const import ZOOM_INTERWAL, MIN_ZOOM, MAX_ZOOM
 from packages import MAPS_DIRECTORY
 
 class GameRender(GUIElement):
-    def __init__(self, pos: tuple[float, float], size: tuple[float, float], game: Game, **kwargs):
+    def __init__(self, pos: tuple[float, float], size: tuple[float, float], game: Game, render_data, **kwargs):
         super().__init__(pos, size, **kwargs)
         self.__game = game
         self.__engine = Engine(self.__game)
         self.__zoom = 1
+        self.__render_data = render_data
     
     def set_zoom(self, value):
         self.__zoom = max(MIN_ZOOM, min(MAX_ZOOM, value))
@@ -32,7 +33,7 @@ class GameRender(GUIElement):
             self.set_zoom(self.__zoom + mouse.wheel * ZOOM_INTERWAL * self.__zoom)
 
         return self.__engine.render(
-            self.__game, dt, self.real_size, mouse, self.global_pos, self.__zoom)
+            self.__game, dt, self.real_size, mouse, self.global_pos, self.__zoom, self.__render_data['game_speed'])
 
 class Main:
     def __init__(self, log_name: str):
@@ -43,6 +44,7 @@ class Main:
         self.__tick = 0
         self.__game = Game(MAPS_DIRECTORY + "/" + "example_map.json")
         self.__mouse = Mouse()
+        self.__render_data = {'game_speed': 1}
 
         path = "/".join([dir for dir in __file__.split('\\') 
             if dir != ''][:-1]) + "/../../../logs/" + log_name
@@ -61,14 +63,20 @@ class Main:
                 color=(42, 42, 42)),
             Window(
                 [ 
-                    GameRender((0, 0), (1, 1), self.__game)
+                    GameRender((0, 0), (1, 1), self.__game, self.__render_data)
                 ], 
                 (0.2, 0), (0.8, 0.8),
                 color=(84, 84, 84)
             ),
             Window(
                 [
-                    RectButton((0.1, 0.1), (0.2, 0.2), on_click=lambda: print('click')),
+                    RectButton(
+                        (0.1, 0.1),
+                        (0.2, 0.3),
+                        on_click = lambda: self.set_game_speed(self.__render_data['game_speed'] + 0.5),
+                        text = 'speed up',
+                        color = (0,0,255)
+                    ),
                     RectButton((0.5, 0.5), (0.2, 0.2)),
                 ], 
                 (0.2, 0.8), (1, 0.2),
@@ -82,7 +90,7 @@ class Main:
         while self.__is_running:
             self.__mouse.update()
             self.__is_running = not event_peek(WINDOWCLOSE)
-            self.__tick += self.__dt
+            self.__tick += self.__dt * self.__render_data['game_speed']
             if self.__tick > FRAMERATE:
                 game_output = self.__game.update(*self.__log_interpreter.get_next_actions())
                 self.__tick = 0
@@ -108,12 +116,7 @@ class Main:
             raise Exception('Game speed must be greater than zero!')
         elif value > FRAMERATE:
             raise Exception('Game speed cannot be greater than FRAMERATE!')
-        self.__game_speed = value
-
-    def get_game_speed(self) -> float:
-        '''Game speed getter.
-        '''
-        return self.__game_speed
+        self.__render_data['game_speed'] = value
 
 if __name__ == "__main__":
     Main()

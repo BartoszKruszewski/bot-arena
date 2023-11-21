@@ -6,7 +6,7 @@ from ...game_logic.game import Game
 from math import floor
 
 from ..const import TILE_SIZE, SHOW_REAL_POS, INFO_TAB_MARGIN, HEALTH_BAR_SIZE, \
-    HEALTH_BAR_COLOR_BACK, HEALTH_BAR_COLOR_FRONT, INFO_TAB_SHOW_TIME
+    HEALTH_BAR_COLOR_BACK, HEALTH_BAR_COLOR_FRONT, INFO_TAB_SHOW_TIME, INFO_TAB_SHOW_SMOOTH
 from ..mouse import Mouse
 
 from .camera import Camera
@@ -51,7 +51,7 @@ class Engine():
         
     def render(
             self, game: Game, dt: float, draw_screen_size: Vector2,
-            mouse: Mouse, screen_shift: Vector2, zoom: float
+            mouse: Mouse, screen_shift: Vector2, zoom: float, game_speed: float
         ) -> Surface:
 
         '''Main rendering function.
@@ -62,14 +62,14 @@ class Engine():
         # update staff
         self.__camera.update(draw_screen_size, mouse, screen_shift, zoom, dt)
         self.__soldier_tracker.update(
-            game.get_soldiers(), dt, self.__camera.get_mouse_pos())
+            game.get_soldiers(), dt, self.__camera.get_mouse_pos(), game_speed)
         self.__turret_tracker.update(
-            game.get_turrets(), dt, self.__camera.get_mouse_pos())
+            game.get_turrets(), dt, self.__camera.get_mouse_pos(), game_speed)
         self.__farm_tracker.update(
-            game.get_farms(), dt, self.__camera.get_mouse_pos())
+            game.get_farms(), dt, self.__camera.get_mouse_pos(), game_speed)
         self.__obstacle_tracker.update(
             {'left': game.get_obstacles(), 'right': []},
-            dt, self.__camera.get_mouse_pos()
+            dt, self.__camera.get_mouse_pos(), game_speed
         )
         self.__particle_controller.update_particles(dt)
 
@@ -180,7 +180,7 @@ class Engine():
         '''
 
         def f(x, b):
-            A = 2
+            A = INFO_TAB_SHOW_SMOOTH
             return (x / (b * 1.01) - floor(x / (b * 1.01))) ** (1 / A)
 
         if animation_progress > 0:

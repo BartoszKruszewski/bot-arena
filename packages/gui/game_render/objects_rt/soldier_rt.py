@@ -20,10 +20,10 @@ class SoldierRT(ObjectRT):
         self.animation = 'walk'
         self.cords = Vector2(SoldierRT.path[path_pos]) * TILE_SIZE
 
-    def update(self, dt: float, mouse_pos: Vector2):
-        super().update(dt, mouse_pos)
+    def update(self, dt: float, mouse_pos: Vector2, game_speed: float):
+        super().update(dt, mouse_pos, game_speed)
         self.__update_direction()
-        self.__update_cords(dt)
+        self.__update_cords(dt, game_speed)
         self.__update_animation()
         self.__update_hp_rate(dt)
 
@@ -58,9 +58,9 @@ class SoldierRT(ObjectRT):
                 self.direction = Vector2(SoldierRT.path[self['position'] - 1]) \
                     - Vector2(SoldierRT.path[self['position']])
 
-    def __update_cords(self, dt: float):
+    def __update_cords(self, dt: float, game_speed: float):
         if self.state == 'walk':
-            self.cords += self.direction * (TILE_SIZE / FRAMERATE) * dt
+            self.cords += self.direction * (TILE_SIZE / FRAMERATE) * dt * game_speed
         else:
             self.cords = Vector2(SoldierRT.path[self['position']]) * TILE_SIZE
 

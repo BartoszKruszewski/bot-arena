@@ -21,9 +21,9 @@ class SoldierTracker(ObjectTracker):
             logic_object.__dict__()
         )
 
-    def update(self, logic_soldiers: dict[str, dict[Soldier]], dt: float, mouse_pos: Vector2) -> None:
+    def update(self, logic_soldiers: dict[str, dict[Soldier]], dt: float, mouse_pos: Vector2, game_speed: float) -> None:
         
-        super().update(logic_soldiers, dt, mouse_pos)
+        super().update(logic_soldiers, dt, mouse_pos, game_speed)
 
         first = {
             side: None if not logic_soldiers[side] 
