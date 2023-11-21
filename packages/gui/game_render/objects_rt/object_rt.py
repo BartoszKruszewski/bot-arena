@@ -1,11 +1,12 @@
 from pygame import Vector2
 from ...const import TILE_SIZE, FRAMERATE, ANIMATION_SPEED, \
-    ANIMATION_LEN, MOUSE_TARGET_RADIUS, INFO_TAB_SHOW_SMOOTH, \
+    ANIMATION_LEN, MOUSE_TARGET_RADIUS, \
     INFO_TAB_SHOW_TIME, INFO_TAB_HIDE_SPEED
 
 class ObjectRT:
     '''Real time object class used in game_render rendering.
     '''
+    particle_controller = None
 
     def __init__(self, cords: Vector2, id: int, name: str, side: str, stats: dict):
 
@@ -24,14 +25,14 @@ class ObjectRT:
         # info
         self.select_time = 0
 
-    def update(self, dt: float, mouse_pos: Vector2): 
+    def update(self, dt: float, mouse_pos: Vector2, game_speed: float): 
         '''Main update function.
 
         Refreshes once per frame.
         '''
 
         if self.state != 'idle':
-            self.__update_frame(dt)
+            self.__update_frame(dt, game_speed)
 
         self.__update_select_time(mouse_pos, dt)
 
@@ -43,11 +44,11 @@ class ObjectRT:
             raise Exception(f"Object doesn't have key stat: {key}")
         return self.stats[key]
 
-    def __update_frame(self, dt: float):
+    def __update_frame(self, dt: float, game_speed: float):
         '''Updates actual animation frame.
         '''
 
-        self.tick += dt
+        self.tick += dt * game_speed
         if self.tick > FRAMERATE / (ANIMATION_LEN if self.state == 'fight' else ANIMATION_SPEED):
             self.tick = 0
             self.frame += 1
