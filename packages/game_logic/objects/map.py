@@ -2,14 +2,14 @@ from random import shuffle, random, choice
 import json
 
 from ..stats import MAP_SIZE_X, MAP_SIZE_Y, OBSTACLES_AMOUNT
-
+from .obstalces import Obstacles
 class Map():
     def __init__(self, map_path: str) -> None:
         self._start = None
         self._end = None
 
         self.path = []
-        self.obstacles = []
+        self.obstacles = Obstacles()
 
         self.MAP_SIZE_X = None
         self.MAP_SIZE_Y = None
@@ -32,9 +32,8 @@ class Map():
         self._start = tuple(map_data['start'])
         self._end = (MAP_SIZE_X - 1, MAP_SIZE_Y - 1)
         self.path = [tuple(pos) for pos in map_data['path']]
-        self.obstacles = [tuple(pos) for pos in map_data['obstacles']]
-
-
+        for cord in [tuple(pos) for pos in map_data['obstacles']]:
+            self.obstacles.spawn(cord)
 
     def __generate_path(self, pos) -> None:
         # generate path without loops using backtracking
@@ -89,7 +88,7 @@ class Map():
                     if not near_path((x, y))]
         
         while len(self.obstacles) < OBSTACLES_AMOUNT:
-            self.obstacles.append(choice(not_path))
+            self.obstacles.spawn(choice(not_path))
             not_path.remove(self.obstacles[-1])
 
     def __generate_map(self) -> None:

@@ -181,7 +181,7 @@ class Game:
         return self._map.path
     
     def get_obstacles(self) -> list[tuple[int, int]]:
-        return self._map.obstacles
+        return self._map.obstacles.obstacles
     
     def get_map_size(self) -> tuple[int, int]:
         return (self._map.MAP_SIZE_X, self._map.MAP_SIZE_Y)

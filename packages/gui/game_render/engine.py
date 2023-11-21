@@ -3,9 +3,10 @@ from pygame import Vector2
 from pygame.draw import rect as draw_rect, line as draw_line
 from pygame.transform import scale
 from ...game_logic.game import Game
+from math import floor
 
 from ..const import TILE_SIZE, SHOW_REAL_POS, INFO_TAB_MARGIN, HEALTH_BAR_SIZE, \
-    HEALTH_BAR_COLOR_BACK, HEALTH_BAR_COLOR_FRONT
+    HEALTH_BAR_COLOR_BACK, HEALTH_BAR_COLOR_FRONT, INFO_TAB_SHOW_TIME
 from ..mouse import Mouse
 
 from .camera import Camera
@@ -21,6 +22,8 @@ from .objects_rt.turret_rt import TurretRT
 from .objects_rt.turret_tracker import TurretTracker
 from .objects_rt.farm_rt import FarmRT
 from .objects_rt.farm_tracker import FarmTracker
+from .objects_rt.obstacle_tracker import ObstacleTracker
+from .objects_rt.obstacle_rt import ObstacleRT
 
 class Engine():
     '''Main game_render class.
@@ -29,7 +32,7 @@ class Engine():
     def __init__(self, game: Game):
 
         # initialize modules
-        self.__map_renderer = MapRenderer(game)
+        self.__map_renderer = MapRenderer()
         self.__particle_controller = ParticleController()
         self.__font_renderer = FontRenderer()
         self.__assets_loader = AssetsLoader()
@@ -38,9 +41,7 @@ class Engine():
         self.__soldier_tracker = SoldierTracker(game.get_path())
         self.__turret_tracker = TurretTracker()
         self.__farm_tracker = FarmTracker()
-
-        self.__draw_screen = None
-        self.__ui_texture = None
+        self.__obstacle_tracker = ObstacleTracker()
 
         # assets
         self.__assets = self.__assets_loader.load('./assets/textures', '.png')
@@ -66,18 +67,27 @@ class Engine():
             game.get_turrets(), dt, self.__camera.get_mouse_pos())
         self.__farm_tracker.update(
             game.get_farms(), dt, self.__camera.get_mouse_pos())
+        self.__obstacle_tracker.update(
+            {'left': game.get_obstacles(), 'right': []},
+            dt, self.__camera.get_mouse_pos()
+        )
         self.__particle_controller.update_particles(dt)
 
         # reset frame
         self.__draw_screen = Surface(draw_screen_size // zoom)
         self.__ui_texture = Surface(draw_screen_size // zoom, SRCALPHA)
         self.__draw_screen.blit(self.__map_texture, self.__camera.get_offset())
-
+        
         # draw objects
-        for tracker in self.__soldier_tracker, \
-         self.__farm_tracker, self.__turret_tracker:
+        objects_queue = []
+
+        for tracker in self.__soldier_tracker, self.__farm_tracker, \
+         self.__turret_tracker, self.__obstacle_tracker:
             for object in tracker.get_objects():
-                self.__draw_object_rt(object)
+                objects_queue.append(object)
+
+        for object in sorted(objects_queue, key = lambda x: x.cords.y):
+            self.__draw_object_rt(object)
 
         # draw particles
         for particle in self.__particle_controller.get_particles():
@@ -121,6 +131,8 @@ class Engine():
             texture = self.__assets["farms"]["farm"]
         elif object.__class__ == TurretRT:
             texture = self.__assets["turrets"]["turret"]
+        elif object.__class__ == ObstacleRT:
+            texture = self.__assets["obstacles"]["obstacle_" + object.name]
         else:
             raise Exception(f'{object} is not a real time object!')        
 
@@ -129,7 +141,7 @@ class Engine():
         self.__draw(texture,
              object.cords + Vector2((TILE_SIZE - size[0]) // 2, TILE_SIZE - size[1]))
             
-        self.__draw_info_bar(object.stats, object.cords, object.view_rate)
+        self.__draw_info_bar(object.stats, object.cords, object.select_time / INFO_TAB_SHOW_TIME)
 
         # real pos
         if SHOW_REAL_POS:
@@ -155,19 +167,31 @@ class Engine():
             soldier.cords + Vector2(TILE_SIZE - HEALTH_BAR_SIZE[0], -1) // 2
         )
     
-    def __draw_info_bar(self, info: dict[str, str], pos: Vector2,
-            view_rate: list[float]):
+    def __draw_info_bar(self, info: dict[str, str], pos: Vector2, animation_progress: float):
         '''Draws info bar with animation.
         
         info: {
             'stat_name' : value
             ...
         }
+
         pos: start point cords
-        view_rate: list of animation progres 0 -> 1 egz. [1, 1, 0.5, 0, 0, 0]
+        animation_progress: 0 -> 1 
         '''
 
-        if view_rate[0] > 0:
+        def f(x, b):
+            A = 2
+            return (x / (b * 1.01) - floor(x / (b * 1.01))) ** (1 / A)
+
+        if animation_progress > 0:
+            
+            animation_len = 5 + len(info)
+            p = 1 / animation_len
+            view_rate = [
+                f(max(0, animation_progress - i * p), p)
+                if animation_progress < (i + 1) * p else 1
+                for i in range(animation_len)
+            ]
 
             text_surfaces = [
                 self.__font_renderer.render(f'{name}: {info}', 'small')
