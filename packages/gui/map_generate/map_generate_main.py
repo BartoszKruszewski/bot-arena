@@ -83,12 +83,11 @@ class Main:
         self.__gui.calc_pos(Vector2(SCREEN_SIZE), Vector2(0, 0))
 
     def submit_path(self):
-        path = [(0, 0)]
+        path = []
         for object in self.__gui:
             if type(object) is not RectButton: continue   
             if object.is_clicked and object.properties.get('map_cords', None) is not None:
                 path.append(object.properties['map_cords'])
-        path.sort()
 
         def neighbors(cords):
             x, y = cords
@@ -104,7 +103,15 @@ class Main:
                 self.__gui = ErrorWindow("Path is not correct", on_click=self.__set_path_scene)
                 return
         path.append((self.map_x_size - 1, self.map_y_size - 1))
-        self.path = path
+        
+        self.path = [(0, 0)]
+        while path != []:
+            for neighbor in neighbors(self.path[-1]):
+                if neighbor in path:
+                    self.path.append(neighbor)
+                    path.remove(neighbor)
+                    break
+
         self.__set_obstacles_scene()
             
     def __set_path_scene(self) -> None:
