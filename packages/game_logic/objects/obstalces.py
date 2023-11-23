@@ -9,6 +9,7 @@ class Obstacle:
             "id": self.id
         }
 
+
 class Obstacles():
     def __init__(self) -> None:
         self.obstacles = []
@@ -24,4 +25,3 @@ class Obstacles():
 
     def __len__(self) -> int:
         return len(self.obstacles)
-        

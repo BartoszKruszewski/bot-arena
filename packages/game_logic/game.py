@@ -10,6 +10,8 @@ from .objects.turrets import Turrets, Turret
 from .objects.soldiers import Soldiers, Soldier
 from .objects.farms import Farms, Farm
 
+from packages import MAPS_DIRECTORY
+
 ErrorCode = {
     -5: 'Too many troops',
     -4: 'Wrong build place',
@@ -23,7 +25,7 @@ ErrorCode = {
 }
 
 class Game:
-    def __init__(self, map_path: str = None) -> None:
+    def __init__(self, map_path: str = MAPS_DIRECTORY + "/example_map.json") -> None:
         self._map = Map(map_path)
 
         self.turrets = {

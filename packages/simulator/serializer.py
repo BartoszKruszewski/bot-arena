@@ -22,7 +22,7 @@ class Serializer:
         end = path[-1]
 
         map_size = game.get_map_size()
-        obstacles = game.get_obstacles()
+        obstacles = [obs.cords for obs in game.get_obstacles()]
 
         return {
             'start': start,

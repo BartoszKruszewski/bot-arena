@@ -6,8 +6,6 @@ import sys
 
 class Bot:
     def __init__(self):
-        self.valid_moves = ['W', 'S', 'T']
-        self.soldier_names = ['swordsman', 'archer']
         self.game_data = {}
 
     def handle_request(self, method, data=None):
