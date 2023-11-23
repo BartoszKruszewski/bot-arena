@@ -7,11 +7,11 @@ from time import sleep
 class Main():
     def __init__(self, log_name: str):
         init()
-        sleep(1)
-        MapGenerate()
-        sleep(1)
-        game_name = input("Game name: ")
-        GameRender('example_log.txt', game_name)
+        # sleep(1)
+        # MapGenerate()
+        # sleep(1)
+        # game_name = input("Game name: ")
+        GameRender('example_log.txt', "example_map.json")
 
 
         

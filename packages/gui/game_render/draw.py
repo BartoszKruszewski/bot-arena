@@ -1,4 +1,4 @@
-from pygame import Vector2, Surface, Rect, Color, SRCALPHA 
+from pygame import Vector2, Surface, Rect, Color, SRCALPHA, transform
 from pygame.draw import rect as draw_rect, line as draw_line
 from ..const import TILE_SIZE, SHOW_REAL_POS, HEALTH_BAR_COLOR_BACK, \
     HEALTH_BAR_COLOR_FRONT, HEALTH_BAR_SIZE, INFO_TAB_SHOW_TIME, \
@@ -11,6 +11,7 @@ from .objects_rt.obstacle_rt import ObstacleRT
 
 from .font_renderer import FontRenderer
 from .particle import Particle
+from .projectile import Projectile
 from .map_renderer import MapRenderer
 
 class Draw:
@@ -32,12 +33,12 @@ class Draw:
         self.__draw_screen.blit(self.__ui_texture, (0, 0))
         return self.__draw_screen
 
-    def projectile(self, projectile):
+    def projectile(self, projectile: Projectile):
             texture = self.__assets["projectiles"]["arrow"]
             size = texture.get_size()
             self.draw(
-                texture,
-                projectile.cords + \
+                transform.rotate(texture, projectile.angle),
+                projectile.pos + \
                 Vector2(TILE_SIZE // 2, TILE_SIZE - size[1]) \
                 - Vector2(size[0], 0) // 2
             )
