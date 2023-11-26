@@ -38,9 +38,9 @@ class GameRender(GUIElement):
         if self.in_mouse_range(mouse):
             self.set_zoom(self.__zoom + mouse.wheel * ZOOM_INTERWAL * self.__zoom)
 
-
         return self.__engine.render(
-            self.__game, dt, self.real_size, mouse, self.global_pos, self.__zoom, self.__render_data['game_speed'])
+                self.__game, dt, self.real_size, mouse,
+                self.global_pos, self.__zoom, self.__render_data['game_speed'])
 
 class Main:
     def __init__(self, log_name: str, game_name: str):
@@ -82,9 +82,15 @@ class Main:
                         (0.2, 0.3),
                         on_click = lambda: self.set_game_speed(self.__render_data['game_speed'] + 0.5),
                         text = 'speed up',
-                        color = (0,0,255)
+                        color = (0, 0, 255)
                     ),
-                    RectButton((0.5, 0.5), (0.2, 0.2)),
+                    RectButton(
+                        (0.5, 0.5),
+                        (0.2, 0.2),
+                        on_click = lambda: self.set_game_speed(0),
+                        text = 'freeze',
+                        color = (0, 255, 255)
+                    ),
                 ], 
                 (0.2, 0.8), (1, 0.2),
                 color=(126, 126, 126)),
@@ -121,7 +127,7 @@ class Main:
         Value must be greater than 0 and lower or equal FRAMERATE.
         '''
 
-        if value <= 0:
+        if value < 0:
             raise Exception('Game speed must be greater than zero!')
         elif value > FRAMERATE:
             raise Exception('Game speed cannot be greater than FRAMERATE!')

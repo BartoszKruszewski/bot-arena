@@ -69,7 +69,7 @@ class Engine():
             {'left': game.get_obstacles(), 'right': []},
             dt, self.__camera.get_mouse_pos(), game_speed
         )
-        self.__particle_controller.update_particles(dt)
+        self.__particle_controller.update_particles(dt, game_speed)
         self.__projectile_controller.update_projectiles(
             self.__turret_tracker.get_objects(),
             self.__soldier_tracker.get_objects(),

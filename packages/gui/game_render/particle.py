@@ -41,13 +41,13 @@ class Particle:
         '''
         return self.__pos, self.__color, self.__size
 
-    def update(self, dt: float):
+    def update(self, dt: float, game_speed: float):
         '''Main update function.
 
         Refreshes once per frame.
         '''
 
-        self.__tick += dt
+        self.__tick += dt * game_speed
         if self.__tick > FRAMERATE / 10:
             self.__time -= 1
             self.__tick = 0
@@ -77,12 +77,12 @@ class ParticleController:
     def __init__(self):
         self.__particles = []
 
-    def update_particles(self, dt: float) -> None:
+    def update_particles(self, dt: float, game_speed: float) -> None:
         '''Updates all particles.
         '''
 
         for particle in self.__particles:
-            particle.update(dt)
+            particle.update(dt, game_speed)
         self.__particles = [particle for particle in self.__particles if particle.is_alive()]
 
     def get_particles(self) -> list[Particle]:

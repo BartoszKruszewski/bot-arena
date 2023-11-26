@@ -35,10 +35,10 @@ class ProjectileController:
         return abs(pos1[0] - pos2[0]) + abs(pos1[1] - pos2[1])
 
     def update_projectiles(self, turrets: list[TurretRT], soldiers: list[SoldierRT], dt: float, game_speed: float):
-        self.__tick += dt
+        self.__tick += dt * game_speed
 
-        if self.__tick >= FRAMERATE / game_speed:
-            self.__tick %= (FRAMERATE / game_speed)
+        if self.__tick >= FRAMERATE:
+            self.__tick %= FRAMERATE
             
             # Check for possible shots from turrets.
             for side in ("left", "right"):
