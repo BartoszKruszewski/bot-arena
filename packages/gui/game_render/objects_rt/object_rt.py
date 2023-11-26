@@ -41,7 +41,8 @@ class ObjectRT:
 
     def __getitem__(self, key):
         if key not in self.stats:
-            raise Exception(f"Object doesn't have key stat: {key}")
+            msg = f'Object does not have key stat: {key}'
+            raise Exception(msg)
         return self.stats[key]
 
     def __update_frame(self, dt: float, game_speed: float):

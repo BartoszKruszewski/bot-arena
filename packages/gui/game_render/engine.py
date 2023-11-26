@@ -35,7 +35,7 @@ class Engine():
 
         # initialize modules
         self.__particle_controller = ParticleController()
-        self.__projectile_controller = ProjectileController()
+        self.__projectile_controller = ProjectileController(game.get_path())
         self.__assets_loader = AssetsLoader()
         self.__camera = Camera(game.get_map_size())
 
@@ -70,11 +70,19 @@ class Engine():
             dt, self.__camera.get_mouse_pos(), game_speed
         )
         self.__particle_controller.update_particles(dt)
-        self.__projectile_controller.update_projectiles(self.__turret_tracker.get_objects(), self.__soldier_tracker.get_objects(), dt, game_speed)
+        self.__projectile_controller.update_projectiles(
+            self.__turret_tracker.get_objects(),
+            self.__soldier_tracker.get_objects(),
+            dt, game_speed
+        )
 
         # reset frame
         self.__draw.begin(self.__camera.get_offset(), draw_screen_size / zoom)
         
+        # draw particles
+        for particle in self.__particle_controller.get_particles():
+            self.__draw.particle(particle)
+
         # draw objects
         objects_queue = []
 
@@ -85,10 +93,6 @@ class Engine():
 
         for object in sorted(objects_queue, key = lambda x: x.cords.y):
             self.__draw.object_rt(object)
-
-        # draw particles
-        for particle in self.__particle_controller.get_particles():
-            self.__draw.particle(particle)
 
         for projectile in self.__projectile_controller.get_projectiles():
             self.__draw.projectile(projectile)

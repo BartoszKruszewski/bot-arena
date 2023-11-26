@@ -35,12 +35,9 @@ class Draw:
 
     def projectile(self, projectile: Projectile):
             texture = self.__assets["projectiles"]["arrow"]
-            size = texture.get_size()
             self.draw(
                 transform.rotate(texture, projectile.angle),
-                projectile.pos + \
-                Vector2(TILE_SIZE // 2, TILE_SIZE - size[1]) \
-                - Vector2(size[0], 0) // 2
+                projectile.pos + Vector2(TILE_SIZE) // 2
             )
 
     def object_rt(self, object: ObjectRT):

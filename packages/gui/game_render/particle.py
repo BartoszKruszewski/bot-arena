@@ -65,7 +65,7 @@ class BloodParticle(Particle):
             pos, Color(255, 0, 0, 200),
             direction = kwargs['direction'],
             size = 4,
-            speed = 3,
+            speed = 5,
             time = 15,
             acc = 0.8
         )
