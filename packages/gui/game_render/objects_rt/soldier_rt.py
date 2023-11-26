@@ -20,6 +20,7 @@ class SoldierRT(ObjectRT):
         self.direction = Vector2(0, 0)
         self.animation = 'walk'
         self.cords = Vector2(SoldierRT.path[path_pos]) * TILE_SIZE
+        self.previous_hp = self.stats['hp']
 
     def update(self, dt: float, mouse_pos: Vector2, game_speed: float):
         super().update(dt, mouse_pos, game_speed)
@@ -28,6 +29,7 @@ class SoldierRT(ObjectRT):
         self.__update_animation()
         self.__update_hp_rate(dt)
         self.__update_particles()
+        self.previous_hp = self.stats['hp']
 
     def set_state(self, state: str):
         '''Soldier state setter.
@@ -71,10 +73,10 @@ class SoldierRT(ObjectRT):
         self.actual_hp_rate += (target - self.actual_hp_rate) / HP_BAR_SMOOTH * dt
 
     def __update_particles(self):
-        if self.state == 'fight' and self.frame == ANIMATION_LEN - 1:
+        if self.stats['hp'] < self.previous_hp:
             ObjectRT.particle_controller.add_particles(
                 BloodParticle,
                 pos = self.cords + Vector2(TILE_SIZE) // 2,
-                amount = 10,
+                amount = 100,
                 direction = -self.direction
             )

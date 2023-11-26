@@ -13,7 +13,7 @@ from ..gui_object import Window, GUIElement
 from ..gui_object import RectButton, SquareButton, GoBackButton
 from ..mouse import Mouse
 from ..const import SCREEN_SIZE, FRAMERATE
-from ..const import ZOOM_INTERWAL, MIN_ZOOM, MAX_ZOOM
+from ..const import ZOOM_INTERWAL, MIN_ZOOM, MAX_ZOOM, TILE_SIZE
 
 from packages import MAPS_DIRECTORY
 
@@ -26,11 +26,18 @@ class GameRender(GUIElement):
         self.__render_data = render_data
     
     def set_zoom(self, value):
-        self.__zoom = max(MIN_ZOOM, min(MAX_ZOOM, value))
+        min_zoom = max(
+            self.real_size.x / self.__game.get_map_size()[0] / TILE_SIZE,
+            self.real_size.y / self.__game.get_map_size()[1] / TILE_SIZE,
+            MIN_ZOOM
+        )
+        self.__zoom = max(min_zoom, min(MAX_ZOOM, value))
 
     def render(self, dt: float, mouse: Mouse) -> Surface:
+        self.set_zoom(self.__zoom)
         if self.in_mouse_range(mouse):
             self.set_zoom(self.__zoom + mouse.wheel * ZOOM_INTERWAL * self.__zoom)
+
 
         return self.__engine.render(
             self.__game, dt, self.real_size, mouse, self.global_pos, self.__zoom, self.__render_data['game_speed'])
@@ -93,6 +100,8 @@ class Main:
             self.__tick += self.__dt * self.__render_data['game_speed']
             if self.__tick > FRAMERATE:
                 game_output = self.__game.update(*self.__log_interpreter.get_next_actions())
+                if 'win' in game_output[0]:
+                    self.__is_running = False
                 self.__tick = 0
             self.__screen_update()
 

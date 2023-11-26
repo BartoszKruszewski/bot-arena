@@ -46,6 +46,11 @@ class SoldierTracker(ObjectTracker):
                 rt_soldier = self.objects_rt[side][logic_soldiers[side][i].id]
                 pre_rt_soldier = self.objects_rt[side][logic_soldiers[side][i - 1].id]
                 distance = abs(rt_soldier['position'] - pre_rt_soldier['position'])
-                rt_soldier.set_state(
-                    'idle' if distance == 0 or
-                    (distance == 1 and pre_rt_soldier.state != 'walk') else 'walk')
+                if distance == 0 or (distance == 1 and pre_rt_soldier.state != 'walk'):
+                    if abs(rt_soldier['position'] - first['left' if side == 'right' else 'right']['position']) <= rt_soldier['range']:
+                        state = 'fight'
+                    else:
+                        state = 'idle'
+                else:
+                    state = 'walk'
+                rt_soldier.set_state(state)

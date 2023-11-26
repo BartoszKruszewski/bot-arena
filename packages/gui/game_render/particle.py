@@ -62,12 +62,12 @@ class Particle:
 class BloodParticle(Particle):
     def __init__(self, pos: Vector2, **kwargs):
         super().__init__(
-            pos, Color(255, 0, 0, 150),
+            pos, Color(255, 0, 0, 200),
             direction = kwargs['direction'],
-            size = 2,
-            speed = 7,
+            size = 4,
+            speed = 3,
             time = 15,
-            acc = 0.82
+            acc = 0.8
         )
 
 class ParticleController:

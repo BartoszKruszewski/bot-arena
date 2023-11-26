@@ -35,7 +35,7 @@ class Engine():
 
         # initialize modules
         self.__particle_controller = ParticleController()
-        self.__projectile_controller = ProjectileController(game.get_path(), self.__particle_controller)
+        self.__projectile_controller = ProjectileController()
         self.__assets_loader = AssetsLoader()
         self.__camera = Camera(game.get_map_size())
 
@@ -73,7 +73,7 @@ class Engine():
         self.__projectile_controller.update_projectiles(self.__turret_tracker.get_objects(), self.__soldier_tracker.get_objects(), dt, game_speed)
 
         # reset frame
-        self.__draw.begin(self.__camera.get_offset(), draw_screen_size)
+        self.__draw.begin(self.__camera.get_offset(), draw_screen_size / zoom)
         
         # draw objects
         objects_queue = []
@@ -95,8 +95,7 @@ class Engine():
 
         return scale(
             self.__draw.end(),
-            Vector2(
-                draw_screen_size) * zoom
+            Vector2(draw_screen_size)
         )
 
     

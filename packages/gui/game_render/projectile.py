@@ -6,8 +6,6 @@ from .particle import ParticleController, BloodParticle
 from ..const import FRAMERATE, MOVE_PRECISION, TILE_SIZE
 
 class Projectile:
-    path = []
-    particle_controller = None
 
     def __init__(self, pos: Vector2, id: int, target: SoldierRT):
         self.pos = pos.copy()
@@ -24,19 +22,12 @@ class Projectile:
 
         if distance <= MOVE_PRECISION:
             self.hit = True
-            Projectile.particle_controller.add_particles(
-                BloodParticle,
-                pos = self.pos + Vector2(TILE_SIZE) // 2,
-                amount = 10,
-                direction = Vector2(0, 0)
-            )
 
 class ProjectileController:
-    def __init__(self, path: list[tuple[int, int]], particle_controller: ParticleController) -> None:
+    def __init__(self) -> None:
         self.__projectiles = []
         self.__next_id = 0
         self.__tick = 0
-        Projectile.particle_controller = particle_controller
 
     def update_projectiles(self, turrets: list[TurretRT], soldiers: list[SoldierRT], dt: float, game_speed: float):
         sides = ("left", "right")
