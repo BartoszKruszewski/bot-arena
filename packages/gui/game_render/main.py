@@ -9,8 +9,8 @@ from ...game_logic.game import Game
 from .log_interpreter import LogInterpreter
 from .engine import Engine
 
-from ..gui_object import Window, GUIElement
-from ..gui_object import RectButton, SquareButton, GoBackButton
+from ..pygame_tree.gui_object import Window, GUIElement
+from ..pygame_tree.gui_object import RectButton, SquareButton, GoBackButton
 from ..mouse import Mouse
 from ..const import SCREEN_SIZE, FRAMERATE
 from ..const import ZOOM_INTERWAL, MIN_ZOOM, MAX_ZOOM, TILE_SIZE
