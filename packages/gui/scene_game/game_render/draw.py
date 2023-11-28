@@ -1,6 +1,6 @@
 from pygame import Vector2, Surface, Rect, Color, SRCALPHA, transform
 from pygame.draw import rect as draw_rect, line as draw_line
-from ..const import TILE_SIZE, SHOW_REAL_POS, HEALTH_BAR_COLOR_BACK, \
+from ...const import TILE_SIZE, SHOW_REAL_POS, HEALTH_BAR_COLOR_BACK, \
     HEALTH_BAR_COLOR_FRONT, HEALTH_BAR_SIZE, INFO_TAB_SHOW_TIME, \
     INFO_TAB_SHOW_SMOOTH, INFO_TAB_MARGIN
 from .objects_rt.object_rt import ObjectRT

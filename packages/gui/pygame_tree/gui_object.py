@@ -24,10 +24,10 @@ class Scene(GUIobject):
     def get_surf(self) -> Surface:
         return self.surf
 
-    def render(self) -> Surface:
+    def render(self, dt, mouse) -> Surface:
         surf = Surface(self.real_size)
         for object in self.sub_objects:
-            surf.blit(object.render(), object.real_pos)
+            surf.blit(object.render(dt, mouse), object.real_pos)
         self.surf = surf
         return surf
     
@@ -54,11 +54,11 @@ class Scene(GUIobject):
             object.handle_event(event)
 
 class Window(GUIobject):
-    def render(self) -> Surface:
+    def render(self, dt, mouse) -> Surface:
         surf = Surface(self.real_size)
         surf.fill(self.properties.get('color', (0, 0, 0)))
         for object in self.sub_objects:
-            surf.blit(object.render(), object.real_pos)
+            surf.blit(object.render(dt, mouse), object.real_pos)
         return surf
     
     def handle_event(self, event: pgevent) -> None:
@@ -72,7 +72,7 @@ class GUIElement(GUIobject, ABC):
     def handle_event(self, event: pgevent) -> None:
         pass
 
-    def render(self) -> Surface:
+    def render(self, dt, mouse) -> Surface:
         surf = Surface(self.real_size)
         surf.fill(self.properties.get('color', (0, 0, 0)))
         return surf

@@ -3,7 +3,7 @@ from pygame.image import load as image_load
 from pygame import Surface, Rect
 from pygame.transform import flip
 
-from ..const import SPRITE_SIZE, ANIMATION_LEN, ANIMATION_NAMES, ANIMATION_DIRECTIONS
+from ...const import SPRITE_SIZE, ANIMATION_LEN, ANIMATION_NAMES, ANIMATION_DIRECTIONS
 
 class AssetsLoader:
     def __init__(self) -> None:

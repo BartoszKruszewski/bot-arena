@@ -1,5 +1,5 @@
 from pygame import Vector2
-from ...const import TILE_SIZE, FRAMERATE, ANIMATION_SPEED, \
+from ....const import TILE_SIZE, FRAMERATE, ANIMATION_SPEED, \
     ANIMATION_LEN, MOUSE_TARGET_RADIUS, \
     INFO_TAB_SHOW_TIME, INFO_TAB_HIDE_SPEED
 

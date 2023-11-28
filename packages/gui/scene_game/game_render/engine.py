@@ -2,12 +2,12 @@ from pygame import Surface, SRCALPHA, Rect, Color
 from pygame import Vector2
 from pygame.draw import rect as draw_rect, line as draw_line
 from pygame.transform import scale
-from ...game_logic.game import Game
+from ....game_logic.game import Game
 from math import floor
 
-from ..const import TILE_SIZE, SHOW_REAL_POS, INFO_TAB_MARGIN, HEALTH_BAR_SIZE, \
+from ...const import TILE_SIZE, SHOW_REAL_POS, INFO_TAB_MARGIN, HEALTH_BAR_SIZE, \
     HEALTH_BAR_COLOR_BACK, HEALTH_BAR_COLOR_FRONT, INFO_TAB_SHOW_TIME, INFO_TAB_SHOW_SMOOTH
-from ..mouse import Mouse
+from ...mouse import Mouse
 
 from .camera import Camera
 from .assets_loader import AssetsLoader

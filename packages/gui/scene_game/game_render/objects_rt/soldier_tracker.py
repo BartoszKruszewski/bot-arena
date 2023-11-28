@@ -1,8 +1,8 @@
 from pygame import Vector2
 
-from packages.gui.game_render.objects_rt.object_rt import ObjectRT
-from ....game_logic.objects.soldiers import Soldier
-from ...const import TILE_SIZE
+from .object_rt import ObjectRT
+from .....game_logic.objects.soldiers import Soldier
+from ....const import TILE_SIZE
 from ..particle import BloodParticle, ParticleController
 from .soldier_rt import SoldierRT
 from .object_tracker import ObjectTracker

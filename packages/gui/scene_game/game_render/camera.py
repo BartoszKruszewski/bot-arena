@@ -1,8 +1,8 @@
 from pygame import Vector2
 
-from ..const import CAMERA_OFFSET_MOVE_AREA, CAMERA_OFFSET_SPEED, TILE_SIZE, \
+from ...const import CAMERA_OFFSET_MOVE_AREA, CAMERA_OFFSET_SPEED, TILE_SIZE, \
     CAMERA_SMOOTH
-from ..mouse import Mouse
+from ...mouse import Mouse
 
 class Camera:
     def __init__(self, map_size):
