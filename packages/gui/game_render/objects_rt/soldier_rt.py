@@ -1,5 +1,5 @@
 from pygame import Vector2
-from ....const import TILE_SIZE, FRAMERATE, HP_BAR_SMOOTH, ANIMATION_LEN
+from packages.gui.const import TILE_SIZE, FRAMERATE, HP_BAR_SMOOTH, ANIMATION_LEN
 from .object_rt import ObjectRT
 from ..particle import BloodParticle
 

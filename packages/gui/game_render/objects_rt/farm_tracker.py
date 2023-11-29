@@ -1,6 +1,6 @@
 from pygame import Vector2
 
-from .....game_logic.objects.farms import Farm
+from packages.game_logic.objects.farms import Farm
 from .object_rt import ObjectRT
 from .farm_rt import FarmRT
 from .object_tracker import ObjectTracker

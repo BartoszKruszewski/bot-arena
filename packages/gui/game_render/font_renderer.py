@@ -1,6 +1,6 @@
 from pygame.font import Font
 from pygame import Surface
-from ...const import FONT_COLOR, FONT_SIZE
+from packages.gui.const import FONT_COLOR, FONT_SIZE
 
 class FontRenderer:
     def __init__(self):

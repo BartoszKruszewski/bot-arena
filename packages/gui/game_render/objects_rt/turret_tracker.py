@@ -1,7 +1,7 @@
 from pygame import Vector2
 
 from .object_rt import ObjectRT
-from .....game_logic.objects.turrets import Turret
+from packages.game_logic.objects.turrets import Turret
 from .turret_rt import TurretRT
 from .object_tracker import ObjectTracker
 

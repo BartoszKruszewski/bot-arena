@@ -1,8 +1,8 @@
 from pygame import Vector2
+from pygame.mouse import get_pos
 
-from ...const import CAMERA_OFFSET_MOVE_AREA, CAMERA_OFFSET_SPEED, TILE_SIZE, \
+from packages.gui.const import CAMERA_OFFSET_MOVE_AREA, CAMERA_OFFSET_SPEED, TILE_SIZE, \
     CAMERA_SMOOTH
-from ...mouse import Mouse
 
 class Camera:
     def __init__(self, map_size):
@@ -13,8 +13,8 @@ class Camera:
         self.__mouse_pos = Vector2(0, 0)
         
 
-    def update(self, draw_screen_size: Vector2, mouse: Mouse, screen_shift: Vector2, zoom: float, dt: float):
-        self.__update_mouse_pos(mouse, screen_shift, zoom)
+    def update(self, draw_screen_size: Vector2, screen_shift: Vector2, zoom: float, dt: float):
+        self.__update_mouse_pos(screen_shift, zoom)
         self.__update_camera_offset(draw_screen_size, zoom, dt)
 
     def get_offset(self) -> Vector2:
@@ -23,8 +23,8 @@ class Camera:
     def get_mouse_pos(self) -> Vector2:
         return self.__mouse_pos - self.__camera_offset
 
-    def __update_mouse_pos(self, mouse: Mouse, screen_shift: Vector2, zoom: float):
-        self.__mouse_pos =  (mouse.pos - screen_shift) / zoom
+    def __update_mouse_pos(self, screen_shift: Vector2, zoom: float):
+        self.__mouse_pos = (Vector2(get_pos()) - screen_shift) / zoom
 
     def __update_camera_offset(self, draw_screen_size: Vector2, zoom: float, dt: float):
         

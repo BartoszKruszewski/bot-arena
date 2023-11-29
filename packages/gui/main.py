@@ -1,10 +1,9 @@
-from .scene_example.manager import Manager as ExampleManager
-from .scene_main.main_manager import Manager as MainManager
-from .scene_game.manager import Manager as GameManager
+from packages.gui.scenes.example_scene import ExampleSceneManager
+from packages.gui.scenes.game_scene import GameSceneManager
+from packages.gui.scenes.main_scene import MainSceneManager
 from ..game_logic.game import Game
 
 from .const import SCREEN_SIZE, FRAMERATE
-from .mouse import Mouse
 
 from pygame import WINDOWCLOSE, init
 from pygame.time import Clock
@@ -22,38 +21,27 @@ class Main():
         self.screen = display_set_mode(SCREEN_SIZE)
         self.is_running = True
         self.clock = Clock()
-        self.mouse = Mouse()
 
-        self.manager = MainManager(
-            self.load_example_scene,
-            self.load_another_scene,
-            self.load_another_another_scene,
-            self.load_game_scene
-        )
+        self.manager = MainSceneManager({
+            'example': self.load_example_scene,
+            'game': self.load_game_scene,
+        })
 
         while self.is_running:
             self.is_running = not event_peek(WINDOWCLOSE)
-            
-            self.mouse.update()
 
             manager_info = ManagerInfo()
             manager_info.events = event_get()
 
             dt = self.clock.tick(FRAMERATE) * FRAMERATE / 1000
-            self.screen.blit(self.manager(manager_info, dt, self.mouse), (0, 0))
+            self.screen.blit(self.manager(manager_info, dt), (0, 0))
             display_update()
 
-    def load_example_scene(self):
-        self.manager = ExampleManager(self.go_back)
-
-    def load_another_scene(self):
-        self.manager = ExampleManager(self.go_back)
-
-    def load_another_another_scene(self):
-        self.manager = ExampleManager(self.go_back)
-
     def load_game_scene(self):
-        self.manager = GameManager(self.go_back)
+        self.manager = GameSceneManager(self.go_back)
+
+    def load_example_scene(self):
+        self.manager = ExampleSceneManager(self.go_back)
 
     def go_back(self):
         print('go back')

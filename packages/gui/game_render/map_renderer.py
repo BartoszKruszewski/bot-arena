@@ -2,8 +2,8 @@ from pygame import Surface, SRCALPHA, Rect, Vector2, Color
 from pygame.draw import rect as draw_rect
 from random import choice
 
-from ....game_logic.game import Game
-from ...const import TILE_SIZE, SHOW_GRID, SHOW_OBSTACLES_AREA
+from packages.game_logic.game import Game
+from packages.gui.const import TILE_SIZE, SHOW_GRID, SHOW_OBSTACLES_AREA
 
 class MapRenderer:
     def render(self, assets: dict, game: Game) -> Surface:

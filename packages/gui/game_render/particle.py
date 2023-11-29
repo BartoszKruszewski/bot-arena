@@ -1,6 +1,6 @@
 from pygame import Vector2, Color
 from random import randint
-from ...const import PARTICLE_DIRECTION_PRECISION as PDP, STANDARD_PARTICLE_TIME, \
+from packages.gui.const import PARTICLE_DIRECTION_PRECISION as PDP, STANDARD_PARTICLE_TIME, \
     STANDARD_PARTICLE_SPEED, FRAMERATE, STANDARD_PARTICLE_ACC, STANDARD_PARTICLE_SIZE
 
 class Particle:

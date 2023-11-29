@@ -3,7 +3,7 @@ from pygame import Vector2
 from .objects_rt.soldier_rt import SoldierRT
 from .objects_rt.turret_rt import TurretRT
 from .particle import ParticleController, BloodParticle
-from ...const import FRAMERATE, MOVE_PRECISION, PROJECTILE_SPEED
+from packages.gui.const import FRAMERATE, MOVE_PRECISION, PROJECTILE_SPEED
 
 class Projectile:
     def __init__(self, pos: Vector2, target: SoldierRT):

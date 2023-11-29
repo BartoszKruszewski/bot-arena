@@ -1,11 +1,11 @@
 from pygame import Vector2
 
-from .....game_logic.objects.obstalces import Obstacle
+from packages.game_logic.objects.obstalces import Obstacle
 from .object_rt import ObjectRT
 from .obstacle_rt import ObstacleRT
 from .object_tracker import ObjectTracker
 from random import randint
-from ....const import OBSTACLE_TYPE_NUMBER
+from packages.gui.const import OBSTACLE_TYPE_NUMBER
 
 class ObstacleTracker(ObjectTracker):
     def get_new_object(self, logic_object: Obstacle, side: str) -> ObjectRT:
