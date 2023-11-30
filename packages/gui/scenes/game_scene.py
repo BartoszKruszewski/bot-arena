@@ -1,7 +1,5 @@
 from packages.gui.abstract_scene_manager import AbstractSceneManager
-from packages.gui.gui_objects.window import Window
-from packages.gui.gui_objects.scene import Scene
-from packages.gui.gui_objects.game_renderer import GameRenderer
+from packages.gui.gui_objects import Window, Scene, GameRenderer
 
 class GameSceneManager(AbstractSceneManager):
     def load_scene(self, scene_functions):

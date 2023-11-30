@@ -1,6 +1,5 @@
 from packages.gui.abstract_scene_manager import AbstractSceneManager
-from packages.gui.gui_objects.scene import Scene 
-from packages.gui.gui_objects import Button
+from packages.gui.gui_objects import Scene, Button
 
 class MainSceneManager(AbstractSceneManager):
     def load_scene(self, scene_functions):

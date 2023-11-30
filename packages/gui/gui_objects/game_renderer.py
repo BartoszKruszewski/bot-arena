@@ -3,8 +3,7 @@ from pygame.event import get as get_event
 
 from packages.gui.gui_objects.gui_element import GUIElement
 from packages.game_logic.game import Game
-from packages.gui.game_render.log_interpreter import LogInterpreter
-from packages.gui.game_render.engine import Engine
+from packages.gui.game_render import LogInterpreter, Engine
 from packages.gui.const import FRAMERATE, ZOOM_INTERWAL, \
     MIN_ZOOM, MAX_ZOOM, TILE_SIZE
 

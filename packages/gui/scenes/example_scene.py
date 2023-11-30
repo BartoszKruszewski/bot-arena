@@ -1,8 +1,5 @@
 from ..abstract_scene_manager import AbstractSceneManager
-from packages.gui.gui_objects.scene import Scene
-from packages.gui.gui_objects.window import Window
-from packages.gui.gui_objects.radio_button import RadioButton
-from packages.gui.gui_objects.number_field import NumberField
+from packages.gui.gui_objects import Scene, Window, RadioButton, NumberField
 
 class ExampleSceneManager(AbstractSceneManager):
     def load_scene(self, scene_functions):
