@@ -13,23 +13,28 @@ class GUIobject(ABC):
         self.global_pos = None
         self.properties = kwargs
 
-        self.__click_switch = False
+        
 
-    def update(self, dt):
-        pass
+    def get_info(self, id: str, property: str):
+        if self.properties.get("id", None) == id:
+            return self.properties[property]
 
-    def in_mouse_range(self) -> bool:
-        mouse_pos = mouse.get_pos()
-        return all((
-                self.global_pos.x < mouse_pos[0] < self.global_pos.x + self.real_size.x,
-                self.global_pos.y < mouse_pos[1] < self.global_pos.y + self.real_size.y
-            )) 
-    
-    def is_clicked(self) -> bool:
-        if mouse.get_pressed()[0]:
-            if self.__click_switch:
-                return False
-            self.__click_switch = True
-            return self.in_mouse_range()
-        self.__click_switch = False
+        if self.sub_objects:
+            for obj in self.sub_objects:
+                info = obj.get_info(id, property)
+                if info: return info
+
+        return None
+
+    def send_info(self, id: str, property: str, info) -> bool:
+        if self.properties.get("id", None) == id:
+            self.properties[property] = info
+            return True
+
+        if self.sub_objects:
+            for obj in self.sub_objects:
+                state = obj.send_info(id, property, info)
+                if state: return True
+
+        return False
         

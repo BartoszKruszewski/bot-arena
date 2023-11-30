@@ -2,10 +2,12 @@ from abc import ABC
 from .gui_object import GUIobject
 from pygame.event import Event
 from pygame import Surface
+from pygame.mouse import get_pos, get_pressed
 
 class GUIElement(GUIobject, ABC):
     def __init__(self, pos: tuple[float, float], size: tuple[float, float], **kwargs):
         super().__init__(None, pos, size, **kwargs)
+        self.__click_switch = False
 
     def handle_event(self, event: Event) -> None:
         pass
@@ -17,3 +19,21 @@ class GUIElement(GUIobject, ABC):
         surf = Surface(self.real_size)
         surf.fill(self.properties.get('color', (0, 0, 0)))
         return surf
+    
+    def update(self, dt):
+        pass
+
+    def in_mouse_range(self) -> bool:
+        mouse_pos = get_pos()
+        return all((
+                self.global_pos.x < mouse_pos[0] < self.global_pos.x + self.real_size.x,
+                self.global_pos.y < mouse_pos[1] < self.global_pos.y + self.real_size.y
+            )) 
+    
+    def is_clicked(self) -> bool:
+        if get_pressed()[0]:
+            if self.__click_switch:
+                return False
+            self.__click_switch = True
+            return self.in_mouse_range()
+        self.__click_switch = False
