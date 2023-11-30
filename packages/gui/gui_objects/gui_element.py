@@ -1,13 +1,14 @@
 from abc import ABC
 from .gui_object import GUIobject
 from pygame.event import Event
-from pygame import Surface
+from pygame import Surface, font
 from pygame.mouse import get_pos, get_pressed
 
 class GUIElement(GUIobject, ABC):
     def __init__(self, pos: tuple[float, float], size: tuple[float, float], **kwargs):
         super().__init__(None, pos, size, **kwargs)
         self.__click_switch = False
+        self.properties['fontSize'] = self.properties.get('fontSize', 30)
 
     def handle_event(self, event: Event) -> None:
         pass
@@ -18,6 +19,10 @@ class GUIElement(GUIobject, ABC):
     def render(self) -> Surface:
         surf = Surface(self.real_size)
         surf.fill(self.properties.get('color', (0, 0, 0)))
+        surf.blit(
+            font.SysFont('arial', self.properties['fontSize']).render(self.properties.get('text', ""), True, (0, 0, 0)),
+            (self.real_size.x / 2 - 30, self.real_size.y / 2 - 15)
+        )
         return surf
     
     def update(self, dt):

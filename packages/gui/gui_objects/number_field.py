@@ -15,7 +15,7 @@ class NumberField(Window):
                 InputField(
                     (0.2, 0), (0.60, 1),
                     color = (200, 200, 200),
-                    value = '0',
+                    text = '0',
                     filter = self.number_filter,
                     id = str(self) # !!!!!!!!!!!!!!!!!!!!
                 ),
@@ -28,19 +28,17 @@ class NumberField(Window):
         
         self.properties['interval'] = self.properties.get('interval', 1)
         
-        
     def number_filter(self, text):
         if not text.isnumeric():
             return False
         return True
 
     def increment(self):
-        number = str(int(self.get_info(str(self), 'value')) + self.properties['interval'])
-        self.send_info(str(self), 'value', number)
+        number = str(int(self.get_info(str(self), 'text')) + self.properties['interval'])
+        self.send_info(str(self), 'text', number)
         self.send_info(str(self), 'active', False)
-        print("chuj")
 
     def decrement(self):
-        number = str(int(self.get_info(str(self), 'value')) - self.properties['interval'])
-        self.send_info(str(self), 'value', number)
+        number = str(int(self.get_info(str(self), 'text')) - self.properties['interval'])
+        self.send_info(str(self), 'text', number)
         self.send_info(str(self), 'active', False)
