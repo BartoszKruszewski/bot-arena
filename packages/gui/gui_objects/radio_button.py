@@ -7,7 +7,6 @@ class RadioButton(GUIElement):
         super().__init__(pos, size, **kwargs)
         self.properties['active'] = self.properties.get('active', False)
 
-        self.active = self.properties['active']
         self.on_click = self.properties.get('on_click', lambda: None)
         self.active_color = self.properties.get('active_color', (255, 255, 255))
         self.color = self.properties.get('color', (0, 0, 0))
@@ -15,7 +14,10 @@ class RadioButton(GUIElement):
     def update(self, dt):
         super().update(dt)
         if self.is_clicked():
-            self.active = not self.active
             self.on_click()
-            self.properties['color'] = self.active_color if self.active else self.color
-            self.properties['active'] = self.active                
+            self.properties['active'] = not self.properties['active']               
+
+    def render(self):
+        self.properties['color'] = self.active_color if self.properties['active'] else self.color
+        return super().render()
+

@@ -2,6 +2,10 @@ from ..abstract_scene_manager import AbstractSceneManager
 from packages.gui.gui_objects import Scene, Window, RadioButton, NumberField, List, Grid
 
 class ExampleSceneManager(AbstractSceneManager):
+    def __init__(self, scene_functions=...):
+        super().__init__(scene_functions)
+        self.podswietleni = []
+
     def load_scene(self, scene_functions):
         return Scene([
             Window([
@@ -24,7 +28,17 @@ class ExampleSceneManager(AbstractSceneManager):
                     [[str(i*100 + j) for j in range(5)] for i in range(5)],
                     (0, 0), (0.5, 0.5),
                     color = (255, 0, 0),
-                    on_click = lambda x,y: print(x, y)
+                    on_click = self.handle_soldier_click
                 )
             ], (0, 0), (0.5, 1))
         ])
+    
+    def handle_soldier_click(self, x, y):
+        if (x, y) not in self.podswietleni:
+            self.podswietleni.append((x,y))
+        else:
+            self.podswietleni.remove((x,y))
+        print(self.podswietleni)
+
+    def handle_tower_click(self, x, y):
+        pass
