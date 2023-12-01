@@ -8,14 +8,14 @@ PASSIVE_GOLD = 100
 
 SOLDIERS_STATS = {
     'swordsman': {
-        'max_hp': 100,
-        'damage': 10,
+        'max_hp': 1000,
+        'damage': 100,
         'range': 1,
         'cost': 100,
     },
     'archer': {
-        'max_hp': 30,
-        'damage': 10,
+        'max_hp': 300,
+        'damage': 100,
         'range': 3,
         'cost': 150,
     },

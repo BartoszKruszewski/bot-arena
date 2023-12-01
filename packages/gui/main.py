@@ -16,7 +16,7 @@ class ManagerInfo:
         self.events = []
 
 class Main():
-    def __init__(self, log_name: str):
+    def __init__(self):
         init()
         self.screen = display_set_mode(SCREEN_SIZE)
         self.is_running = True

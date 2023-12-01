@@ -11,7 +11,7 @@ class GameRenderer(GUIElement):
     def __init__(self, pos: tuple[float, float], size: tuple[float, float], **kwargs):
         super().__init__(pos, size)
         self.__game = Game()
-        self.__log_interpreter = LogInterpreter("./logs/" + 'example_log.txt')
+        self.__log_interpreter = LogInterpreter("./logs/" + '0.txt')
         self.__engine = Engine(self.__game)
         self.__zoom = 1
         self.__tick = 0

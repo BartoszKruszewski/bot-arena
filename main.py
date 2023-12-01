@@ -8,11 +8,11 @@ def game_logic_main():
 
 def graphics_main():
     from packages.gui.main import Main
-    Main("example_log.txt")
+    Main()
 
 def simulator_main():
-    from packages.simulator.main import TestRun
-    TestRun()
+    from packages.simulator_maciek.main import main as Main
+    Main()
 
 def main():
     if len(sys.argv) == 0:
