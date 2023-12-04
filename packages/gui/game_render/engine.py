@@ -13,7 +13,6 @@ from .assets_loader import AssetsLoader
 from .map_renderer import MapRenderer
 from .particle import ParticleController, Particle
 from .projectile import ProjectileController
-from .font_renderer import FontRenderer
 
 from .objects_rt.soldier_rt import SoldierRT
 from .objects_rt.object_rt import ObjectRT

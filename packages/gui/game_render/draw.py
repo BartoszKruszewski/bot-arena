@@ -1,4 +1,5 @@
 from pygame import Vector2, Surface, Rect, Color, SRCALPHA, transform
+from pygame.font import Font
 from pygame.draw import rect as draw_rect, line as draw_line
 from packages.gui.const import TILE_SIZE, SHOW_REAL_POS, HEALTH_BAR_COLOR_BACK, \
     HEALTH_BAR_COLOR_FRONT, HEALTH_BAR_SIZE, INFO_TAB_SHOW_TIME, \
@@ -9,8 +10,7 @@ from .objects_rt.turret_rt import TurretRT
 from .objects_rt.soldier_rt import SoldierRT
 from .objects_rt.obstacle_rt import ObstacleRT
 
-from .font_renderer import FontRenderer
-from .particle import Particle
+from .particle import Particle, DamageInfoParticle
 from .projectile import Projectile
 from .map_renderer import MapRenderer
 
@@ -18,7 +18,6 @@ class Draw:
     def __init__(self, assets, game) -> None:
         self.__assets = assets
         self.__camera_offset = Vector2()
-        self.__font_renderer = FontRenderer()
         self.__draw_screen = None
         self.__map_renderer = MapRenderer()
         self.__map_texture = self.__map_renderer.render(self.__assets, game)
@@ -126,7 +125,7 @@ class Draw:
             ]
 
             text_surfaces = [
-                self.__font_renderer.render(f'{name}: {info}', 'small')
+                Font('./assets/font.ttf', 8).render(f'{name}: {info}', False, (255, 255, 255))
                 for name, info in info.items()
             ]
 
@@ -192,10 +191,11 @@ class Draw:
         '''Draws particle.
         '''
 
-        pos, color, size = particle.get_data()
-        surf = Surface((size, size), SRCALPHA)
-        surf.fill(color)
-        self.draw(surf, pos)
+        pos, color, size, surf = particle.get_data()
+        if surf is None:
+            surf = Surface((size, size), SRCALPHA)
+            surf.fill(color)
+        self.draw(surf, pos, isinstance(particle, DamageInfoParticle))
     
     def line(self, pos1: Vector2, pos2: Vector2, color: Color,
             len: float = 1, ui: bool = False):

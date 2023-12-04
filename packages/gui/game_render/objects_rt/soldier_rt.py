@@ -1,7 +1,7 @@
 from pygame import Vector2
-from packages.gui.const import TILE_SIZE, FRAMERATE, HP_BAR_SMOOTH, ANIMATION_LEN
+from packages.gui.const import TILE_SIZE, FRAMERATE, HP_BAR_SMOOTH, DAMAGE_INFO_COLOR_MULT
 from .object_rt import ObjectRT
-from ..particle import BloodParticle
+from ..particle import BloodParticle, DamageInfoParticle
 
 class SoldierRT(ObjectRT):
     '''Real time soldier game_render class.
@@ -74,9 +74,19 @@ class SoldierRT(ObjectRT):
 
     def __update_particles(self):
         if self.stats['hp'] < self.previous_hp:
+            value = self.previous_hp - self.stats['hp']
+            color = (255, 255 * max((1 - value * DAMAGE_INFO_COLOR_MULT / self.stats['max_hp']), 0), 0)
+            ObjectRT.particle_controller.add_particles(
+                DamageInfoParticle,
+                pos = self.cords + Vector2(TILE_SIZE) // 2,
+                amount = 1,
+                direction = -self.direction,
+                value = value,
+                text_color = color
+            )
             ObjectRT.particle_controller.add_particles(
                 BloodParticle,
                 pos = self.cords + Vector2(TILE_SIZE) // 2,
-                amount = 100,
-                direction = -self.direction
+                amount = 50,
+                direction = -self.direction,
             )
