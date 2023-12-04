@@ -11,12 +11,16 @@ class GameRenderer(GUIElement):
     def __init__(self, pos: tuple[float, float], size: tuple[float, float], **kwargs):
         super().__init__(pos, size, **kwargs)
         self.__game = Game()
-        self.__log_interpreter = LogInterpreter("./logs/" + 'example_log.txt')
+        self.__log_interpreter = LogInterpreter(
+            f'./logs/{self.properties.get("log_name", "example_log")}.txt'
+        )
         self.__engine = Engine(self.__game)
         
         self.__tick = 0
         self.__dt = 0
-        self.__game_end_action = self.properties.get('game_end_action', lambda: None)
+        
+        self.properties['game_speed'] = 1
+        self.properties['zoom'] = 1
 
     def __update_zoom(self):
         zoom = self.properties.get('zoom', 1)
@@ -36,12 +40,12 @@ class GameRenderer(GUIElement):
         self.properties['zoom'] = zoom
 
     def update(self, dt):
-        self.__tick += dt
+        self.__tick += dt * self.properties.get('game_speed', 1)
 
         if self.__tick > FRAMERATE:
             game_output = self.__game.update(*self.__log_interpreter.get_next_actions())
             if 'win' in game_output[0]:
-                self.__game_end_action() 
+                self.properties.get('game_end_action', lambda: None)() 
             self.__tick %= FRAMERATE
         
         self.__update_zoom()

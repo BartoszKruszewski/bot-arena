@@ -1,7 +1,7 @@
 from pygame import Vector2, Surface, Rect, Color, SRCALPHA, transform
 from pygame.font import Font
 from pygame.draw import rect as draw_rect, line as draw_line
-from packages.gui.const import TILE_SIZE, SHOW_REAL_POS, HEALTH_BAR_COLOR_BACK, \
+from packages.gui.const import TILE_SIZE, HEALTH_BAR_COLOR_BACK, \
     HEALTH_BAR_COLOR_FRONT, HEALTH_BAR_SIZE, INFO_TAB_SHOW_TIME, \
     INFO_TAB_SHOW_SMOOTH, INFO_TAB_MARGIN
 from .objects_rt.object_rt import ObjectRT
@@ -78,7 +78,6 @@ class Draw:
             object.select_time / INFO_TAB_SHOW_TIME
         )
 
-        # real pos
         if 'pos' in self.__helpers:
             surf = Surface((1, 1))
             surf.fill((255, 0, 0))
