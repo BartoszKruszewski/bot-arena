@@ -21,6 +21,7 @@ class GameRenderer(GUIElement):
         
         self.properties['game_speed'] = 1
         self.properties['zoom'] = 1
+        self.properties['helpers'] = []
 
     def __update_zoom(self):
         zoom = self.properties.get('zoom', 1)
@@ -59,5 +60,5 @@ class GameRenderer(GUIElement):
             self.global_pos,
             self.properties.get('zoom', 1),
             self.properties.get('game_speed', 1),
-            helpers = ['grid']
+            self.properties.get('helpers', [])
         )

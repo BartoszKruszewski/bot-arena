@@ -28,6 +28,13 @@ class GameSceneManager(AbstractSceneManager):
                     color = (0, 255, 0),
                     on_click = self.increase_game_speed
                 ),
+                RadioButton(
+                    (0.1, 0.5),
+                    (0.3, 0.3),
+                    text = 'grid',
+                    color = (255, 0, 0),
+                    on_click = self.toggle_grid
+                ),
 
             ], (0.2, 0.8), (1, 0.2), color=(126, 126, 126)),
         ])
@@ -35,3 +42,10 @@ class GameSceneManager(AbstractSceneManager):
     def increase_game_speed(self):
         actual_game_speed = self.scene.get_info('game_renderer', 'game_speed')
         self.scene.send_info('game_renderer', 'game_speed', actual_game_speed + 1)
+
+    def toggle_grid(self):
+        helpers = self.scene.get_info('game_renderer', 'helpers')
+        if 'grid' in helpers:
+            helpers.remove('grid')
+        else:
+            helpers.append('grid')

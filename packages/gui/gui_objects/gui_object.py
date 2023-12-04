@@ -14,13 +14,15 @@ class GUIobject(ABC):
         self.properties = kwargs
 
     def get_info(self, id: str, property: str):
+        
         if self.properties.get("id", None) == id:
             return self.properties[property]
 
         if self.sub_objects:
             for obj in self.sub_objects:
                 info = obj.get_info(id, property)
-                if info: return info
+                if info is not None: 
+                    return info
 
         return None
 

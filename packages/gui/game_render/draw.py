@@ -28,7 +28,7 @@ class Draw:
         self.__draw_screen = Surface(size)
         self.__ui_texture = Surface(size, SRCALPHA)
         if helpers != self.__helpers:
-            self.__helpers = helpers
+            self.__helpers = helpers.copy()
             self.__map_texture = self.__map_renderer.fast_render(self.__helpers)
         self.__draw_screen.blit(self.__map_texture, self.__camera_offset)
 
