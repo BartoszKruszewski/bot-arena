@@ -29,11 +29,25 @@ class GameSceneManager(AbstractSceneManager):
                     on_click = self.increase_game_speed
                 ),
                 RadioButton(
-                    (0.1, 0.5),
-                    (0.3, 0.3),
+                    (0.07, 0.5),
+                    (0.1, 0.3),
+                    text = 'area',
+                    color = (255, 0, 90),
+                    on_click = self.toggle_helper('obstacles_area')
+                ),
+                RadioButton(
+                    (0.18, 0.5),
+                    (0.1, 0.3),
+                    text = 'pos',
+                    color = (255, 155, 0),
+                    on_click = self.toggle_helper('pos')
+                ),
+                RadioButton(
+                    (0.29, 0.5),
+                    (0.1, 0.3),
                     text = 'grid',
                     color = (255, 0, 0),
-                    on_click = self.toggle_grid
+                    on_click = self.toggle_helper('grid')
                 ),
 
             ], (0.2, 0.8), (1, 0.2), color=(126, 126, 126)),
@@ -43,9 +57,11 @@ class GameSceneManager(AbstractSceneManager):
         actual_game_speed = self.scene.get_info('game_renderer', 'game_speed')
         self.scene.send_info('game_renderer', 'game_speed', actual_game_speed + 1)
 
-    def toggle_grid(self):
-        helpers = self.scene.get_info('game_renderer', 'helpers')
-        if 'grid' in helpers:
-            helpers.remove('grid')
-        else:
-            helpers.append('grid')
+    def toggle_helper(self, helper):
+        def toggler():
+            helpers = self.scene.get_info('game_renderer', 'helpers')
+            if helper in helpers:
+                helpers.remove(helper)
+            else:
+                helpers.append(helper)
+        return toggler

@@ -93,7 +93,7 @@ class MapRenderer:
         return surf
 
     def __get_obstacles_area(self, map_size ,obstacles: list[Vector2]):
-        surf = Surface(map_size)
+        surf = Surface(map_size * TILE_SIZE, SRCALPHA)
         COLOR = (255, 0, 0)
         sq = Surface((TILE_SIZE, TILE_SIZE))
         sq.fill(COLOR)
