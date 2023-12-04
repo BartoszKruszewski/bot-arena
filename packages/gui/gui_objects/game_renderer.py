@@ -54,5 +54,6 @@ class GameRenderer(GUIElement):
             self.real_size,
             self.global_pos,
             self.properties.get('zoom', 1),
-            self.properties.get('game_speed', 1)
+            self.properties.get('game_speed', 1),
+            helpers = ['grid']
         )

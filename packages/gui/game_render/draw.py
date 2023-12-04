@@ -21,11 +21,15 @@ class Draw:
         self.__draw_screen = None
         self.__map_renderer = MapRenderer()
         self.__map_texture = self.__map_renderer.render(self.__assets, game)
+        self.__helpers = []
     
-    def begin(self, camera_offset: Vector2, size):
+    def begin(self, camera_offset: Vector2, size, helpers):
         self.__camera_offset = camera_offset
         self.__draw_screen = Surface(size)
         self.__ui_texture = Surface(size, SRCALPHA)
+        if helpers != self.__helpers:
+            self.__helpers = helpers
+            self.__map_texture = self.__map_renderer.fast_render(self.__helpers)
         self.__draw_screen.blit(self.__map_texture, self.__camera_offset)
 
     def end(self) -> Surface:
@@ -75,7 +79,7 @@ class Draw:
         )
 
         # real pos
-        if SHOW_REAL_POS:
+        if 'pos' in self.__helpers:
             surf = Surface((1, 1))
             surf.fill((255, 0, 0))
             self.draw(surf, object.cords)
