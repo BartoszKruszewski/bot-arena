@@ -1,7 +1,7 @@
 from packages.gui.scenes.example_scene import ExampleSceneManager
 from packages.gui.scenes.game_scene import GameSceneManager
+from packages.gui.scenes.game_end_scene import GameEndSceneManager
 from packages.gui.scenes.main_scene import MainSceneManager
-from ..game_logic.game import Game
 
 from .const import SCREEN_SIZE, FRAMERATE
 
@@ -22,10 +22,7 @@ class Main():
         self.is_running = True
         self.clock = Clock()
 
-        self.manager = MainSceneManager({
-            'example': self.load_example_scene,
-            'game': self.load_game_scene,
-        })
+        self.load_main_scene()
 
         while self.is_running:
             self.is_running = not event_peek(WINDOWCLOSE)
@@ -38,13 +35,19 @@ class Main():
             display_update()
 
     def load_game_scene(self):
-        self.manager = GameSceneManager(self.go_back)
+        self.manager = GameSceneManager({'game_end': self.load_game_end_scene})
 
     def load_example_scene(self):
-        self.manager = ExampleSceneManager(self.go_back)
+        self.manager = ExampleSceneManager({'main': self.load_main_scene})
 
-    def go_back(self):
-        print('go back')
+    def load_game_end_scene(self):
+        self.manager = GameEndSceneManager({'main': self.load_main_scene})
+
+    def load_main_scene(self):
+        self.manager = MainSceneManager({
+            'example': self.load_example_scene,
+            'game': self.load_game_scene,
+        })
 
     
 
