@@ -1,7 +1,9 @@
 from pygame import Vector2, Color
+from pygame.font import Font
 from random import randint
 from packages.gui.const import PARTICLE_DIRECTION_PRECISION as PDP, STANDARD_PARTICLE_TIME, \
     STANDARD_PARTICLE_SPEED, FRAMERATE, STANDARD_PARTICLE_ACC, STANDARD_PARTICLE_SIZE
+
 
 class Particle:
     def __init__(self, pos: Vector2, color: Color, **kwargs):
@@ -15,7 +17,10 @@ class Particle:
             randint(-PDP, PDP) / PDP, 
         ) if not 'direction' in kwargs else kwargs['direction']
         fading = True if not 'fading' in kwargs else kwargs['fading']
+        texture = None if not 'texture' in kwargs else kwargs['texture']
 
+
+        self.__texture = texture
         self.__pos = pos.copy()
         self.__color = color
         self.__max_opacity = color.a
@@ -39,7 +44,7 @@ class Particle:
 
         tuple[position, color, size]
         '''
-        return self.__pos, self.__color, self.__size
+        return self.__pos, self.__color, self.__size, self.__texture
 
     def update(self, dt: float, game_speed: float):
         '''Main update function.
@@ -58,6 +63,18 @@ class Particle:
 
     def __str__(self) -> str:
         return f'<{self.__class__}: {self.__pos}>'
+
+class DamageInfoParticle(Particle):
+    def __init__(self, pos: Vector2, **kwargs):
+        super().__init__(
+            pos, Color(255, 0, 0, 200),
+            direction = kwargs['direction'],
+            speed = 3,
+            time = 15,
+            acc = 0.9,
+            texture = Font(f'./assets/font.ttf', 8).render(str(kwargs['value']), False, kwargs['text_color'])
+
+        )
 
 class BloodParticle(Particle):
     def __init__(self, pos: Vector2, **kwargs):
