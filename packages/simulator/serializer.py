@@ -17,7 +17,7 @@ class Serializer:
 
     def serialize_arena(game: Game) -> dict[str, str]:
         # Arena data
-        path = game.get_path();
+        path = game.get_path()
         start = path[0]
         end = path[-1]
 
