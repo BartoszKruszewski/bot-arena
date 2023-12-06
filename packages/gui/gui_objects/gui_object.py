@@ -14,7 +14,6 @@ class GUIobject(ABC):
         self.properties = kwargs
 
     def get_info(self, id: str, property: str):
-        
         if self.properties.get("id", None) == id:
             return self.properties[property]
 

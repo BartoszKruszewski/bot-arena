@@ -2,11 +2,13 @@ from .gui_object import GUIobject
 from pygame import Surface, Vector2
 from .window import Window
 from pygame.event import Event
+from pygame import MOUSEBUTTONDOWN, KEYDOWN, BUTTON_LEFT
 
 class Scene(GUIobject):
     def __init__(self, sub_objects: list['GUIobject'], **kwargs):
         super().__init__(sub_objects, (0, 0), (1, 1), **kwargs)
         self.surf = None
+        self.supported_events = [MOUSEBUTTONDOWN, KEYDOWN]
 
     def get_surf(self) -> Surface:
         return self.surf
@@ -49,6 +51,11 @@ class Scene(GUIobject):
                     queue.append(object)
 
     def handle_event(self, event: Event) -> None:
+        if event.type not in self.supported_events:
+            return
+        if event.type == MOUSEBUTTONDOWN:
+            if event.button != BUTTON_LEFT:
+                return
         for object in self.sub_objects:
             object.handle_event(event)
 

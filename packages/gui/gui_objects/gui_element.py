@@ -1,7 +1,7 @@
 from abc import ABC
 from .gui_object import GUIobject
 from pygame.event import Event
-from pygame import Surface, font
+from pygame import Surface, font, MOUSEBUTTONDOWN
 from pygame.mouse import get_pos, get_pressed
 
 class GUIElement(GUIobject, ABC):
@@ -28,17 +28,29 @@ class GUIElement(GUIobject, ABC):
     def update(self, dt):
         pass
 
-    def in_mouse_range(self) -> bool:
-        mouse_pos = get_pos()
+    def in_mouse_range(self, event_or_none: Event = None) -> bool:
+        if event_or_none is None:
+            mouse_pos = get_pos()
+        else:
+            if event_or_none.type != MOUSEBUTTONDOWN:
+                raise Exception("Event type is not MOUSEBUTTONDOWN")
+            mouse_pos = event_or_none.pos
         return all((
-                self.global_pos.x < mouse_pos[0] < self.global_pos.x + self.real_size.x,
-                self.global_pos.y < mouse_pos[1] < self.global_pos.y + self.real_size.y
-            )) 
+            self.global_pos.x < mouse_pos[0] < self.global_pos.x + self.real_size.x,
+            self.global_pos.y < mouse_pos[1] < self.global_pos.y + self.real_size.y
+        )) 
+
     
-    def is_clicked(self) -> bool:
-        if get_pressed()[0]:
-            if self.__click_switch:
-                return False
-            self.__click_switch = True
-            return self.in_mouse_range()
-        self.__click_switch = False
+    def is_clicked(self, event_or_none: Event = None) -> bool:
+        if event_or_none is None:
+            if get_pressed()[0]:
+                if self.__click_switch:
+                    return False
+                self.__click_switch = True
+                return self.in_mouse_range()
+            self.__click_switch = False
+        else:
+            event = event_or_none
+            if event.type == MOUSEBUTTONDOWN:
+                return self.in_mouse_range(event)
+        return False
