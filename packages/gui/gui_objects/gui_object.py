@@ -20,7 +20,8 @@ class GUIobject(ABC):
         if self.sub_objects:
             for obj in self.sub_objects:
                 info = obj.get_info(id, property)
-                if info: return info
+                if info is not None: 
+                    return info
 
         return None
 

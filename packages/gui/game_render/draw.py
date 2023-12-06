@@ -1,7 +1,7 @@
 from pygame import Vector2, Surface, Rect, Color, SRCALPHA, transform
 from pygame.font import Font
 from pygame.draw import rect as draw_rect, line as draw_line
-from packages.gui.const import TILE_SIZE, SHOW_REAL_POS, HEALTH_BAR_COLOR_BACK, \
+from packages.gui.const import TILE_SIZE, HEALTH_BAR_COLOR_BACK, \
     HEALTH_BAR_COLOR_FRONT, HEALTH_BAR_SIZE, INFO_TAB_SHOW_TIME, \
     INFO_TAB_SHOW_SMOOTH, INFO_TAB_MARGIN
 from .objects_rt.object_rt import ObjectRT
@@ -21,11 +21,15 @@ class Draw:
         self.__draw_screen = None
         self.__map_renderer = MapRenderer()
         self.__map_texture = self.__map_renderer.render(self.__assets, game)
+        self.__helpers = []
     
-    def begin(self, camera_offset: Vector2, size):
+    def begin(self, camera_offset: Vector2, size, helpers):
         self.__camera_offset = camera_offset
         self.__draw_screen = Surface(size)
         self.__ui_texture = Surface(size, SRCALPHA)
+        if helpers != self.__helpers:
+            self.__helpers = helpers.copy()
+            self.__map_texture = self.__map_renderer.fast_render(self.__helpers)
         self.__draw_screen.blit(self.__map_texture, self.__camera_offset)
 
     def end(self) -> Surface:
@@ -74,8 +78,7 @@ class Draw:
             object.select_time / INFO_TAB_SHOW_TIME
         )
 
-        # real pos
-        if SHOW_REAL_POS:
+        if 'pos' in self.__helpers:
             surf = Surface((1, 1))
             surf.fill((255, 0, 0))
             self.draw(surf, object.cords)

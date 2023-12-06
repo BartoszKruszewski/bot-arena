@@ -47,7 +47,7 @@ class Engine():
         
     def render(
             self, game: Game, dt: float, draw_screen_size: Vector2,
-            screen_shift: Vector2, zoom: float, game_speed: float
+            screen_shift: Vector2, zoom: float, game_speed: float, helpers = []
         ) -> Surface:
 
         '''Main rendering function.
@@ -75,7 +75,7 @@ class Engine():
         )
 
         # reset frame
-        self.__draw.begin(self.__camera.get_offset(), draw_screen_size / zoom)
+        self.__draw.begin(self.__camera.get_offset(), draw_screen_size / zoom, helpers)
         
         # draw particles
         for particle in self.__particle_controller.get_particles():

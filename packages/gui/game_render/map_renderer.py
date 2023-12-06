@@ -3,22 +3,32 @@ from pygame.draw import rect as draw_rect
 from random import choice
 
 from packages.game_logic.game import Game
-from packages.gui.const import TILE_SIZE, SHOW_GRID, SHOW_OBSTACLES_AREA
+from packages.gui.const import TILE_SIZE
 
 class MapRenderer:
-    def render(self, assets: dict, game: Game) -> Surface:
+    def render(self, assets: dict, game: Game, helpers = []) -> Surface:
 
         size = Vector2(game.get_map_size())
         self.__map_texture = Surface(size * TILE_SIZE)
         path = game.get_path()
 
         self.__draw_path(assets, path)
-        self.__draw_grass(assets, size, path)    
-        if SHOW_OBSTACLES_AREA: self.__draw_obstacles_area(game.get_obstacles())
-        if SHOW_GRID: self.__draw_grid(size)
+        self.__draw_grass(assets, size, path)
+        self.__obstacles_area = self.__get_obstacles_area(size, game.get_obstacles())
+        self.__grid = self.__get_grid(size)
 
-        return self.__map_texture
+        return self.fast_render(helpers)
     
+    def fast_render(self, helpers = []) -> Surface:
+        
+        surf = self.__map_texture.copy()
+        if 'obstacles_area' in helpers:
+            surf.blit(self.__obstacles_area, (0, 0))
+        if 'grid' in helpers:
+            surf.blit(self.__grid, (0, 0))
+
+        return surf
+
     def __draw_path(self, assets, path):
         for pos in path:
             self.__map_texture.blit(
@@ -71,21 +81,25 @@ class MapRenderer:
             if Vector2(x, y) + cord in other_tiles
         ]
 
-    def __draw_grid(self, map_size: Vector2):
+    def __get_grid(self, map_size: Vector2):
+        surf = Surface(map_size * TILE_SIZE, SRCALPHA)
         COLOR = (0, 0, 0, 100)
 
-        surf = Surface((TILE_SIZE, TILE_SIZE), SRCALPHA)
-        draw_rect(surf, COLOR, Rect(0, 0, TILE_SIZE, TILE_SIZE), 1)
+        sq = Surface((TILE_SIZE, TILE_SIZE), SRCALPHA)
+        draw_rect(sq, COLOR, Rect(0, 0, TILE_SIZE, TILE_SIZE), 1)
         for y in range(int(map_size.y)):
             for x in range(int(map_size.x)):
-                self.__map_texture.blit(surf, Vector2(x, y) * TILE_SIZE)
+                surf.blit(sq, Vector2(x, y) * TILE_SIZE)
+        return surf
 
-    def __draw_obstacles_area(self, obstacles: list[Vector2]):
+    def __get_obstacles_area(self, map_size ,obstacles: list[Vector2]):
+        surf = Surface(map_size * TILE_SIZE, SRCALPHA)
         COLOR = (255, 0, 0)
-        surf = Surface((TILE_SIZE, TILE_SIZE))
-        surf.fill(COLOR)
+        sq = Surface((TILE_SIZE, TILE_SIZE))
+        sq.fill(COLOR)
         for obstacle in obstacles:
-            self.__map_texture.blit(surf, Vector2(obstacle.cords) * TILE_SIZE)
+            surf.blit(sq, Vector2(obstacle.cords) * TILE_SIZE)
+        return surf
 
     def __randomize_grass(self, texture: Surface) -> Surface:
         '''Radomize grass texture color

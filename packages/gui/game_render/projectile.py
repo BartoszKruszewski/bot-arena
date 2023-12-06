@@ -44,10 +44,11 @@ class ProjectileController:
             for side in ("left", "right"):
                 for turret in filter(lambda t: t.side == side, turrets):
                     for soldier in filter(lambda s: s.side != side, soldiers):
-                        pos = self.__path[soldier['position'] + (1 if side == 'right' else -1)]
-                        if self.__distance(turret['cords'], pos) <= turret.stats["range"]:
-                            self.__projectiles.append(Projectile(turret.cords, soldier))
-                            break
+                        if soldier['position'] + (1 if side == 'right' else -1) in self.__path:
+                            pos = self.__path[soldier['position'] + (1 if side == 'right' else -1)]
+                            if self.__distance(turret['cords'], pos) <= turret.stats["range"]:
+                                self.__projectiles.append(Projectile(turret.cords, soldier))
+                                break
 
             # Check for possible shots from soldiers.
             for side in ("left", "right"):
