@@ -1,13 +1,12 @@
 from abc import ABC
 from .gui_object import GUIobject
 from pygame.event import Event
-from pygame import Surface, font, MOUSEBUTTONDOWN
+from pygame import Surface, font, MOUSEBUTTONDOWN, BUTTON_LEFT
 from pygame.mouse import get_pos, get_pressed
 
 class GUIElement(GUIobject, ABC):
     def __init__(self, pos: tuple[float, float], size: tuple[float, float], **kwargs):
         super().__init__(None, pos, size, **kwargs)
-        self.__click_switch = False
         self.properties['fontSize'] = self.properties.get('fontSize', 30)
 
     def handle_event(self, event: Event) -> None:
@@ -41,16 +40,7 @@ class GUIElement(GUIobject, ABC):
         )) 
 
     
-    def is_clicked(self, event_or_none: Event = None) -> bool:
-        if event_or_none is None:
-            if get_pressed()[0]:
-                if self.__click_switch:
-                    return False
-                self.__click_switch = True
-                return self.in_mouse_range()
-            self.__click_switch = False
-        else:
-            event = event_or_none
-            if event.type == MOUSEBUTTONDOWN:
-                return self.in_mouse_range(event)
+    def is_clicked(self, event: Event) -> bool:
+        if event.type == MOUSEBUTTONDOWN and event.button == BUTTON_LEFT:
+            return self.in_mouse_range(event)
         return False

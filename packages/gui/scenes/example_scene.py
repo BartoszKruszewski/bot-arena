@@ -1,5 +1,5 @@
 from ..abstract_scene_manager import AbstractSceneManager
-from packages.gui.gui_objects import Scene, Window, RadioButton, NumberField, List, Grid
+from packages.gui.gui_objects import Scene, Window, RadioButton, NumberField, List, Grid, Slider
 
 class ExampleSceneManager(AbstractSceneManager):
     def __init__(self, scene_functions=...):
@@ -29,7 +29,8 @@ class ExampleSceneManager(AbstractSceneManager):
                     (0, 0), (0.5, 0.5),
                     color = (255, 0, 0),
                     on_click = self.handle_soldier_click
-                )
+                ),
+                Slider((0.1, 0.7), (0.8, 0.1), color=(0, 255, 0), on_change=lambda x: print(x))
             ], (0, 0), (0.5, 1))
         ])
     
