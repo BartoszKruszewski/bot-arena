@@ -15,7 +15,7 @@ def get_run_command(file: str) -> list[str]:
 
     elif ext == ".cpp":  # C++
         bin_file = os.path.join(bin_path, file_name)
-        compile_command = ["g++", file, "-o", bin_file, "-std=c++17"]
+        compile_command = ["g++", "-O2", "-Wall", "-std=c++17", file, "-o", bin_file, ]
         compile(compile_command)
         return [bin_file]
     else:

@@ -1,60 +1,58 @@
 #include <iostream>
+#include <vector>
 #include <random>
 #include <algorithm>
 
-std::pair<int, int> randomCoords() {
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_int_distribution<> dis(0, 9);
+using namespace std;
 
-    int x = dis(gen);
-    int y = dis(gen);
-
-    return std::make_pair(x, y);
+int random_num(int range) {
+    return rand() % (range + 1);
 }
 
 std::string randomMove() {
     int x, y;
-    char moveOptions[] = {'W', 'T', 'F', 'S'};
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_int_distribution<> dis(0, 3);
+    vector<char> moveOptions = {'W', 'T', 'F', 'S'};
 
-    char move = moveOptions[dis(gen)];
+    char move = moveOptions[random_num(moveOptions.size() - 1)];
 
-    if (dis(gen) % 2 == 0 || move == 'W') {
+    if (random_num(100) < 50 || move == 'W') {
         return "W";
-    } else if (move == 'T' || move == 'F') {
-        std::tie(x, y) = randomCoords();
-        return std::string(1, move) + " " + std::to_string(x) + " " + std::to_string(y);
+
+    } else if (move == 'T') {
+        x = random_num(9);
+        y = random_num(9);
+        return "T " + to_string(x) + " " + to_string(y);
+
+    } else if (move == 'F') {
+        x = random_num(9);
+        y = random_num(9);
+        return "F " + to_string(x) + " " + to_string(y);
+
     } else if (move == 'S') {
-        std::string unitOptions[] = {"swordsman", "archer"};
-        return "S " + unitOptions[dis(gen) % 2];
+        vector<string> unitOptions = {"swordsman", "archer"};
+        return "S " + unitOptions[random_num(unitOptions.size() - 1)];
     }
 
     return "";
 }
 
 int main() {
-    std::random_device rd;
-    std::mt19937 gen(rd());
-
-    std::string settings;
-    std::getline(std::cin, settings);
-
-    std::string map;
-    std::getline(std::cin, map);
-
     while (true) {
-        std::cerr << "READY" << std::endl;
-        std::cout << "READY" << std::endl;
+        string settings;
+        string map;
+
+        getline(std::cin, settings);
+        getline(std::cin, map);
+
+        cerr << "READY" << endl;
+        cout << "READY" << endl;
 
         while (true) {
-            std::string move = randomMove();
-            std::cout << move << std::endl;
+            string move = randomMove();
+            cout << move << endl;
 
-            std::string message;
-            std::getline(std::cin, message);
+            string message;
+            getline(cin, message);
 
             if (message == "END") {
                 break;
