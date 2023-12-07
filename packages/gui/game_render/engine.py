@@ -95,9 +95,8 @@ class Engine():
         for projectile in self.__projectile_controller.get_projectiles():
             self.__draw.projectile(projectile)
 
-        return scale(
-            self.__draw.end(),
-            Vector2(draw_screen_size)
-        )
-
-    
+        self.__draw.scale(Vector2(draw_screen_size))
+        self.__draw.statsBar(game.get_gold(), game.get_income())
+        
+        return self.__draw.end()
+            

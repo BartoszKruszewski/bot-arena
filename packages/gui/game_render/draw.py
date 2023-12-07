@@ -1,9 +1,11 @@
 from pygame import Vector2, Surface, Rect, Color, SRCALPHA, transform
 from pygame.font import Font
 from pygame.draw import rect as draw_rect, line as draw_line
+from pygame.transform import scale
 from packages.gui.const import TILE_SIZE, HEALTH_BAR_COLOR_BACK, \
     HEALTH_BAR_COLOR_FRONT, HEALTH_BAR_SIZE, INFO_TAB_SHOW_TIME, \
-    INFO_TAB_SHOW_SMOOTH, INFO_TAB_MARGIN
+    INFO_TAB_SHOW_SMOOTH, INFO_TAB_MARGIN, DIGITS_SPACING, \
+    LEFT_INCOME_POS, LEFT_GOLD_POS, RIGHT_INCOME_POS, RIGHT_GOLD_POS
 from .objects_rt.object_rt import ObjectRT
 from .objects_rt.farm_rt import FarmRT
 from .objects_rt.turret_rt import TurretRT
@@ -33,8 +35,11 @@ class Draw:
         self.__draw_screen.blit(self.__map_texture, self.__camera_offset)
 
     def end(self) -> Surface:
-        self.__draw_screen.blit(self.__ui_texture, (0, 0))
         return self.__draw_screen
+
+    def scale(self, size: Vector2):
+        self.__draw_screen.blit(self.__ui_texture, (0, 0))
+        self.__draw_screen = scale(self.end(), size)
 
     def projectile(self, projectile: Projectile):
             texture = self.__assets["projectiles"]["arrow"]
@@ -244,3 +249,41 @@ class Draw:
         )):
             if ui: self.__ui_texture.blit(texture, pos + ca)
             else: self.__draw_screen.blit(texture, pos + ca)
+
+    def statsBar(self, gold, income):
+        texture = self.__assets["statsBar"]["statsBar"]
+        size = Vector2(self.__draw_screen.get_size())
+        tsize = Vector2(texture.get_size())
+        
+        self.__draw_screen.blit(texture, (size.x - tsize.x, 0))
+        
+        Offset = Vector2(size.x - tsize.x, 0) + LEFT_GOLD_POS
+        number = str(gold["left"])
+        for i in range(len(number)):
+            digit = self.__assets["statsBar"][number[i]]
+            aux = Vector2(digit.get_size()[0] + DIGITS_SPACING, 0) * i
+            self.__draw_screen.blit(digit, Offset + aux)
+
+        Offset = Vector2(size.x - tsize.x, 0) + LEFT_INCOME_POS
+        number = str(income["left"])
+        for i in range(len(number)):
+            digit = self.__assets["statsBar"][number[i]]
+            aux = Vector2(digit.get_size()[0] + DIGITS_SPACING, 0) * i
+            self.__draw_screen.blit(digit, Offset + aux)
+
+        self.__draw_screen.blit(transform.rotate(texture, 180),
+                                (0, size.y - tsize.y))
+        
+        Offset = Vector2(0, size.y - tsize.y) + RIGHT_GOLD_POS
+        number = str(gold["right"])
+        for i in range(len(number)):
+            digit = self.__assets["statsBar"][number[i]]
+            aux = Vector2(digit.get_size()[0] + DIGITS_SPACING, 0) * i
+            self.__draw_screen.blit(digit, Offset + aux)
+
+        Offset = Vector2(0, size.y - tsize.y) + RIGHT_INCOME_POS
+        number = str(income["right"])
+        for i in range(len(number)):
+            digit = self.__assets["statsBar"][number[i]]
+            aux = Vector2(digit.get_size()[0] + DIGITS_SPACING, 0) * i
+            self.__draw_screen.blit(digit, Offset + aux)

@@ -1,11 +1,11 @@
-from pygame import MOUSEWHEEL, Surface
+from pygame import MOUSEWHEEL, Surface, Vector2
 from pygame.event import get as get_event
 
 from packages.gui.gui_objects.gui_element import GUIElement
 from packages.game_logic.game import Game
 from packages.gui.game_render import LogInterpreter, Engine
 from packages.gui.const import FRAMERATE, ZOOM_INTERWAL, \
-    MIN_ZOOM, MAX_ZOOM, TILE_SIZE
+    MIN_ZOOM, MAX_ZOOM, TILE_SIZE, STATSBAR_BACKGROUND_COLOR
 
 class GameRenderer(GUIElement):
     def __init__(self, pos: tuple[float, float], size: tuple[float, float], **kwargs):
@@ -56,9 +56,8 @@ class GameRenderer(GUIElement):
         return self.__engine.render(
             self.__game,
             self.__dt,
-            self.real_size,
+            Vector2(self.real_size.x, int(self.real_size.y)),
             self.global_pos,
             self.properties.get('zoom', 1),
             self.properties.get('game_speed', 1),
-            self.properties.get('helpers', [])
-        )
+            self.properties.get('helpers', []))
