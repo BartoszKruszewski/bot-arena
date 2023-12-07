@@ -11,7 +11,7 @@ def graphics_main():
     Main()
 
 def simulator_main():
-    from packages.simulator_maciek.main import main as Main
+    from packages.simulator.main import main as Main
     Main()
 
 def main():

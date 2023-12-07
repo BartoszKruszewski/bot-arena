@@ -4,11 +4,12 @@ import queue
 import time
 
 from packages import BOTS_DIRECTORY
+from packages.simulator.utils import get_run_command
 
 class Bot:
-    def __init__(self, name):
-        name = BOTS_DIRECTORY + "/" + name
-        self.process = subprocess.Popen(['python', name], bufsize=1, shell=False, text=True,
+    def __init__(self, file):
+        file = BOTS_DIRECTORY + "/" + file
+        self.process = subprocess.Popen(get_run_command(file), bufsize=1, shell=False, text=True,
                                         stdout=subprocess.PIPE, stdin=subprocess.PIPE)
         self.in_queue = queue.Queue()
         self.out_queue = queue.Queue()
@@ -22,7 +23,7 @@ class Bot:
         
         self.total_time = 0
         self.start_time = None
-        
+
     def _reader(self):
         proc = self.process
         while proc.poll() is None:
@@ -71,6 +72,8 @@ class Bot:
         for thread in self.threads:
             thread.join()
         # may not work
+
+
 
 
 
