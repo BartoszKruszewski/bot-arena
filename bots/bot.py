@@ -27,9 +27,7 @@ while True:
     print("READY", file=sys.stderr)
     print("READY")
 
-    i = 0
-    while i < 2:
-        i += 1
+    while True:
         move = random_move()
         print(move)
         message = input()
