@@ -2,13 +2,14 @@ import subprocess
 import threading
 import queue
 import time
+import os
 
 from packages import BOTS_DIRECTORY
 from packages.simulator.utils import get_run_command
 
 class Bot:
     def __init__(self, file):
-        file = BOTS_DIRECTORY + "/" + file
+        file = os.path.join(BOTS_DIRECTORY, file)
         self.process = subprocess.Popen(get_run_command(file), bufsize=1, shell=False, text=True,
                                         stdout=subprocess.PIPE, stdin=subprocess.PIPE)
         self.in_queue = queue.Queue()
