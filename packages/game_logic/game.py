@@ -207,10 +207,10 @@ class Game:
         }
 
     def get_gold(self) -> dict[str, int]:
-        return self.gold
+        return self.gold.copy()
     
     def get_income(self) -> dict[str, int]:
-        return self.income
+        return self.income.copy()
 
     def display(self) -> None:
         for turret in self.turrets['left'].turrets:
