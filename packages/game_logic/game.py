@@ -156,9 +156,6 @@ class Game:
         return None
 
     def update(self, action_left: Action, action_right: Action) -> tuple[str, str]:
-        self.income['left'] += len(self.farms['left']) * 2
-        self.income['right'] += len(self.farms['right']) * 2
-
         self.__update_soldiers()
         self.__shoot_turrets()
         self.soldiers['left'].clear_dead()
@@ -171,6 +168,9 @@ class Game:
         
         self.gold['left'] += self.income['left']
         self.gold['right'] += self.income['right']
+
+        self.income['left'] += len(self.farms['left']) * 2
+        self.income['right'] += len(self.farms['right']) * 2
 
         WinLog = self.__is_win()
         if WinLog:
