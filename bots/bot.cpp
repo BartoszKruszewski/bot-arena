@@ -1,37 +1,43 @@
 #include <iostream>
-#include <cstdlib>
-#include <ctime>
+#include <random>
 #include <algorithm>
 
 std::pair<int, int> randomCoords() {
-    int x = std::rand() % 10;
-    int y = std::rand() % 10;
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> dis(0, 9);
+
+    int x = dis(gen);
+    int y = dis(gen);
+
     return std::make_pair(x, y);
 }
 
 std::string randomMove() {
     int x, y;
     char moveOptions[] = {'W', 'T', 'F', 'S'};
-    char move = moveOptions[std::rand() % 4];
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> dis(0, 3);
 
-    if (std::rand() % 2 == 0 || move == 'W') {
+    char move = moveOptions[dis(gen)];
+
+    if (dis(gen) % 2 == 0 || move == 'W') {
         return "W";
-    } else if (move == 'T') {
+    } else if (move == 'T' || move == 'F') {
         std::tie(x, y) = randomCoords();
-        return "T " + std::to_string(x) + " " + std::to_string(y);
-    } else if (move == 'F') {
-        std::tie(x, y) = randomCoords();
-        return "F " + std::to_string(x) + " " + std::to_string(y);
+        return std::string(1, move) + " " + std::to_string(x) + " " + std::to_string(y);
     } else if (move == 'S') {
         std::string unitOptions[] = {"swordsman", "archer"};
-        return "S " + unitOptions[std::rand() % 2];
+        return "S " + unitOptions[dis(gen) % 2];
     }
 
     return "";
 }
 
 int main() {
-    std::srand(std::time(0));
+    std::random_device rd;
+    std::mt19937 gen(rd());
 
     std::string settings;
     std::getline(std::cin, settings);
