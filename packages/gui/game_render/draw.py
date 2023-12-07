@@ -258,14 +258,14 @@ class Draw:
         self.__draw_screen.blit(texture, (size.x - tsize.x, 0))
         
         Offset = Vector2(size.x - tsize.x, 0) + LEFT_GOLD_POS
-        number = str(gold["left"])
+        number = str(gold["right"])
         for i in range(len(number)):
             digit = self.__assets["statsBar"][number[i]]
             aux = Vector2(digit.get_size()[0] + DIGITS_SPACING, 0) * i
             self.__draw_screen.blit(digit, Offset + aux)
 
         Offset = Vector2(size.x - tsize.x, 0) + LEFT_INCOME_POS
-        number = str(income["left"])
+        number = str(income["right"])
         for i in range(len(number)):
             digit = self.__assets["statsBar"][number[i]]
             aux = Vector2(digit.get_size()[0] + DIGITS_SPACING, 0) * i
@@ -275,14 +275,14 @@ class Draw:
                                 (0, size.y - tsize.y))
         
         Offset = Vector2(0, size.y - tsize.y) + RIGHT_GOLD_POS
-        number = str(gold["right"])
+        number = str(gold["left"])
         for i in range(len(number)):
             digit = self.__assets["statsBar"][number[i]]
             aux = Vector2(digit.get_size()[0] + DIGITS_SPACING, 0) * i
             self.__draw_screen.blit(digit, Offset + aux)
 
         Offset = Vector2(0, size.y - tsize.y) + RIGHT_INCOME_POS
-        number = str(income["right"])
+        number = str(income["left"])
         for i in range(len(number)):
             digit = self.__assets["statsBar"][number[i]]
             aux = Vector2(digit.get_size()[0] + DIGITS_SPACING, 0) * i

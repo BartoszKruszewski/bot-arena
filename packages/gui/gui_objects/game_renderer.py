@@ -12,7 +12,7 @@ class GameRenderer(GUIElement):
         super().__init__(pos, size, **kwargs)
         self.__game = Game()
         self.__log_interpreter = LogInterpreter(
-            f'./logs/{self.properties.get("log_name", "example_log")}.txt'
+            f'./logs/{self.properties.get("log_name", "0")}.txt'
         )
         self.__engine = Engine(self.__game)
         
