@@ -5,7 +5,7 @@ from packages.gui.gui_objects.gui_element import GUIElement
 from packages.game_logic.game import Game
 from packages.gui.game_render import LogInterpreter, Engine
 from packages.gui.const import FRAMERATE, ZOOM_INTERWAL, \
-    MIN_ZOOM, MAX_ZOOM, TILE_SIZE, STATSBAR_BACKGROUND_COLOR
+    MIN_ZOOM, MAX_ZOOM, TILE_SIZE
 
 class GameRenderer(GUIElement):
     def __init__(self, pos: tuple[float, float], size: tuple[float, float], **kwargs):
