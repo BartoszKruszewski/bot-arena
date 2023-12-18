@@ -1,5 +1,5 @@
 from ..abstract_scene_manager import AbstractSceneManager
-from packages.gui.gui_objects import Scene, Window, RadioButton, NumberField, List, Grid, Slider, TimeController
+from packages.gui.gui_objects import Scene, Window, RadioButton, NumberField, List, Grid, Slider, TimeController, Icon
 
 class ExampleSceneManager(AbstractSceneManager):
     def __init__(self, scene_functions=...):
@@ -21,6 +21,7 @@ class ExampleSceneManager(AbstractSceneManager):
                     active_color=(0, 255, 0),
                     on_click=lambda: print('radio button clicked')
                 ),
+                Icon((0.1, 0.1), (0.2, 0.2), 'bot'),
                 NumberField((0.6, 0.6), (0.3, 0.1)),
                 TimeController((0.6, 0.8), (0.3, 0.1),
                     prev_on_click=lambda: print('prev'),

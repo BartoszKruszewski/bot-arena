@@ -8,3 +8,4 @@ from .grid import Grid
 from .list import List
 from .slider import Slider
 from .time_controller import TimeController
+from .icon import Icon
