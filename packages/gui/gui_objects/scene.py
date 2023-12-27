@@ -3,7 +3,7 @@ from pygame import Surface, Vector2
 from pygame.font import Font
 from .window import Window
 from pygame.event import Event
-from packages.gui.const import HEADER_BAR_SIZE
+from packages.gui.const import HEADER_BAR_SIZE, SCREEN_SIZE
 from packages import ASSETS_DIRECTORY
 
 class Scene(GUIobject):
@@ -14,6 +14,7 @@ class Scene(GUIobject):
                 f'{ASSETS_DIRECTORY}/{self.properties.get("font", "font_gui")}.ttf',
                 self.properties.get('font_size', 20)
             )
+        self.calc_pos((0, 0), SCREEN_SIZE)
 
     def get_surf(self) -> Surface:
         return self.surf
@@ -31,6 +32,7 @@ class Scene(GUIobject):
         return surf
     
     def calc_pos(self, global_pos: tuple, screen_size: tuple) -> None:
+        self.initialized = True
         global_pos = Vector2(global_pos)
         screen_size = Vector2(screen_size)
 
@@ -67,6 +69,6 @@ class Scene(GUIobject):
         for object in self.sub_objects:
             object.handle_event(event)
 
-    def update(self, dt) -> None:
+    def update(self, dt) -> None:            
         for object in self.sub_objects:
             object.update(dt)

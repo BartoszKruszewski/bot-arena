@@ -21,6 +21,7 @@ class Main():
         self.screen = display_set_mode(SCREEN_SIZE)
         self.is_running = True
         self.clock = Clock()
+        self.thread = None
 
         self.load_main_scene()
 
@@ -31,7 +32,8 @@ class Main():
             manager_info.events = event_get()
 
             dt = self.clock.tick(FRAMERATE) * FRAMERATE / 1000
-            self.screen.blit(self.manager(manager_info, dt), (0, 0))
+            surf, self.thread = self.manager(manager_info, dt, self.thread)
+            self.screen.blit(surf, (0, 0))
             display_update()
 
     def load_game_scene(self):

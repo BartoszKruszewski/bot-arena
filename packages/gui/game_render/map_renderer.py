@@ -1,13 +1,12 @@
 from pygame import Surface, SRCALPHA, Rect, Vector2, Color
 from pygame.draw import rect as draw_rect
 from random import choice
-
+from time import sleep
 from packages.game_logic.game import Game
 from packages.gui.const import TILE_SIZE
 
 class MapRenderer:
     def render(self, assets: dict, game: Game, helpers = []) -> Surface:
-
         size = Vector2(game.get_map_size())
         self.__map_texture = Surface(size * TILE_SIZE)
         path = game.get_path()
