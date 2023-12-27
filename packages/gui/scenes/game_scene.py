@@ -4,7 +4,7 @@ from packages.gui.gui_objects import Window, Scene, GameRenderer, Button, RadioB
 class GameSceneManager(AbstractSceneManager):
     def load_scene(self, scene_functions):
         return Scene([
-            Window([], (0, 0), (0.2, 1), color=(42, 42, 42)),
+            Window([], (0, 0), (0.2, 1), color=(42, 42, 42), name = 'example2'),
             Window([ 
                 GameRenderer(
                     (0, 0),
@@ -12,7 +12,7 @@ class GameSceneManager(AbstractSceneManager):
                     game_end_action = scene_functions['game_end'],
                     id = 'game_renderer'
                 )
-                ], (0.2, 0), (0.8, 0.8), color=(84, 84, 84)),
+                ], (0.2, 0), (0.8, 0.8), color=(84, 84, 84), name = 'game'),
             Window([
                 Button(
                     (0.45, 0.45),
@@ -50,8 +50,8 @@ class GameSceneManager(AbstractSceneManager):
                     on_click = self.toggle_helper('grid')
                 ),
 
-            ], (0.2, 0.8), (1, 0.2), color=(126, 126, 126)),
-        ])
+            ], (0.2, 0.8), (1, 0.2), color=(126, 126, 126), name = 'example'),
+        ], name = 'main')
     
     def increase_game_speed(self):
         actual_game_speed = self.scene.get_info('game_renderer', 'game_speed')

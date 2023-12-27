@@ -4,8 +4,7 @@ from pygame.draw import rect as draw_rect, line as draw_line
 from pygame.transform import scale
 from packages.gui.const import TILE_SIZE, HEALTH_BAR_COLOR_BACK, \
     HEALTH_BAR_COLOR_FRONT, HEALTH_BAR_SIZE, INFO_TAB_SHOW_TIME, \
-    INFO_TAB_SHOW_SMOOTH, INFO_TAB_MARGIN, DIGITS_SPACING, \
-    LEFT_INCOME_POS, LEFT_GOLD_POS, RIGHT_INCOME_POS, RIGHT_GOLD_POS
+    INFO_TAB_SHOW_SMOOTH, INFO_TAB_MARGIN
 from .objects_rt.object_rt import ObjectRT
 from .objects_rt.farm_rt import FarmRT
 from .objects_rt.turret_rt import TurretRT
