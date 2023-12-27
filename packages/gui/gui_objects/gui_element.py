@@ -23,9 +23,6 @@ class GUIElement(GUIobject, ABC):
             (self.real_size.x / 2 - 30, self.real_size.y / 2 - 15)
         )
         return surf
-    
-    def update(self, dt):
-        pass
 
     def in_mouse_range(self, event_or_none: Event = None) -> bool:
         if event_or_none is None:
