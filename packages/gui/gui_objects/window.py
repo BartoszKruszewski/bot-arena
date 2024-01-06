@@ -3,7 +3,6 @@ from pygame import Surface, Vector2
 from pygame.event import Event
 from pygame.font import Font
 from packages import ASSETS_DIRECTORY
-from packages.gui.const import HEADER_BAR_SIZE
 
 class Window(GUIobject):
     def __init__(self, sub_objects, pos: tuple[float, float], size: tuple[float, float], **kwargs):

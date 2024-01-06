@@ -1,25 +1,29 @@
 from packages.gui.abstract_scene_manager import AbstractSceneManager
 from packages.gui.gui_objects import Window, Scene, GameRenderer, Button, RadioButton
 
+PROPORTION1 = 0.2
+PROPORTION2 = 0.4
+
 class GameSceneManager(AbstractSceneManager):
     def load_scene(self, scene_functions):
         return Scene([
-            Window([], (0, 0), (0.2, 1), color=(42, 42, 42), name = 'example2'),
+            Window([], (0, 0), (PROPORTION1, 1 - PROPORTION1), color=(42, 42, 42), name = 'log'),
             Window([ 
                 GameRenderer(
                     (0, 0),
                     (1, 1),
-                    game_end_action = scene_functions['game_end'],
+                    game_end_action = scene_functions['simulation'],
                     id = 'game_renderer'
                 )
-                ], (0.2, 0), (0.8, 0.8), color=(84, 84, 84), name = 'game'),
+                ], (PROPORTION1, 0), (1 - PROPORTION1, 1 - PROPORTION1), color=(84, 84, 84), name = 'game'),
+            Window([], (0, 1 - PROPORTION1), (PROPORTION2, PROPORTION1), color=(42, 42, 42), name = 'stats'),
             Window([
                 Button(
                     (0.45, 0.45),
                     (0.3, 0.3),
                     text = 'end_game',
                     color = (0, 0, 255),
-                    on_click = scene_functions['game_end']
+                    on_click = scene_functions['simulation']
                 ),
                 Button(
                     (0.1, 0.1),
@@ -50,8 +54,9 @@ class GameSceneManager(AbstractSceneManager):
                     on_click = self.toggle_helper('grid')
                 ),
 
-            ], (0.2, 0.8), (1, 0.2), color=(126, 126, 126), name = 'example'),
-        ], name = 'main')
+            ], (PROPORTION2, 1 - PROPORTION1), (1 - PROPORTION2, PROPORTION1), color=(126, 126, 126), name = 'control'),
+            
+        ], name = 'simulation view')
     
     def increase_game_speed(self):
         actual_game_speed = self.scene.get_info('game_renderer', 'game_speed')

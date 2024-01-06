@@ -1,7 +1,5 @@
-from packages.gui.scenes.example_scene import ExampleSceneManager
 from packages.gui.scenes.game_scene import GameSceneManager
-from packages.gui.scenes.game_end_scene import GameEndSceneManager
-from packages.gui.scenes.main_scene import MainSceneManager
+from packages.gui.scenes.simulation_scene import SimulationSceneManager
 
 from .const import SCREEN_SIZE, FRAMERATE
 
@@ -23,7 +21,7 @@ class Main():
         self.clock = Clock()
         self.thread = None
 
-        self.load_main_scene()
+        self.load_simulation_scene()
 
         while self.is_running:
             self.is_running = not event_peek(WINDOWCLOSE)
@@ -37,19 +35,10 @@ class Main():
             display_update()
 
     def load_game_scene(self):
-        self.manager = GameSceneManager({'game_end': self.load_game_end_scene})
+        self.manager = GameSceneManager({'simulation': self.load_simulation_scene})
 
-    def load_example_scene(self):
-        self.manager = ExampleSceneManager({'main': self.load_main_scene})
-
-    def load_game_end_scene(self):
-        self.manager = GameEndSceneManager({'main': self.load_main_scene})
-
-    def load_main_scene(self):
-        self.manager = MainSceneManager({
-            'example': self.load_example_scene,
-            'game': self.load_game_scene,
-        })
+    def load_simulation_scene(self):
+        self.manager = SimulationSceneManager({'game': self.load_game_scene})
 
     
 

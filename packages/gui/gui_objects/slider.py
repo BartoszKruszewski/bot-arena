@@ -41,8 +41,6 @@ class Slider(Button):
         slider_surf.fill((32, 120, 0))
         surf.blit(slider_surf, self.properties['slider']['pos'])
 
-        
-
         return surf
 
         
