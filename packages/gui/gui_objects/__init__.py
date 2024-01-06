@@ -1,6 +1,7 @@
 from .button import Button
 from .game_renderer import GameRenderer
 from .number_field import NumberField
+from .input_field import InputField
 from .radio_button import RadioButton
 from .scene import Scene
 from .window import Window

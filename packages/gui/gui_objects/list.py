@@ -2,20 +2,35 @@ from .radio_button import RadioButton
 from .window import Window
 
 class List(Window):
-    def __init__(self, sub_objects_str: list[str], pos: tuple[float, float], size: tuple[float, float], **kwargs):
+    def __init__(self, objects_in_list: list[str], pos: tuple[float, float], size: tuple[float, float], **kwargs):
         super().__init__([], pos, size, **kwargs)
-        interval = 1 / len(sub_objects_str)
+        interval = 1 / len(objects_in_list)
+        self.properties['max_active'] = kwargs.get('max_active', len(objects_in_list))
         self.sub_objects = [
             RadioButton(
-                (i * interval, 0), (interval, 1),
+                (0, i * interval), (1, interval),
                 color=(255, 0, 0),
                 active_color=(0, 255, 0),
-                on_click=self.generate_function(self.properties.get("on_click", lambda:None), i),
+                on_click = lambda: self.properties.get('on_click', lambda: None)(self.get_active()),
                 fontSize = 12,
-                text = sub_objects_str[i]
+                text = object
             )
-            for i in range(len(sub_objects_str))]
+            for i, object in enumerate(objects_in_list)]
 
-    def generate_function(self, on_click, index : int):
-        return lambda: on_click(index)
+    def get_active(self):
+        active_buttons = [
+            button.properties['text']
+            for button in self.sub_objects
+            if button.properties['active']
+        ]
+        if len(active_buttons) == self.properties['max_active']:
+            for button in self.sub_objects:
+                if not button.properties['active']:
+                    button.properties['blocked'] = True
+        else:
+            for button in self.sub_objects:
+                button.properties['blocked'] = False
+        return active_buttons
+        
+
 
