@@ -39,13 +39,12 @@ class ProjectileController:
 
         if self.__tick >= FRAMERATE:
             self.__tick %= FRAMERATE
-            
             # Check for possible shots from turrets.
             for side in ("left", "right"):
                 for turret in filter(lambda t: t.side == side, turrets):
                     for soldier in filter(lambda s: s.side != side, soldiers):
-                        if soldier['position'] + (1 if side == 'right' else -1) in self.__path:
-                            pos = self.__path[soldier['position'] + (1 if side == 'right' else -1)]
+                        if 0 <= soldier['position'] < len(self.__path):
+                            pos = self.__path[soldier['position']]
                             if self.__distance(turret['cords'], pos) <= turret.stats["range"]:
                                 self.__projectiles.append(Projectile(turret.cords, soldier))
                                 break

@@ -15,8 +15,6 @@ class GUIobject(ABC):
 
     def get_info(self, id: str, property: str):
         if self.properties.get("id", None) == id:
-            print(id, property)
-            print(self.properties)
             return self.properties.get(property, None)
 
         if self.sub_objects:

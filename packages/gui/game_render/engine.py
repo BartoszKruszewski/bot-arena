@@ -94,6 +94,6 @@ class Engine():
 
         for projectile in self.__projectile_controller.get_projectiles():
             self.__draw.projectile(projectile)
-        
+
         return scale(self.__draw.end(), draw_screen_size)
             
