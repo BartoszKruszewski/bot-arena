@@ -15,7 +15,7 @@ class NumberField(Window):
                 InputField(
                     (0.2, 0), (0.60, 1),
                     color = (200, 200, 200),
-                    text = '0',
+                    text = str(kwargs.get('default', 0)),
                     filter = self.number_filter,
                     id = str(self) # !!!!!!!!!!!!!!!!!!!!
                 ),
@@ -27,18 +27,29 @@ class NumberField(Window):
             ], pos, size, **kwargs)
         
         self.properties['interval'] = self.properties.get('interval', 1)
+        self.properties['minimum'] = self.properties.get('minimum', None)
+        self.properties['maximum'] = self.properties.get('maximum', None)
         
     def number_filter(self, text):
-        if not text.isnumeric():
-            return False
-        return True
+        return text.isnumeric() and int(text) < self.properties['maximum']
 
     def increment(self):
-        number = str(int(self.get_info(str(self), 'text')) + self.properties['interval'])
-        self.send_info(str(self), 'text', number)
+        number = int(self.get_info(str(self), 'text')) + self.properties['interval']
+        if self.properties['minimum'] is not None:
+            number = max(self.properties['minimum'], number)
+        if self.properties['maximum'] is not None:
+            number = min(self.properties['maximum'], number)
+        self.send_info(str(self), 'text', str(number))
         self.send_info(str(self), 'active', False)
 
     def decrement(self):
-        number = str(int(self.get_info(str(self), 'text')) - self.properties['interval'])
-        self.send_info(str(self), 'text', number)
+        number = int(self.get_info(str(self), 'text')) - self.properties['interval']
+        if self.properties['minimum'] is not None:
+            number = max(self.properties['minimum'], number)
+        if self.properties['maximum'] is not None:
+            number = min(self.properties['maximum'], number)
+        self.send_info(str(self), 'text', str(number))
         self.send_info(str(self), 'active', False)
+
+    def update(self, dt):
+        self.properties['text'] = self.sub_objects[1].properties['text']

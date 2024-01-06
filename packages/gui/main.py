@@ -34,8 +34,8 @@ class Main():
             self.screen.blit(surf, (0, 0))
             display_update()
 
-    def load_game_scene(self):
-        self.manager = GameSceneManager({'simulation': self.load_simulation_scene})
+    def load_game_scene(self, log_name):
+        self.manager = GameSceneManager({'simulation': self.load_simulation_scene, 'log_name': log_name})
 
     def load_simulation_scene(self):
         self.manager = SimulationSceneManager({'game': self.load_game_scene})

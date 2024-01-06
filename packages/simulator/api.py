@@ -24,7 +24,7 @@ def str_to_action(str, player):
     else:
         raise WrongMove
 
-def play(name1, name2, num_games,
+def play(name1, name2, num_games, map,
         ready_timeout=10, move_timeout=10, game_timeout=60):
         
         p = {}
@@ -51,7 +51,7 @@ def play(name1, name2, num_games,
                 return 0
 
         def play_game(log_name):
-            game = Game() # TODO: add map path
+            game = Game(map) # TODO: add map path
             log_maker = LogMaker(log_name)
             reset()  
 

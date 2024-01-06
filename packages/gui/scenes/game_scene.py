@@ -13,7 +13,8 @@ class GameSceneManager(AbstractSceneManager):
                     (0, 0),
                     (1, 1),
                     game_end_action = scene_functions['simulation'],
-                    id = 'game_renderer'
+                    id = 'game_renderer',
+                    log_name = scene_functions['log_name']
                 )
                 ], (PROPORTION1, 0), (1 - PROPORTION1, 1 - PROPORTION1), color=(84, 84, 84), name = 'game'),
             Window([], (0, 1 - PROPORTION1), (PROPORTION2, PROPORTION1), color=(42, 42, 42), name = 'stats'),

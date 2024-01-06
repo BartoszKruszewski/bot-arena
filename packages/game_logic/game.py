@@ -25,8 +25,8 @@ ErrorCode = {
 }
 
 class Game:
-    def __init__(self, map_path: str = MAPS_DIRECTORY + "/example_map.json") -> None:
-        self._map = Map(map_path)
+    def __init__(self, map_path: str = "example_map.json") -> None:
+        self._map = Map(f'{MAPS_DIRECTORY}\\{map_path}')
 
         self.turrets = {
             'left': Turrets(self._map.path),

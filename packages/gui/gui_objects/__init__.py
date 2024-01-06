@@ -11,3 +11,4 @@ from .slider import Slider
 from .time_controller import TimeController
 from .icon import Icon
 from .text import Text
+from .progress_bar import ProgressBar
