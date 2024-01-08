@@ -9,20 +9,29 @@ class NumberField(Window):
         super().__init__(
             [
                 Button(
-                    (0, 0), (0.2, 1),
+                    (0, 0), (0.3, 1),
                     background_color = GUI_COLORS['text'],
                     on_click = self.decrement,
+                    rounded = 3,
+                    text = '-',
+                    text_color = GUI_COLORS['background2']
+
                 ),
                 InputField(
-                    (0.2, 0), (0.60, 1),
+                    (0.3, 0), (0.4, 1),
                     text = str(kwargs.get('default', 0)),
                     filter = self.number_filter,
                     id = str(self),
+                    rounded = 0,
+                    
                 ),
                 Button(
-                    (0.8, 0), (0.2, 1),
+                    (0.7, 0), (0.3, 1),
                     background_color = GUI_COLORS['text'],
                     on_click = self.increment,
+                    rounded = 3,
+                    text = '+',
+                    text_color = GUI_COLORS['background2']
                 )
             ], pos, size, **kwargs)
         

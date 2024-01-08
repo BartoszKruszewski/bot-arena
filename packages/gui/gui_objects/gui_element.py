@@ -19,12 +19,13 @@ class GUIElement(GUIobject, ABC):
     def render(self) -> Surface:
         surf = Surface(self.real_size, SRCALPHA)
         background_color = self.properties.get('background_color', GUI_COLORS['none'])
-        if 'rounded' in self.properties:
+        rounded_radius = self.properties.get('rounded', ROUNDED_RADIUS)
+        if rounded_radius > 0:
             draw_rect(
                 surf,
                 background_color,
                 Rect(0, 0, self.real_size.x, self.real_size.y),
-                border_radius=ROUNDED_RADIUS
+                border_radius = rounded_radius
             )
         else:
             surf.fill(background_color)

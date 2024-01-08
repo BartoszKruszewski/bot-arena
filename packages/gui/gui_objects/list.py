@@ -15,7 +15,6 @@ class List(Window):
                 active_color=self.properties.get('active_element_color', GUI_COLORS['active']),
                 on_click = lambda: self.properties.get('on_click', lambda: None)(self.get_active()),
                 text = object,
-                rounded = True
             )
             for i, object in enumerate(objects_in_list)]
 

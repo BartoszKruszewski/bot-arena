@@ -44,7 +44,6 @@ class SimulationSceneManager(AbstractSceneManager):
                             text = 'start simulation',
                             blocked = True,
                             id='start_simulation_button',
-                            rounded = True
                         ),
                     ], 
                     (PROPORTION1, 0), (1 - PROPORTION1, PROPORTION2),
@@ -54,16 +53,14 @@ class SimulationSceneManager(AbstractSceneManager):
                         ProgressBar(
                             (0.1, 0.1), (0.8, 0.2),
                             id = 'progress_bar',
-                            rounded = True
                         ),
                         Button(
-                            (0.3, 0.4), (0.4, 0.1),
+                            (0.3, 0.4), (0.4, 0.15),
                             on_click = scene_functions['game'],
                             text = 'simulation view',
                             args = (),
                             blocked = True,
                             id='start_view_button',
-                            rounded = True
                         ),
                     ], 
                     (PROPORTION1, PROPORTION2), (1 - PROPORTION1, 1 - PROPORTION2),
