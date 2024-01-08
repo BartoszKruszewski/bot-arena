@@ -46,8 +46,10 @@ GUI_COLORS = {
     'blocked': (30, 31, 35),
     'none': (0, 0, 0, 0),
     'button': (65, 66, 70),
+    'button_hovered': (51, 206, 252),
 }
 BORDER_SIZE = 1
 HEADER_BAR_PADDING = 10
 ROUNDED_RADIUS = 10
 STANDARD_FONT_SIZE = 16
+MAX_HOVER_TIME = 20

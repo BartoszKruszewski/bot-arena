@@ -61,4 +61,5 @@ class NumberField(Window):
         self.send_info(str(self), 'active', False)
 
     def update(self, dt):
+        super().update(dt)
         self.properties['text'] = self.sub_objects[1].properties['text']

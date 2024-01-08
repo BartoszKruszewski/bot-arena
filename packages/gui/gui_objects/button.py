@@ -1,6 +1,14 @@
 from .gui_element import GUIElement
 from pygame.event import Event
 from packages.gui.const import GUI_COLORS
+from pygame import Color
+
+def color_blend(c1, c2, w):
+    return (
+        c1[0] * (1 - w) + c2[0] * w,
+        c1[1] * (1 - w) + c2[1] * w,
+        c1[2] * (1 - w) + c2[2] * w,
+    )
 
 class Button(GUIElement):
     def __init__(self, pos: tuple[float, float], size: tuple[float, float], **kwargs):
@@ -19,5 +27,6 @@ class Button(GUIElement):
             self.properties['background_color'] = \
                 self.properties.get('blocked_color', GUI_COLORS['blocked'])
         else:
-            self.properties['background_color'] = self.standard_color
+            self.properties['background_color'] = color_blend(
+                self.standard_color, GUI_COLORS['button_hovered'], self.properties['hover_intense'])
         return super().render()

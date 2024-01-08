@@ -4,17 +4,27 @@ from pygame.event import Event
 from pygame import Surface, font, MOUSEBUTTONDOWN, BUTTON_LEFT, SRCALPHA, Rect
 from pygame.mouse import get_pos, get_pressed
 from pygame.draw import rect as draw_rect
-from packages.gui.const import GUI_COLORS, ROUNDED_RADIUS
+from packages.gui.const import GUI_COLORS, ROUNDED_RADIUS, MAX_HOVER_TIME
+
+def easeInOutCubic(x):
+    return 4 * x * x * x if x < 0.5 else 1 - (-2 * x + 2) ** 3 / 2
 
 class GUIElement(GUIobject, ABC):
     def __init__(self, pos: tuple[float, float], size: tuple[float, float], **kwargs):
         super().__init__([], pos, size, **kwargs)
+        self.hover_time = 0
+        self.properties['hover_intense'] = 0
 
     def handle_event(self, event):
         pass
-
+            
     def update(self, dt):
-        pass
+        if self.in_mouse_range():
+            self.hover_time += dt
+        else:
+            self.hover_time -= dt
+        self.hover_time = min(max(self.hover_time, 0), MAX_HOVER_TIME)
+        self.properties['hover_intense'] = easeInOutCubic(self.hover_time / MAX_HOVER_TIME)
 
     def render(self) -> Surface:
         surf = Surface(self.real_size, SRCALPHA)
@@ -39,13 +49,8 @@ class GUIElement(GUIobject, ABC):
         ))
         return surf
 
-    def in_mouse_range(self, event_or_none: Event = None) -> bool:
-        if event_or_none is None:
-            mouse_pos = get_pos()
-        else:
-            if event_or_none.type != MOUSEBUTTONDOWN:
-                raise Exception("Event type is not MOUSEBUTTONDOWN")
-            mouse_pos = event_or_none.pos
+    def in_mouse_range(self) -> bool:
+        mouse_pos = get_pos()
         return all((
             self.global_pos.x < mouse_pos[0] < self.global_pos.x + self.real_size.x,
             self.global_pos.y < mouse_pos[1] < self.global_pos.y + self.real_size.y
@@ -53,5 +58,5 @@ class GUIElement(GUIobject, ABC):
 
     def is_clicked(self, event: Event) -> bool:
         if event.type == MOUSEBUTTONDOWN and event.button == BUTTON_LEFT:
-            return self.in_mouse_range(event)
+            return self.in_mouse_range()
         return False
