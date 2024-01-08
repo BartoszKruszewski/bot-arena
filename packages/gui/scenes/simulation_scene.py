@@ -14,60 +14,62 @@ class SimulationSceneManager(AbstractSceneManager):
                 List(
                     listdir(BOTS_DIRECTORY),
                     (0, 0), (PROPORTION1 / 2, 1),
-                    color=(42, 42, 42),
                     name = 'bots',
                     on_click = self.add_bot,
-                    max_active = 2
+                    max_active = 2,
+                    element_color = (0, 0, 0, 0)
                 ),
                 List(
                     listdir(MAPS_DIRECTORY),
                     (PROPORTION1 / 2, 0), (PROPORTION1 / 2, 1),
-                    color=(84, 84, 84),
                     name = 'maps',
                     on_click = self.add_map,
-                    max_active = 1
+                    max_active = 1,
+                    element_color = (0, 0, 0, 0)
                 ),
                 Window([
+                        Text((0, 0.1), (1, 0.1), text = "empty bot1", id='bot1'),
+                        Text((0, 0.3), (1, 0.1), text = "empty bot2", id='bot2'),
+                        Text((0, 0.5), (1, 0.1), text = "empty map", id='map'),
                         NumberField(
-                            (0, 0), (0.3, 0.3),
-                            name = 'number of simulations',
+                            (0.11, 0.7), (0.22, 0.1),
                             id='number_of_games',
                             minimum = 1,
                             maximum = 100,
                             default = 1,
                         ),
-                        Text((0, 0.4), (1, 0.1), text = "empty bot1", font_size = 30, id='bot1'),
-                        Text((0, 0.6), (1, 0.1), text = "empty bot2", font_size = 30, id='bot2'),
-                        Text((0, 0.8), (1, 0.1), text = "empty map", font_size = 30, id='map'),
                         Button(
-                            (0.3, 0.4), (0.4, 0.1),
-                            color=(255, 255, 0),
+                            (0.44, 0.7), (0.43, 0.1),
                             on_click = self.run_simulation,
                             text = 'start simulation',
                             blocked = True,
-                            id='start_simulation_button'
+                            id='start_simulation_button',
+                            rounded = True
                         ),
                     ], 
                     (PROPORTION1, 0), (1 - PROPORTION1, PROPORTION2),
-                    color=(42, 42, 42), name = 'control'
+                    name = 'control'
                 ),
                 Window([
-                        ProgressBar((0, 0), (1, 0.2), id = 'progress_bar'),
+                        ProgressBar(
+                            (0.1, 0.1), (0.8, 0.2),
+                            id = 'progress_bar',
+                            rounded = True
+                        ),
                         Button(
                             (0.3, 0.4), (0.4, 0.1),
-                            color=(255, 255, 0),
-                            on_click=scene_functions['game'],
+                            on_click = scene_functions['game'],
                             text = 'simulation view',
                             args = (),
                             blocked = True,
-                            id='start_view_button'
+                            id='start_view_button',
+                            rounded = True
                         ),
                     ], 
                     (PROPORTION1, PROPORTION2), (1 - PROPORTION1, 1 - PROPORTION2),
-                    color=(126, 126, 126), name = 'progress'
+                    name = 'progress'
                 ),
             ], 
-            name = 'choose simulation'
         )
     
     def add_bot(self, active_buttons):

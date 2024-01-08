@@ -2,6 +2,7 @@ from .input_field import InputField
 from .gui_object import GUIobject
 from .window import Window
 from .button import Button
+from packages.gui.const import GUI_COLORS
 
 class NumberField(Window):
     def __init__(self, pos: tuple[float, float], size: tuple[float, float], **kwargs):
@@ -9,20 +10,19 @@ class NumberField(Window):
             [
                 Button(
                     (0, 0), (0.2, 1),
-                    color = (20,20,20),
-                    on_click = self.decrement
+                    background_color = GUI_COLORS['text'],
+                    on_click = self.decrement,
                 ),
                 InputField(
                     (0.2, 0), (0.60, 1),
-                    color = (200, 200, 200),
                     text = str(kwargs.get('default', 0)),
                     filter = self.number_filter,
-                    id = str(self) # !!!!!!!!!!!!!!!!!!!!
+                    id = str(self),
                 ),
                 Button(
                     (0.8, 0), (0.2, 1),
-                    color = (100,100,100),
-                    on_click = self.increment
+                    background_color = GUI_COLORS['text'],
+                    on_click = self.increment,
                 )
             ], pos, size, **kwargs)
         

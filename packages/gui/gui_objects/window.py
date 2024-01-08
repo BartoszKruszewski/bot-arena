@@ -1,25 +1,32 @@
 from .gui_object import GUIobject
-from pygame import Surface, Vector2
+from pygame import Surface, Rect
 from pygame.event import Event
-from pygame.font import Font
-from packages import ASSETS_DIRECTORY
+
+from pygame.draw import rect as draw_rect
+from packages.gui.const import HEADER_BAR_SIZE, BORDER_SIZE, HEADER_BAR_TEXT_POS, GUI_COLORS
 
 class Window(GUIobject):
-    def __init__(self, sub_objects, pos: tuple[float, float], size: tuple[float, float], **kwargs):
-            super().__init__(sub_objects, pos, size, **kwargs)
-            self.font = Font(
-                f'{ASSETS_DIRECTORY}/{self.properties.get("font", "font_gui")}.ttf',
-                self.properties.get('font_size', 20)
-            )
-
     def render(self) -> Surface:
         surf = Surface(self.real_size)
-        surf.fill(self.properties.get('color', (0, 0, 0)))
+        surf.fill(self.properties.get('background_color', GUI_COLORS['background1']))
         if 'name' in self.properties:
-            surf.blit(self.font.render(
-                self.properties.get('name', ""),
+            border_color = self.properties.get('border_color', GUI_COLORS['window_border'])
+            draw_rect(
+                surf,
+                border_color,
+                Rect(0, 0, self.real_size.x, self.real_size.y), width=BORDER_SIZE
+            )
+            draw_rect(
+                surf,
+                border_color,
+                Rect(0, 0, self.real_size.x, HEADER_BAR_SIZE), width=BORDER_SIZE
+            )
+            text = self.font.render(
+                str.capitalize(self.properties.get('name', "")),
                 True,
-                self.properties.get('header_color', (255, 255, 255))), (0, 0))
+                self.properties.get('header_color', (255, 255, 255))
+            )
+            surf.blit(text, (HEADER_BAR_TEXT_POS, (HEADER_BAR_SIZE - text.get_size()[1]) // 2))
         for object in self.sub_objects:
             surf.blit(object.render(), object.real_pos)
         return surf

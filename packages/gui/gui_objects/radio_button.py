@@ -1,6 +1,7 @@
 from .gui_element import GUIElement
 from pygame import MOUSEBUTTONDOWN
 from pygame.event import Event as pgevent, Event
+from packages.gui.const import GUI_COLORS
 
 class RadioButton(GUIElement):
     def __init__(self, pos: tuple[float, float], size: tuple[float, float], **kwargs):
@@ -8,15 +9,7 @@ class RadioButton(GUIElement):
         self.properties['active'] = self.properties.get('active', False)
         self.properties['blocked'] = self.properties.get('blocked', False)
         self.on_click = self.properties.get('on_click', lambda: None)
-        self.active_color = self.properties.get('active_color', (255, 255, 255))
-        self.blocked_color = self.properties.get('blocked_color', (20, 20, 20))
-        self.color = self.properties.get('color', (0, 0, 0))
-
-    def update(self, dt):
-        super().update(dt)
-        # if self.is_clicked():
-        #     self.on_click()
-        #     self.properties['active'] = not self.properties['active']           
+        self.standard_color = self.properties.get('background_color', GUI_COLORS['button'])      
 
     def handle_event(self, event: Event) -> None:
         if not self.properties['blocked']:
@@ -25,6 +18,13 @@ class RadioButton(GUIElement):
                 self.on_click()
 
     def render(self):
-        self.properties['color'] = self.blocked_color if self.properties['blocked'] else (self.active_color if self.properties['active'] else self.color) 
+        if self.properties['blocked']:
+            self.properties['background_color'] = \
+                self.properties.get('blocked_color', GUI_COLORS['blocked'])
+        elif self.properties['active']:
+            self.properties['background_color'] = \
+                self.properties.get('active_color', GUI_COLORS['active'])
+        else:
+            self.properties['background_color'] = self.standard_color
         return super().render()
 

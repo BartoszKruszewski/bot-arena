@@ -36,9 +36,18 @@ HEALTH_BAR_COLOR_FRONT = (0, 255, 0)
 OBSTACLE_TYPE_NUMBER = 41
 PROJECTILE_SPEED = 5
 DAMAGE_INFO_COLOR_MULT = 4
-COLORS = {
-    "brown": (87, 65, 47)
+HEADER_BAR_SIZE = 0.05 * SCREEN_SIZE_Y
+GUI_COLORS = {
+    'background1': (44, 45, 49),
+    'background2': (30, 31, 35),
+    'window_border': (32, 33, 37),
+    'text': (146, 147, 151),
+    'active': (51, 206, 252),
+    'blocked': (30, 31, 35),
+    'none': (0, 0, 0, 0),
+    'button': (65, 66, 70),
 }
-STATSBAR_BACKGROUND_COLOR = COLORS["brown"]
-
-HEADER_BAR_SIZE = 0.036 * SCREEN_SIZE_Y
+BORDER_SIZE = 1
+HEADER_BAR_TEXT_POS = 10
+ROUNDED_RADIUS = 20
+STANDARD_FONT_SIZE = 16

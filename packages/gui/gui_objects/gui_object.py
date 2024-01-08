@@ -1,5 +1,8 @@
 from pygame import Vector2, mouse
 from abc import ABC
+from packages import ASSETS_DIRECTORY
+from pygame.font import Font
+from packages.gui.const import STANDARD_FONT_SIZE
 
 class GUIobject(ABC):
     def __init__(self, sub_objects: list['GUIobject'], pos: tuple[float, float], size: tuple[float, float], **kwargs):
@@ -12,6 +15,11 @@ class GUIobject(ABC):
         self.real_size = None
         self.global_pos = None
         self.properties = kwargs
+
+        self.font = Font(
+                f'{ASSETS_DIRECTORY}/{self.properties.get("font", "font_gui")}.ttf',
+                self.properties.get('font_size', STANDARD_FONT_SIZE)
+            )
 
     def get_info(self, id: str, property: str):
         if self.properties.get("id", None) == id:

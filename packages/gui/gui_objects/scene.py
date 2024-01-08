@@ -4,16 +4,11 @@ from pygame.font import Font
 from .window import Window
 from pygame.event import Event
 from packages.gui.const import HEADER_BAR_SIZE, SCREEN_SIZE
-from packages import ASSETS_DIRECTORY
 
 class Scene(GUIobject):
     def __init__(self, sub_objects: list['GUIobject'], **kwargs):
         super().__init__(sub_objects, (0, 0), (1, 1), **kwargs)
         self.surf = None
-        self.font = Font(
-                f'{ASSETS_DIRECTORY}/{self.properties.get("font", "font_gui")}.ttf',
-                self.properties.get('font_size', 20)
-            )
         self.calc_pos((0, 0), SCREEN_SIZE)
 
     def get_surf(self) -> Surface:
@@ -21,11 +16,6 @@ class Scene(GUIobject):
 
     def render(self) -> Surface:
         surf = Surface(self.real_size)
-        if 'name' in self.properties:
-            surf.blit(self.font.render(
-                self.properties.get('name', ""),
-                True,
-                self.properties.get('header_color', (255, 255, 255))), (0, 0))
         for object in self.sub_objects:
             surf.blit(object.render(), object.real_pos)
         self.surf = surf
@@ -54,11 +44,15 @@ class Scene(GUIobject):
                 object.real_pos = Vector2(
                     window.real_size.x * object.pos.x,
                     ((window.real_size.y - HEADER_BAR_SIZE) * object.pos.y + HEADER_BAR_SIZE)
+                    if 'name' in window.properties else
+                    window.real_size.y * object.pos.y
                 )
 
                 object.real_size = Vector2(
                     window.real_size.x * object.size.x,
                     (window.real_size.y - HEADER_BAR_SIZE) * object.size.y
+                    if 'name' in window.properties else
+                    window.real_size.y * object.size.y,
                 )
 
                 object.global_pos = window.global_pos + object.real_pos

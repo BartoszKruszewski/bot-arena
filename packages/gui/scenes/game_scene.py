@@ -57,7 +57,7 @@ class GameSceneManager(AbstractSceneManager):
 
             ], (PROPORTION2, 1 - PROPORTION1), (1 - PROPORTION2, PROPORTION1), color=(126, 126, 126), name = 'control'),
             
-        ], name = 'simulation view')
+        ])
     
     def increase_game_speed(self):
         actual_game_speed = self.scene.get_info('game_renderer', 'game_speed')
