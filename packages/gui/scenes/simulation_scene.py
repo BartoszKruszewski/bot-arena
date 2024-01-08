@@ -17,7 +17,8 @@ class SimulationSceneManager(AbstractSceneManager):
                     name = 'bots',
                     on_click = self.add_bot,
                     max_active = 2,
-                    element_color = (0, 0, 0, 0)
+                    element_color = (0, 0, 0, 0),
+                    icon='bot'
                 ),
                 List(
                     listdir(MAPS_DIRECTORY),
@@ -25,7 +26,8 @@ class SimulationSceneManager(AbstractSceneManager):
                     name = 'maps',
                     on_click = self.add_map,
                     max_active = 1,
-                    element_color = (0, 0, 0, 0)
+                    element_color = (0, 0, 0, 0),
+                    icon='map'
                 ),
                 Window([
                         Text((0, 0.1), (1, 0.1), text = "empty bot1", id='bot1'),
@@ -47,7 +49,8 @@ class SimulationSceneManager(AbstractSceneManager):
                         ),
                     ], 
                     (PROPORTION1, 0), (1 - PROPORTION1, PROPORTION2),
-                    name = 'control'
+                    name = 'control',
+                    icon = 'simulation'
                 ),
                 Window([
                         ProgressBar(
@@ -64,7 +67,8 @@ class SimulationSceneManager(AbstractSceneManager):
                         ),
                     ], 
                     (PROPORTION1, PROPORTION2), (1 - PROPORTION1, 1 - PROPORTION2),
-                    name = 'progress'
+                    name = 'progress',
+                    icon = 'timer'
                 ),
             ], 
         )

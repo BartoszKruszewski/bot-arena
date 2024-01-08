@@ -7,7 +7,12 @@ PROPORTION2 = 0.4
 class GameSceneManager(AbstractSceneManager):
     def load_scene(self, scene_functions):
         return Scene([
-            Window([], (0, 0), (PROPORTION1, 1 - PROPORTION1), color=(42, 42, 42), name = 'log'),
+            Window([],
+                (0, 0), (PROPORTION1, 1 - PROPORTION1),
+                color=(42, 42, 42),
+                name = 'log',
+                icon = 'console'
+            ),
             Window([ 
                 GameRenderer(
                     (0, 0),
@@ -16,8 +21,18 @@ class GameSceneManager(AbstractSceneManager):
                     id = 'game_renderer',
                     log_name = scene_functions['log_name']
                 )
-                ], (PROPORTION1, 0), (1 - PROPORTION1, 1 - PROPORTION1), color=(84, 84, 84), name = 'game'),
-            Window([], (0, 1 - PROPORTION1), (PROPORTION2, PROPORTION1), color=(42, 42, 42), name = 'stats'),
+            ], 
+                (PROPORTION1, 0), (1 - PROPORTION1, 1 - PROPORTION1), 
+                color=(84, 84, 84),
+                name = 'game',
+                icon = 'game',
+            ),
+            Window([], 
+                (0, 1 - PROPORTION1), (PROPORTION2, PROPORTION1), 
+                color=(42, 42, 42), 
+                name = 'stats',
+                icon = 'stats'
+            ),
             Window([
                 Button(
                     (0.45, 0.45),
@@ -55,7 +70,12 @@ class GameSceneManager(AbstractSceneManager):
                     on_click = self.toggle_helper('grid')
                 ),
 
-            ], (PROPORTION2, 1 - PROPORTION1), (1 - PROPORTION2, PROPORTION1), color=(126, 126, 126), name = 'control'),
+            ], 
+            (PROPORTION2, 1 - PROPORTION1), (1 - PROPORTION2, PROPORTION1),
+            color=(126, 126, 126), 
+            name = 'controls',
+            icon = 'controls'
+        ),
             
         ])
     
