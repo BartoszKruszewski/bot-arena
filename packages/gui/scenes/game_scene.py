@@ -1,7 +1,8 @@
 from packages.gui.abstract_scene_manager import AbstractSceneManager
 from packages.gui.gui_objects import Window, Scene, GameRenderer, Button, RadioButton
+from packages.gui.const import GUI_COLORS
 
-PROPORTION1 = 0.2
+PROPORTION1 = 0.22
 PROPORTION2 = 0.4
 
 class GameSceneManager(AbstractSceneManager):
@@ -31,7 +32,9 @@ class GameSceneManager(AbstractSceneManager):
                 (0, 1 - PROPORTION1), (PROPORTION2, PROPORTION1), 
                 color=(42, 42, 42), 
                 name = 'stats',
-                icon = 'stats'
+                icon = 'stats',
+                background_color = GUI_COLORS['background2'],
+                headerbar_color = GUI_COLORS['background1']
             ),
             Window([
                 Button(

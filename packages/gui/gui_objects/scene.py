@@ -3,7 +3,7 @@ from pygame import Surface, Vector2
 from pygame.font import Font
 from .window import Window
 from pygame.event import Event
-from packages.gui.const import HEADER_BAR_SIZE, SCREEN_SIZE
+from packages.gui.const import HEADER_BAR_SIZE, SCREEN_SIZE, GUI_COLORS
 
 class Scene(GUIobject):
     def __init__(self, sub_objects: list['GUIobject'], **kwargs):
@@ -16,6 +16,7 @@ class Scene(GUIobject):
 
     def render(self) -> Surface:
         surf = Surface(self.real_size)
+        surf.fill(self.properties.get('background_color', GUI_COLORS['background1']))
         for object in self.sub_objects:
             surf.blit(object.render(), object.real_pos)
         self.surf = surf

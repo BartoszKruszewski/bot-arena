@@ -5,7 +5,7 @@ from threading import Thread
 class AbstractSceneManager(ABC):
     def __init__(self, scene_functions = {}):
         self.scene = Scene([
-            Text((0, 0), (0.2, 0.2), text = 'loading...', color='white')
+            Text((0, 0), (1, 1), text = 'loading...', font_size = 40)
         ], name='loading')
         self.initialized = False
         self.scene_functions = scene_functions

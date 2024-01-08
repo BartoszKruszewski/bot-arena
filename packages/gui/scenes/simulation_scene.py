@@ -1,9 +1,10 @@
 from packages.gui.abstract_scene_manager import AbstractSceneManager
-from packages.gui.gui_objects import Scene, Button, Window, List, NumberField, Text, ProgressBar
+from packages.gui.gui_objects import Scene, Button, Window, List, NumberField, Text, ProgressBar, RadioButton
 from os import listdir
 from packages import MAPS_DIRECTORY, BOTS_DIRECTORY
 from packages.simulator.api import play
 from threading import Thread
+from packages.gui.const import GUI_COLORS
 
 PROPORTION1 = 0.6
 PROPORTION2 = 0.6
@@ -126,3 +127,4 @@ class SimulationSceneManager(AbstractSceneManager):
             bot2 == 'empty bot2',
             map == 'empty map',
         )))
+

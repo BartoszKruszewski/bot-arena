@@ -24,6 +24,11 @@ class Window(GUIobject):
         surf.fill(self.properties.get('background_color', GUI_COLORS['background1']))
         if 'name' in self.properties:
             border_color = self.properties.get('border_color', GUI_COLORS['window_border'])
+            if 'headerbar_color' in self.properties:
+                surf.fill(
+                    self.properties['headerbar_color'], 
+                    Rect(0, 0, self.real_size.x, HEADER_BAR_SIZE)
+                )
             draw_rect(
                 surf,
                 border_color,
