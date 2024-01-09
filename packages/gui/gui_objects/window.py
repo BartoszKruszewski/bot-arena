@@ -55,6 +55,24 @@ class Window(GUIobject):
             surf.blit(object.render(), object.real_pos)
         return surf
     
+    def calc_pos(self):
+        for object in self.sub_objects:
+            object.real_pos = Vector2(
+                self.real_size.x * object.pos.x,
+                ((self.real_size.y - HEADER_BAR_SIZE) * object.pos.y + HEADER_BAR_SIZE)
+                if 'name' in self.properties else
+                self.real_size.y * object.pos.y
+            )
+
+            object.real_size = Vector2(
+                self.real_size.x * object.size.x,
+                (self.real_size.y - HEADER_BAR_SIZE) * object.size.y
+                if 'name' in self.properties else
+                self.real_size.y * object.size.y,
+            )
+
+            object.global_pos = self.global_pos + object.real_pos
+
     def handle_event(self, event: Event) -> None:
         for object in self.sub_objects:
             object.handle_event(event)

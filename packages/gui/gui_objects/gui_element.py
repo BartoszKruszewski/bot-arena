@@ -49,13 +49,6 @@ class GUIElement(GUIobject, ABC):
         ))
         return surf
 
-    def in_mouse_range(self) -> bool:
-        mouse_pos = get_pos()
-        return all((
-            self.global_pos.x < mouse_pos[0] < self.global_pos.x + self.real_size.x,
-            self.global_pos.y < mouse_pos[1] < self.global_pos.y + self.real_size.y
-        )) 
-
     def is_clicked(self, event: Event) -> bool:
         if event.type == MOUSEBUTTONDOWN and event.button == BUTTON_LEFT:
             return self.in_mouse_range()

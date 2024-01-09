@@ -1,6 +1,8 @@
+from pygame.event import Event
 from .radio_button import RadioButton
 from .window import Window
-from packages.gui.const import GUI_COLORS
+from packages.gui.const import GUI_COLORS, LIST_SCROLL_MULT
+from pygame import MOUSEWHEEL
 
 class List(Window):
     def __init__(self, objects_in_list: list[str], pos: tuple[float, float], size: tuple[float, float], **kwargs):
@@ -16,7 +18,20 @@ class List(Window):
                 on_click = lambda: self.properties.get('on_click', lambda: None)(self.get_active()),
                 text = object,
             )
-            for i, object in enumerate(objects_in_list)]
+            for i, object in enumerate(objects_in_list)
+        ]
+        
+    def handle_event(self, event: Event) -> None:
+        super().handle_event(event)
+        if event.type == MOUSEWHEEL and self.in_mouse_range():
+            move = event.y * LIST_SCROLL_MULT
+            if self.sub_objects[-1].pos[1] + self.sub_objects[-1].size[1] + move < 1:
+                move = 1 - self.sub_objects[-1].pos[1] - self.sub_objects[-1].size[1] 
+            if self.sub_objects[0].pos[1] + move > 0:
+                move = -self.sub_objects[0].pos[1]
+            for object in self.sub_objects:
+                object.pos[1] += move
+            self.calc_pos()
 
     def get_active(self):
         active_buttons = [

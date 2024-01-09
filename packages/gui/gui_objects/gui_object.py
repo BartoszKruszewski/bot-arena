@@ -3,6 +3,7 @@ from abc import ABC
 from packages import ASSETS_DIRECTORY
 from pygame.font import Font
 from packages.gui.const import STANDARD_FONT_SIZE
+from pygame.mouse import get_pos
 
 class GUIobject(ABC):
     def __init__(self, sub_objects: list['GUIobject'], pos: tuple[float, float], size: tuple[float, float], **kwargs):
@@ -44,4 +45,11 @@ class GUIobject(ABC):
                 if state: return True
 
         return False
+    
+    def in_mouse_range(self) -> bool:
+        mouse_pos = get_pos()
+        return all((
+            self.global_pos.x < mouse_pos[0] < self.global_pos.x + self.real_size.x,
+            self.global_pos.y < mouse_pos[1] < self.global_pos.y + self.real_size.y
+        )) 
         
