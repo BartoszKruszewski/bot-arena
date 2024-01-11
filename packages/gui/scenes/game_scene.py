@@ -1,5 +1,6 @@
 from packages.gui.abstract_scene_manager import AbstractSceneManager
-from packages.gui.gui_objects import Window, Scene, GameRenderer, Button, RadioButton
+from packages.gui.gui_objects import Window, Scene, GameRenderer, Button, RadioButton, Text
+from packages.gui.gui_objects.stats_display import StatsDisplay
 from packages.gui.const import GUI_COLORS
 
 PROPORTION1 = 0.22
@@ -8,7 +9,9 @@ PROPORTION2 = 0.4
 class GameSceneManager(AbstractSceneManager):
     def load_scene(self, scene_functions):
         return Scene([
-            Window([],
+            Window([
+                
+            ],
                 (0, 0), (PROPORTION1, 1 - PROPORTION1),
                 color=(42, 42, 42),
                 name = 'log',
@@ -28,8 +31,19 @@ class GameSceneManager(AbstractSceneManager):
                 name = 'game',
                 icon = 'game',
             ),
-            Window([], 
+            StatsDisplay([
+                Text((0.1, 0.4), (0.1, 0.15), "Left"),
+                Text((0.1, 0.75), (0.1, 0.15), "Right"),
+                Text((0.3, 0.05), (0.15, 0.15), "income"),
+                Text((0.6, 0.05), (0.15, 0.15), "gold"),
+                
+                Text((0.3, 0.4), (0.15, 0.15), '0', id = "left_income"),
+                Text((0.6, 0.4), (0.15, 0.15), '0', id = "left_gold"),
+                Text((0.3, 0.75), (0.15, 0.15), '0', id = "right_income"),
+                Text((0.6, 0.75), (0.15, 0.15), '0', id = "right_gold")
+            ], 
                 (0, 1 - PROPORTION1), (PROPORTION2, PROPORTION1), 
+                self.update_dict,
                 color=(42, 42, 42), 
                 name = 'stats',
                 icon = 'stats',
@@ -86,6 +100,8 @@ class GameSceneManager(AbstractSceneManager):
         actual_game_speed = self.scene.get_info('game_renderer', 'game_speed')
         self.scene.send_info('game_renderer', 'game_speed', actual_game_speed + 1)
 
+    def update_dict(self):
+        return self.scene.get_info('game_renderer', 'game_stats')
     def toggle_helper(self, helper):
         def toggler():
             helpers = self.scene.get_info('game_renderer', 'helpers')

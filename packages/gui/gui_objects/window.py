@@ -40,7 +40,6 @@ class Window(GUIobject):
                 Rect(0, 0, self.real_size.x, HEADER_BAR_SIZE), width=BORDER_SIZE
             )
             if 'icon' in self.properties:
-                
                 surf.blit(self.icon, (HEADER_BAR_PADDING, (HEADER_BAR_SIZE - self.icon.get_size()[1]) // 2))
                 offset = self.icon.get_size()[0]
             else:

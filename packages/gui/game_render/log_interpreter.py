@@ -52,4 +52,7 @@ class LogInterpreter:
         self.index += 1
 
         return actions
+    
+    def get_index(self):
+        return self.index
         

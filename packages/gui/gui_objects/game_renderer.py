@@ -21,6 +21,11 @@ class GameRenderer(GUIElement):
         
         self.properties['game_speed'] = 1
         self.properties['zoom'] = 1
+        self.properties['log_index'] = self.__log_interpreter.get_index()
+        self.properties['game_stats'] = {
+            "gold": self.__game.get_gold(), 
+            "income": self.__game.get_income()
+        }
         self.properties['helpers'] = []
 
     def __update_zoom(self):
@@ -51,6 +56,11 @@ class GameRenderer(GUIElement):
         
         self.__update_zoom()
         self.__dt = dt
+        self.properties['log_index'] = self.__log_interpreter.get_index()
+        self.properties['game_stats'] = {
+            "gold": self.__game.get_gold(), 
+            "income": self.__game.get_income()
+        }
 
     def render(self) -> Surface:
         return self.__engine.render(
