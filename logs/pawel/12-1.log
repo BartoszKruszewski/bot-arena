@@ -1,0 +1,78 @@
+map:example_map.json
+W | W
+W | W
+F 4 4 | T 0 8
+W | F 9 5
+S archer | W
+W | T 2 8
+W | W
+T 1 7 | W
+W | S archer
+F 2 3 | T 7 4
+T 1 0 | W
+T 4 7 | W
+W | T 4 7
+T 1 1 | W
+W | S swordsman
+F 3 6 | F 5 6
+W | W
+T 8 4 | F 2 4
+S archer | W
+W | W
+W | F 7 1
+S swordsman | T 5 6
+W | S archer
+W | W
+W | F 8 2
+W | F 2 3
+W | F 9 1
+W | W
+T 8 7 | W
+W | S swordsman
+T 6 9 | F 7 0
+T 5 8 | W
+T 6 1 | W
+W | S archer
+W | F 9 1
+S archer | W
+F 5 3 | W
+F 3 4 | T 7 9
+W | W
+F 7 1 | W
+S archer | W
+T 3 8 | W
+W | S archer
+F 8 9 | W
+W | F 1 2
+T 9 5 | W
+W | S swordsman
+W | W
+W | W
+W | F 4 3
+S swordsman | S swordsman
+W | S swordsman
+W | W
+W | S archer
+F 2 5 | F 1 2
+W | S swordsman
+S swordsman | T 9 2
+F 4 6 | F 4 5
+W | W
+S archer | T 3 8
+W | S swordsman
+W | F 8 8
+F 0 5 | S swordsman
+W | W
+W | F 5 2
+W | W
+F 6 9 | W
+F 8 6 | W
+W | W
+W | W
+W | W
+W | W
+W | S archer
+W | T 4 1
+W | F 6 8
+W | W
+W | W

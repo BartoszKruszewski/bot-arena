@@ -1,0 +1,21 @@
+map:example_map.json
+W | S archer
+W | W
+W | W
+W | F 6 4
+W | W
+W | W
+W | W
+W | S archer
+W | T 4 7
+W | W
+W | T 0 7
+W | W
+W | T 6 7
+W | W
+F 9 5 | W
+W | W
+T 0 0 | W
+T 6 2 | W
+W | F 7 5
+W | F 5 4

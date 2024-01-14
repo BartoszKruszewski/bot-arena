@@ -24,8 +24,8 @@ def str_to_action(str, player):
     else:
         raise WrongMove
 
-def play(name1, name2, num_games, map,
-        ready_timeout=10, move_timeout=10, game_timeout=60):
+def play(name1, name2, num_games, map_name, log_name="logs",
+        ready_timeout=100, move_timeout=100, game_timeout=600):
         
         p = {}
 
@@ -50,9 +50,9 @@ def play(name1, name2, num_games, map,
             elif not dict[p[1]]:
                 return 0
 
-        def play_game(log_name):
-            game = Game(map) # TODO: add map path
-            log_maker = LogMaker(log_name)
+        def play_game(log_name, log_number, map_name):
+            game = Game(map_name) # TODO: add map path
+            log_maker = LogMaker(log_name, log_number)
             reset()  
 
             game_data = Serializer.get(game)
@@ -66,8 +66,8 @@ def play(name1, name2, num_games, map,
                 for player in p.values():
                     if not is_ready[player]:
                         response = player.get()
-                        if response is not None:
-                            print(response, file=sys.stderr)
+                        # if response is not None:
+                            # print(response, file=sys.stderr)
                         if response == 'READY':
                             is_ready[player] = True
                 if all(is_ready.values()):
@@ -86,7 +86,7 @@ def play(name1, name2, num_games, map,
                 else:
                     return determine(action)
                 
-                print("RUCHY", action.values(), file=sys.stderr)
+                # print("RUCHY", action.values(), file=sys.stderr)
                 log_maker.add_actions(*action.values())
                 
                 try:
@@ -101,25 +101,25 @@ def play(name1, name2, num_games, map,
                 response = game.update(action[p[0]], action[p[1]])
 
                 if response[0] == ErrorCode[1]:
-                    log_maker.save()
+                    log_maker.save("0", map_name)
                     return 0
                 elif response[0] == ErrorCode[2]:
-                    log_maker.save()
+                    log_maker.save("1", map_name)
                     return 1
                 elif "Tie" in response:
-                    log_maker.save()
+                    log_maker.save("TIE", map_name)
                     return 'TIE'
                 
                 game_data = Serializer.get(game)
                 for player in p.values():
                     player.put(str(game_data))
-                print("MAPA", file=sys.stderr)
+                # print("MAPA", file=sys.stderr)
 
             return "TIE"
 
-                    
+        LogMaker.clear(log_name)
         for i in range(num_games):
-            results.append(play_game(str(i)))
+            yield(play_game(log_name, str(i), map_name))
             for player in p.values():
                 player.put('END')
 

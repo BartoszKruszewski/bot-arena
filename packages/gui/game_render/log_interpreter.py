@@ -1,5 +1,6 @@
-from os import listdir
+from os import listdir, path
 from packages.game_logic.actions import Action, BuildTurret, BuildFarm, SpawnSoldier, Wait
+from packages import LOGS_DIRECTORY
 
 class LogInterpreter:
     '''Changes .txt file to list[tuple[Action, Action]]
@@ -14,11 +15,14 @@ class LogInterpreter:
 
     def __init__(self, log_path: str) -> None:
         self.log = []
+        self.map_name = None
 
+        log_path = path.join(LOGS_DIRECTORY, log_path)
         self.__load_log(log_path)
         self.__parse_log()
 
         self.index = 0
+         
         
     def __load_log(self, log_path: str):
         with open(log_path, "r") as log:
@@ -27,7 +31,8 @@ class LogInterpreter:
     def __parse_log(self):
         self.log = [line.strip().split() for line in self.log]
         action_log = []
-        for line in self.log:
+        self.map_name = self.log[0][0][4:]
+        for line in self.log[1:]:
             if line[0] == "#": continue
 
             left_side, right_side = line[:line.index("|")], line[line.index("|")+1:]
@@ -55,4 +60,7 @@ class LogInterpreter:
     
     def get_index(self):
         return self.index
+    
+    def get_map_name(self):
+        return self.map_name
         

@@ -1,0 +1,297 @@
+map:example_map.json
+W | W
+W | W
+W | W
+F 7 5 | F 8 9
+F 7 4 | W
+W | W
+W | W
+W | W
+S archer | F 1 0
+W | W
+F 3 3 | W
+F 8 2 | W
+W | T 9 1
+S archer | T 5 2
+W | W
+W | S swordsman
+T 8 9 | W
+W | W
+S swordsman | F 9 2
+W | W
+T 5 3 | W
+W | W
+S archer | S archer
+W | W
+T 5 0 | W
+W | W
+W | F 0 1
+W | T 8 3
+W | F 0 0
+F 9 6 | F 2 2
+W | T 8 1
+T 7 7 | W
+W | W
+W | T 1 5
+F 6 1 | W
+W | T 7 1
+F 0 9 | W
+W | T 6 8
+S archer | T 7 1
+T 7 4 | W
+T 0 9 | S swordsman
+T 4 9 | W
+S swordsman | T 2 9
+W | W
+W | W
+W | S swordsman
+W | W
+W | W
+W | W
+W | F 3 7
+T 9 6 | W
+W | W
+W | W
+W | S archer
+W | W
+F 8 4 | F 5 4
+F 2 6 | W
+W | W
+W | W
+F 0 6 | W
+F 6 8 | W
+S archer | W
+S swordsman | T 5 5
+W | S archer
+W | W
+T 2 5 | T 0 3
+W | W
+W | W
+W | W
+W | W
+T 3 2 | T 4 8
+W | W
+T 0 2 | W
+W | W
+W | S swordsman
+F 5 3 | W
+S archer | F 5 9
+W | F 5 5
+W | T 4 5
+S archer | W
+W | T 8 1
+F 3 6 | W
+W | W
+F 0 6 | W
+F 3 9 | W
+W | W
+W | W
+T 5 6 | T 8 4
+W | F 4 0
+F 1 7 | F 7 3
+F 2 9 | T 2 2
+W | W
+W | T 2 4
+W | S swordsman
+W | W
+W | W
+T 7 8 | T 8 0
+S swordsman | T 8 3
+W | W
+W | W
+W | W
+W | F 3 6
+W | W
+W | T 7 5
+W | W
+W | S archer
+W | S swordsman
+S swordsman | W
+S swordsman | T 2 5
+W | W
+W | F 7 1
+W | T 3 6
+W | F 0 9
+W | W
+T 5 4 | W
+W | W
+T 1 8 | W
+W | W
+W | W
+F 4 9 | S swordsman
+W | W
+S swordsman | S swordsman
+W | S swordsman
+W | W
+W | W
+W | W
+W | W
+W | F 5 2
+W | W
+W | W
+F 1 7 | S archer
+W | W
+W | W
+T 4 3 | S archer
+T 5 5 | W
+W | W
+T 9 1 | W
+W | W
+W | W
+W | W
+W | W
+S swordsman | W
+W | T 8 3
+W | W
+S archer | T 1 7
+W | W
+T 4 0 | W
+W | T 8 6
+W | W
+S swordsman | W
+W | W
+W | S swordsman
+F 1 0 | F 2 8
+W | W
+W | W
+W | T 5 9
+F 7 1 | W
+W | W
+S archer | S archer
+W | W
+W | W
+W | W
+T 4 6 | W
+W | W
+S archer | T 3 0
+S archer | W
+T 6 7 | W
+W | W
+W | W
+S swordsman | S archer
+W | W
+W | W
+W | F 6 9
+W | W
+W | T 8 0
+W | W
+T 8 5 | W
+W | W
+T 7 6 | W
+S archer | W
+W | W
+F 6 0 | W
+W | T 9 9
+S archer | S archer
+S archer | S archer
+W | T 3 5
+W | W
+W | F 1 9
+W | W
+S archer | W
+W | W
+W | W
+W | W
+W | S swordsman
+W | W
+W | W
+W | W
+W | F 1 9
+W | F 7 6
+W | T 9 7
+T 0 9 | W
+W | W
+F 8 6 | F 7 6
+F 0 3 | W
+T 8 0 | W
+W | W
+W | W
+F 6 5 | W
+W | S swordsman
+W | W
+W | W
+F 0 8 | W
+W | W
+T 6 7 | W
+W | W
+W | W
+W | W
+W | W
+T 4 4 | F 7 5
+W | S swordsman
+F 0 0 | T 3 6
+S swordsman | W
+W | W
+S swordsman | T 2 1
+T 6 8 | S swordsman
+W | W
+T 2 1 | W
+W | W
+T 8 8 | W
+W | T 6 9
+W | F 7 9
+W | S swordsman
+W | S archer
+W | F 5 7
+S archer | S swordsman
+T 0 8 | F 7 1
+S archer | W
+W | F 4 1
+F 9 8 | F 6 2
+F 5 3 | W
+W | W
+W | F 3 7
+T 9 6 | W
+W | W
+T 3 3 | W
+W | W
+W | S swordsman
+W | S swordsman
+S swordsman | W
+W | W
+W | W
+T 5 0 | F 6 1
+S archer | T 5 7
+S archer | W
+F 2 6 | W
+W | T 2 8
+F 7 7 | S swordsman
+W | W
+W | W
+W | W
+F 5 7 | W
+W | W
+W | W
+F 3 7 | W
+W | T 7 4
+W | W
+W | W
+S archer | W
+S archer | W
+W | T 0 5
+S archer | W
+W | W
+W | W
+W | T 3 0
+W | W
+W | F 8 1
+S swordsman | F 3 3
+W | W
+W | W
+W | W
+S archer | F 6 0
+W | W
+T 6 6 | W
+T 6 3 | W
+W | W
+W | W
+S archer | F 1 0
+W | F 7 3
+W | W
+W | W
+W | T 3 4
+W | W
+W | W
+W | T 3 4
+W | W
+T 8 4 | W

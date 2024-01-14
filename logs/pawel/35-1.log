@@ -1,0 +1,21 @@
+map:example_map.json
+W | S swordsman
+T 2 0 | W
+W | S archer
+W | F 1 2
+W | W
+W | W
+W | F 0 4
+T 3 9 | W
+W | T 4 1
+W | W
+T 4 6 | W
+W | T 2 8
+W | F 6 6
+W | W
+W | W
+T 2 4 | T 3 3
+W | W
+W | T 7 7
+W | W
+W | W

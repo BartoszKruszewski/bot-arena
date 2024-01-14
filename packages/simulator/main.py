@@ -1,4 +1,10 @@
 from .api import play
 
-def main():
-    print(play("bot.py", "bot.cpp", num_games=3))
+def Main():
+    results = []
+    for result in play("bot.py", "bot.py", 
+                       num_games=100, 
+                       map_name="example_map.json", 
+                       log_name="pawel"):
+        results.append(result)
+    print(results)

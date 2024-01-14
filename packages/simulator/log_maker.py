@@ -1,16 +1,27 @@
 from packages import LOGS_DIRECTORY
+import os
 
 class LogMaker():
-    def __init__(self, name):
+    def __init__(self, name, number):
         self.name = name
-        self.path = LOGS_DIRECTORY + "/" + name + ".txt"
+        os.makedirs(os.path.join(LOGS_DIRECTORY, name), exist_ok=True)
+        self.path = os.path.join(LOGS_DIRECTORY, name, number)
 
         self.actions = []
 
     def add_actions(self, action1, action2):
         self.actions.append(" | ".join([action1, action2]))
 
-    def save(self):
+    def save(self, winner, map_name):
+        self.path = self.path + f"-{winner}.log"
         with open(self.path, "w") as file:
+            file.write("map:" + map_name + "\n")
             file.write("\n".join(self.actions))
 
+    def clear(log_name):
+        try:
+            path = os.path.join(LOGS_DIRECTORY, log_name)
+            for file in os.listdir(path):
+                os.remove(os.path.join(path, file))
+        except FileNotFoundError:
+            pass

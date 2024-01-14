@@ -10,10 +10,22 @@ from packages.gui.const import FRAMERATE, ZOOM_INTERWAL, \
 class GameRenderer(GUIElement):
     def __init__(self, pos: tuple[float, float], size: tuple[float, float], **kwargs):
         super().__init__(pos, size, **kwargs)
-        self.__game = Game()
-        self.__log_interpreter = LogInterpreter(
-            f'./logs/{self.properties.get("log_name", "0")}.txt'
-        )
+        # TODO: remove this part:
+        ###
+        import os 
+        try:
+            self.__log_interpreter = LogInterpreter(
+                f'./logs/{self.properties.get("log_name", "0")}.txt'
+                # os.path.join('pawel', '0-1.log')
+            )
+        except FileNotFoundError:
+            self.__log_interpreter = LogInterpreter(
+                # f'./logs/{self.properties.get("log_name", "0")}.txt'
+                os.path.join('pawel', '0-0.log')
+            )
+        ###
+        self.__game = Game(self.__log_interpreter.get_map_name())
+        
         self.__engine = Engine(self.__game)
         
         self.__tick = 0
