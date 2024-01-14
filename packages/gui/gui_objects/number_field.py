@@ -6,36 +6,39 @@ from packages.gui.const import GUI_COLORS
 
 class NumberField(Window):
     def __init__(self, pos: tuple[float, float], size: tuple[float, float], **kwargs):
+        ratio = size[1] / size[0]
         super().__init__(
             [
                 Button(
-                    (0, 0), (0.3, 1),
-                    background_color = GUI_COLORS['text'],
+                    (0, 0.1), (ratio * 0.8, 0.8),
+                    background_color = GUI_COLORS['button'],
                     on_click = self.decrement,
-                    rounded = 3,
+                    rounded = 20,
                     text = '-',
                     text_color = GUI_COLORS['background2']
 
                 ),
                 InputField(
-                    (0.3, 0), (0.4, 1),
+                    (ratio * 0.8 + 0.05, 0), (1 - 2 * ratio * 0.8 - 0.1, 1),
                     text = str(kwargs.get('default', 0)),
                     filter = self.number_filter,
                     id = str(self),
-                    rounded = 0,
-                    
+                    rounded = 10,
+                    background_color = GUI_COLORS['background2'],
                 ),
                 Button(
-                    (0.7, 0), (0.3, 1),
-                    background_color = GUI_COLORS['text'],
+                    (1 - ratio * 0.8, 0.1), (ratio * 0.8, 0.8),
+                    background_color = GUI_COLORS['button'],
                     on_click = self.increment,
-                    rounded = 3,
+                    rounded = 20,
                     text = '+',
                     text_color = GUI_COLORS['background2']
                 )
             ], pos, size, **kwargs)
         
+
         self.properties['interval'] = self.properties.get('interval', 1)
+        self.properties['default'] = str(kwargs.get('default', 0))
         self.properties['minimum'] = self.properties.get('minimum', None)
         self.properties['maximum'] = self.properties.get('maximum', None)
         
@@ -63,3 +66,7 @@ class NumberField(Window):
     def update(self, dt):
         super().update(dt)
         self.properties['text'] = self.sub_objects[1].properties['text']
+        if self.properties['text'] == self.properties['default']:
+            self.sub_objects[1].properties['text_color'] = self.properties.get('default_color', GUI_COLORS['button'])
+        else:
+            self.sub_objects[1].properties['text_color'] = self.properties.get('active_color', GUI_COLORS['active'])

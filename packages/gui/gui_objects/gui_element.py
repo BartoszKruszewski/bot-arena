@@ -6,8 +6,8 @@ from pygame.mouse import get_pos, get_pressed
 from pygame.draw import rect as draw_rect
 from packages.gui.const import GUI_COLORS, ROUNDED_RADIUS, MAX_HOVER_TIME
 
-def easeInOutCubic(x):
-    return 4 * x * x * x if x < 0.5 else 1 - (-2 * x + 2) ** 3 / 2
+def ease(x):
+    return 1 - (1 - x) * (1 - x)
 
 class GUIElement(GUIobject, ABC):
     def __init__(self, pos: tuple[float, float], size: tuple[float, float], **kwargs):
@@ -24,7 +24,7 @@ class GUIElement(GUIobject, ABC):
         else:
             self.hover_time -= dt
         self.hover_time = min(max(self.hover_time, 0), MAX_HOVER_TIME)
-        self.properties['hover_intense'] = easeInOutCubic(self.hover_time / MAX_HOVER_TIME)
+        self.properties['hover_intense'] = ease(self.hover_time / MAX_HOVER_TIME)
 
     def render(self) -> Surface:
         surf = Surface(self.real_size, SRCALPHA)
