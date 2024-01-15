@@ -29,4 +29,6 @@ class Button(GUIElement):
         else:
             self.properties['background_color'] = color_blend(
                 self.standard_color, GUI_COLORS['button_hovered'], self.properties['hover_intense'])
+            self.properties['text_color'] = color_blend(
+                GUI_COLORS['text'], self.standard_color, self.properties['hover_intense'])
         return super().render()

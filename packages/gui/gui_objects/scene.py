@@ -44,7 +44,7 @@ class Scene(GUIobject):
 
                 object.real_pos = Vector2(
                     window.real_size.x * object.pos.x,
-                    ((window.real_size.y - HEADER_BAR_SIZE) * object.pos.y + HEADER_BAR_SIZE)
+                    (window.real_size.y - HEADER_BAR_SIZE) * object.pos.y + HEADER_BAR_SIZE
                     if 'name' in window.properties else
                     window.real_size.y * object.pos.y
                 )

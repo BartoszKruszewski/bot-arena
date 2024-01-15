@@ -20,7 +20,7 @@ class NumberField(Window):
                 ),
                 InputField(
                     (ratio * 0.8 + 0.05, 0), (1 - 2 * ratio * 0.8 - 0.1, 1),
-                    text = str(kwargs.get('default', 0)),
+                    default = str(kwargs.get('default', 0)),
                     filter = self.number_filter,
                     id = str(self),
                     rounded = 10,
@@ -36,9 +36,8 @@ class NumberField(Window):
                 )
             ], pos, size, **kwargs)
         
-
-        self.properties['interval'] = self.properties.get('interval', 1)
         self.properties['default'] = str(kwargs.get('default', 0))
+        self.properties['interval'] = self.properties.get('interval', 1)
         self.properties['minimum'] = self.properties.get('minimum', None)
         self.properties['maximum'] = self.properties.get('maximum', None)
         
@@ -66,7 +65,8 @@ class NumberField(Window):
     def update(self, dt):
         super().update(dt)
         self.properties['text'] = self.sub_objects[1].properties['text']
-        if self.properties['text'] == self.properties['default']:
-            self.sub_objects[1].properties['text_color'] = self.properties.get('default_color', GUI_COLORS['button'])
-        else:
-            self.sub_objects[1].properties['text_color'] = self.properties.get('active_color', GUI_COLORS['active'])
+        if not self.sub_objects[1].properties['active']:
+            if self.sub_objects[1].properties['text'] == self.properties['default']:
+                self.sub_objects[1].properties['text_color'] = self.properties.get('default_color', GUI_COLORS['button'])
+            else:
+                self.sub_objects[1].properties['text_color'] = self.properties.get('active_color', GUI_COLORS['active'])

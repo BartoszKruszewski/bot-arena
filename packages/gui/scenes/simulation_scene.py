@@ -1,5 +1,5 @@
 from packages.gui.abstract_scene_manager import AbstractSceneManager
-from packages.gui.gui_objects import Scene, Button, Window, List, NumberField, Text, ProgressBar, RadioButton
+from packages.gui.gui_objects import Scene, Button, Window, List, NumberField, Text, ProgressBar, RadioButton, InputField
 from os import listdir
 from packages import MAPS_DIRECTORY, BOTS_DIRECTORY
 from packages.simulator.api import play
@@ -93,9 +93,16 @@ class SimulationSceneManager(AbstractSceneManager):
                             maximum = 100,
                             default = 60,
                         ),
-
+                        InputField(
+                            (0.05, CONTROLS_GAP1 * 8 + 0.7), (0.5, 0.1), 
+                            default = "enter log name...", 
+                            background_color = GUI_COLORS['blocked'],
+                            text_color = GUI_COLORS['button'],
+                            id = 'log_name_input',
+                            when_type = self.update_start_button
+                        ),
                         Button(
-                            (0.25, CONTROLS_GAP1 * 8 + 0.7), (0.5, 0.1),
+                            (0.6, CONTROLS_GAP1 * 8 + 0.7), (0.35, 0.1),
                             on_click = self.run_simulation,
                             text = 'start simulation',
                             blocked = True,
@@ -116,13 +123,13 @@ class SimulationSceneManager(AbstractSceneManager):
                             (0.42, CONTROLS_GAP2 * 2 + 0.1 / PROPORTION2), (0.36, 0.1 / PROPORTION2),
                             id = 'bot1_won_progress_bar',
                         ),
-                        Text((0.8, CONTROLS_GAP2 * 2 + 0.1 / PROPORTION2), (0.15, 0.1 / PROPORTION2), text = "0", background_color = GUI_COLORS['blocked']),
+                        Text((0.8, CONTROLS_GAP2 * 2 + 0.1 / PROPORTION2), (0.15, 0.1 / PROPORTION2), text = "0", background_color = GUI_COLORS['blocked'], id='bot1_wins'),
                         Text((0.05, CONTROLS_GAP2 * 3 + 0.2 / PROPORTION2), (0.35, 0.1 / PROPORTION2), text = "bot2 won games:", background_color = GUI_COLORS['blocked']),
                         ProgressBar(
                             (0.42, CONTROLS_GAP2 * 3 + 0.2 / PROPORTION2), (0.36, 0.1 / PROPORTION2),
                             id = 'bot2_won_progress_bar',
                         ),
-                        Text((0.8, CONTROLS_GAP2 * 3 + 0.2 / PROPORTION2), (0.15, 0.1 / PROPORTION2), text = "0", background_color = GUI_COLORS['blocked']),
+                        Text((0.8, CONTROLS_GAP2 * 3 + 0.2 / PROPORTION2), (0.15, 0.1 / PROPORTION2), text = "0", background_color = GUI_COLORS['blocked'], id='bot2_wins'),
                         Button(
                             (0.25, CONTROLS_GAP2 * 4 + 0.3 / PROPORTION2), (0.5, 0.1 / PROPORTION2),
                             on_click = scene_functions['game'],
@@ -164,8 +171,8 @@ class SimulationSceneManager(AbstractSceneManager):
             self.scene.send_info('map', 'text_color', GUI_COLORS['active'])
         self.update_start_button()
 
-    def set_progress_bar_state(self, state):
-        self.scene.send_info('progress_bar', 'state', min(max(state, 0), 1))
+    def set_progress_bar_state(self, bar_name, state):
+        self.scene.send_info(bar_name, 'state', min(max(state, 0), 1))
 
     def run_simulation(self):
         bot1 = self.scene.get_info('bot1', 'text')
@@ -175,25 +182,34 @@ class SimulationSceneManager(AbstractSceneManager):
         ready_timeout = int(self.scene.get_info('ready_timeout', 'text'))
         move_timeout = int(self.scene.get_info('move_timeout', 'text'))
         game_timeout = int(self.scene.get_info('game_timeout', 'text'))
-        
+        log_name = self.scene.get_info('log_name_input', 'text')
+
         self.progress = 0
+        self.bot1_wins = 0
+        self.bot2_wins = 0
+
+        simulations = play(
+            bot1, bot2, number_of_games, map, log_name, 
+            ready_timeout, move_timeout, game_timeout
+        )
 
         def run_thread():
-            res = play(
-                bot1, bot2, 1, map,
-                ready_timeout,
-                move_timeout,
-                game_timeout
-            )
-            self.progress += 1
-            self.set_progress_bar_state(self.progress / number_of_games)
-            if self.progress < number_of_games:
-                run_thread()
-            else:
-                # tu trzeba dac nazwe ostatniego loga zamiast "example_log"
-                self.scene.send_info('start_view_button', 'args', ('example_log',)) 
-                self.scene.send_info('start_view_button', 'blocked', False)
-
+            for result in simulations:
+                self.progress += 1
+                self.set_progress_bar_state(
+                    'progress_bar', self.progress / number_of_games)
+                if result == 0:
+                    self.bot1_wins += 1
+                    self.scene.send_info('bot1_wins', 'text', str(self.bot1_wins))
+                    self.set_progress_bar_state(
+                        'bot1_won_progress_bar', self.bot1_wins / number_of_games)
+                elif result == 1:
+                    self.bot2_wins += 1
+                    self.scene.send_info('bot2_wins', 'text', str(self.bot2_wins))
+                    self.set_progress_bar_state(
+                        'bot2_won_progress_bar', self.bot2_wins / number_of_games)
+            self.simulation_complete(log_name)
+        
         thread = Thread(target = run_thread)
         thread.start()
     
@@ -201,9 +217,15 @@ class SimulationSceneManager(AbstractSceneManager):
         bot1 = self.scene.get_info('bot1', 'text')
         bot2 = self.scene.get_info('bot2', 'text')
         map = self.scene.get_info('map', 'text')
+        log_name = self.scene.get_info('log_name_input', 'text')
         self.scene.send_info('start_simulation_button', 'blocked', any((
             bot1 == "none",
             bot2 == "none",
             map == "none",
+            " " in log_name
         )))
+
+    def simulation_complete(self, log_name):
+        self.scene.send_info('start_view_button', 'args', (log_name,)) 
+        self.scene.send_info('start_view_button', 'blocked', False)
 

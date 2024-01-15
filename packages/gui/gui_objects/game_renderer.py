@@ -6,24 +6,20 @@ from packages.game_logic.game import Game
 from packages.gui.game_render import LogInterpreter, Engine
 from packages.gui.const import FRAMERATE, ZOOM_INTERWAL, \
     MIN_ZOOM, MAX_ZOOM, TILE_SIZE
+from packages import LOGS_DIRECTORY
+from os import listdir
 
 class GameRenderer(GUIElement):
     def __init__(self, pos: tuple[float, float], size: tuple[float, float], **kwargs):
         super().__init__(pos, size, **kwargs)
-        # TODO: remove this part:
-        ###
-        import os 
+        log_name = self.properties.get('log_name', 'log')
+        file_name = listdir(f'{LOGS_DIRECTORY}/{log_name}')[-1]
         try:
             self.__log_interpreter = LogInterpreter(
-                f'./logs/{self.properties.get("log_name", "0")}.txt'
-                # os.path.join('pawel', '0-1.log')
+                f'{LOGS_DIRECTORY}/{log_name}/{file_name}'
             )
         except FileNotFoundError:
-            self.__log_interpreter = LogInterpreter(
-                # f'./logs/{self.properties.get("log_name", "0")}.txt'
-                os.path.join('pawel', '0-0.log')
-            )
-        ###
+            print('No log!')
         self.__game = Game(self.__log_interpreter.get_map_name())
         
         self.__engine = Engine(self.__game)

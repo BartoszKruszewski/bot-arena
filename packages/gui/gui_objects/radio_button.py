@@ -29,6 +29,13 @@ class RadioButton(GUIElement):
                 self.properties['active'] = not self.properties['active']
                 self.on_click()
 
+    def update(self, dt):
+        super().update(dt)
+        if self.properties['active']:
+            self.properties['text_color'] = self.properties.get('edit_text_color', GUI_COLORS['background2'])
+        else:
+            self.properties['text_color'] = self.properties.get('main_text_color', GUI_COLORS['text'])
+
     def render(self):
         if self.properties['blocked']:
             self.properties['background_color'] = \
@@ -39,5 +46,7 @@ class RadioButton(GUIElement):
         else:
             self.properties['background_color'] = color_blend(
                 self.standard_color, GUI_COLORS['button_hovered'], self.properties['hover_intense'])
+            self.properties['text_color'] = color_blend(
+                GUI_COLORS['text'], self.standard_color, self.properties['hover_intense'])
         return super().render()
 
