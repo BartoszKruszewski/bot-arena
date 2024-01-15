@@ -19,12 +19,12 @@ class InputField(RadioButton):
         if event.type == KEYDOWN and self.properties['active']:
             if event.key == K_BACKSPACE:
                 self.properties['text'] = self.properties['text'][:-1]
-                self.properties['when_type']()
+                self.properties.get('when_type', lambda: None)()
             else:
                 new_text = ('' if self.properties['text'] == self.properties['default'] else self.properties['text']) + event.unicode
                 if self.filter(new_text):
                     self.properties['text'] = new_text
-                    self.properties['when_type']()
+                    self.properties.get('when_type', lambda: None)()
 
                     
 

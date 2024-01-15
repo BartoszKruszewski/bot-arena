@@ -2,9 +2,10 @@ from .gui_element import GUIElement
 from .window import Window
 from .scene import Scene
 from .button import Button
-from pygame import MOUSEBUTTONDOWN, MOUSEBUTTONUP, BUTTON_LEFT
+from pygame import MOUSEBUTTONDOWN, MOUSEBUTTONUP, BUTTON_LEFT, BLEND_RGBA_ADD, SRCALPHA
 from pygame.event import Event as pgevent, Event
 from pygame import Surface
+from packages.gui.const import GUI_COLORS
 
 class Slider(Button):
     def __init__(self, pos: tuple[float, float], size: tuple[float, float], **kwargs):
@@ -37,12 +38,8 @@ class Slider(Button):
             slider_pos = (self.real_size.x / 2 - slider_size[0] / 2, 0)
             self.properties['slider'] = {'size': slider_size, 'pos': slider_pos}
 
-        slider_surf = Surface(self.properties['slider']['size'])
-        slider_surf.fill((32, 120, 0))
-        surf.blit(slider_surf, self.properties['slider']['pos'])
+        slider_surf = Surface(self.properties['slider']['size'], SRCALPHA)
+        slider_surf.fill((*GUI_COLORS['button'], 0))
+        surf.blit(slider_surf, self.properties['slider']['pos'], special_flags=BLEND_RGBA_ADD)
 
         return surf
-
-        
-        
-

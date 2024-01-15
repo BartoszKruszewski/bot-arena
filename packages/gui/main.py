@@ -22,6 +22,7 @@ class Main():
         self.thread = None
 
         self.load_simulation_scene()
+        #self.load_game_scene('ent')
 
         while self.is_running:
             self.is_running = not event_peek(WINDOWCLOSE)
