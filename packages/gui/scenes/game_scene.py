@@ -16,7 +16,7 @@ class GameSceneManager(AbstractSceneManager):
         return Scene([
             Window([
                 LogList(
-                    (0, 0), (1, 1), scene_functions['log_name'], self.update_log_index
+                    (0, 0), (1, 1), scene_functions['log_name'], self.get_game_speed
                 )
             ],
                 (0, 0), (PROPORTION1, 1 - PROPORTION1),
@@ -221,8 +221,8 @@ class GameSceneManager(AbstractSceneManager):
     def update_dict(self):
         return self.scene.get_info('game_renderer', 'game_stats')
 
-    def update_log_index(self):
-        return self.scene.get_info('game_renderer', 'log_index')
+    def get_game_speed(self):
+        return self.scene.get_info('game_renderer', 'game_speed')
     
     def toggle_helper(self, helper):
         def toggler():

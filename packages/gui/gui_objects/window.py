@@ -52,8 +52,8 @@ class Window(GUIobject):
             surf.blit(text, (HEADER_BAR_PADDING * 2 + offset, (HEADER_BAR_SIZE - text.get_size()[1]) // 2))
         for object in self.sub_objects:
             if all((
-                object.real_pos.x >= 0,
-                object.real_pos.y >= 0
+                object.real_pos.x + self.real_size.x >= 0,
+                object.real_pos.y + self.real_size.y >= 0
             )): 
                 surf.blit(object.render(), object.real_pos)
         return surf
