@@ -1,6 +1,7 @@
 from packages.gui.abstract_scene_manager import AbstractSceneManager
 from packages.gui.gui_objects import Window, Scene, GameRenderer, Button, RadioButton, Text, Slider
 from packages.gui.gui_objects.stats_display import StatsDisplay
+from packages.gui.gui_objects.log_list import LogList
 from packages.gui.const import GUI_COLORS, SPEED_CONTROL_STEP, SPEED_CONTROL_SLIDER_MULT, \
     ZOOM_CONTROL_STEP, ZOOM_CONTROL_SLIDER_MULT
 
@@ -14,7 +15,9 @@ class GameSceneManager(AbstractSceneManager):
     def load_scene(self, scene_functions):
         return Scene([
             Window([
-                
+                LogList(
+                    (0, 0), (1, 1), scene_functions['log_name'], self.update_log_index
+                )
             ],
                 (0, 0), (PROPORTION1, 1 - PROPORTION1),
                 color=(42, 42, 42),
@@ -217,6 +220,10 @@ class GameSceneManager(AbstractSceneManager):
 
     def update_dict(self):
         return self.scene.get_info('game_renderer', 'game_stats')
+
+    def update_log_index(self):
+        return self.scene.get_info('game_renderer', 'log_index')
+    
     def toggle_helper(self, helper):
         def toggler():
             helpers = self.scene.get_info('game_renderer', 'helpers')
