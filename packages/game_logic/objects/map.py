@@ -88,14 +88,19 @@ class Map():
         def near_path(pos: tuple[int, int]) -> bool:
             return any([abs(pos[0] - x) <= 1 and abs(pos[1] - y) <= 1 for x, y in self.path])
 
-
         not_path = [(x, y) for x in range(MAP_SIZE_X) 
                     for y in range(MAP_SIZE_Y) 
                     if not near_path((x, y))]
         
-        while len(self.obstacles) < OBSTACLES_AMOUNT:
-            self.obstacles.spawn(choice(not_path))
-            not_path.remove(self.obstacles[-1])
+        obstacles_cords = []
+
+        for _ in range(OBSTACLES_AMOUNT):
+            new_obstacle = choice(not_path)
+            obstacles_cords.append(new_obstacle)
+            not_path.remove(new_obstacle)
+
+        for cords in obstacles_cords:
+            self.obstacles.spawn(cords)
 
     def generate_random_map(self, map_path, size_x, size_y) -> None:
         self.path = []
@@ -105,7 +110,7 @@ class Map():
         self.MAP_SIZE_X = size_x
         self.MAP_SIZE_Y = size_y
         self.__generate_path(self._start)
-        #self.__generate_obstacles()
+        self.__generate_obstacles()
         with open(map_path, 'w') as f:
             f.write(json.dumps({
                 'MAP_SIZE_X': self.MAP_SIZE_X,
