@@ -28,7 +28,10 @@ class Button(GUIElement):
                 self.properties.get('blocked_color', GUI_COLORS['blocked'])
         else:
             self.properties['background_color'] = color_blend(
-                self.standard_color, GUI_COLORS['button_hovered'], self.properties['hover_intense'])
+                self.standard_color,
+                self.properties.get('background_color_hovered', GUI_COLORS['button_hovered']), 
+                self.properties['hover_intense']
+            )
             self.properties['text_color'] = color_blend(
                 GUI_COLORS['text'], self.standard_color, self.properties['hover_intense'])
         return super().render()

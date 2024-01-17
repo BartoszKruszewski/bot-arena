@@ -8,8 +8,8 @@ from packages.gui.const import GUI_COLORS, SPEED_CONTROL_STEP, SPEED_CONTROL_SLI
 PROPORTION1 = 0.22
 PROPORTION2 = 0.4
 
-CONTROLS_GAP1 = 0.035
-CONTROLS_HEIGHT = 0.26
+CONTROLS_GAP1 = 0.06
+CONTROLS_HEIGHT = 0.25
 
 class GameSceneManager(AbstractSceneManager):
     def load_scene(self, scene_functions):
@@ -62,7 +62,6 @@ class GameSceneManager(AbstractSceneManager):
                     (CONTROLS_GAP1, CONTROLS_GAP1), 
                     (0.2, CONTROLS_HEIGHT),
                     text = "game speed:",
-                    background_color = GUI_COLORS['background2']
                 ),
                 Button(
                     (CONTROLS_GAP1 * 2 + 0.2, CONTROLS_GAP1),
@@ -85,7 +84,8 @@ class GameSceneManager(AbstractSceneManager):
                 Slider(
                     (CONTROLS_GAP1 * 3 + 0.41 + 0.01 * 2, CONTROLS_GAP1),
                     (0.25, CONTROLS_HEIGHT),
-                    on_change = self.set_game_speed
+                    on_change = self.set_game_speed,
+                    id = 'game_speed_slider'
                 ),
                 Text(
                     (CONTROLS_GAP1 * 3 + 0.66 + 0.01 * 3, CONTROLS_GAP1),
@@ -98,7 +98,6 @@ class GameSceneManager(AbstractSceneManager):
                     (CONTROLS_GAP1, CONTROLS_GAP1 * 2 + CONTROLS_HEIGHT),
                     (0.2, CONTROLS_HEIGHT),
                     text = "zoom:",
-                    background_color = GUI_COLORS['background2']
                 ),
                 Button(
                     (CONTROLS_GAP1 * 2 + 0.235, CONTROLS_GAP1 * 2 + CONTROLS_HEIGHT),
@@ -115,7 +114,8 @@ class GameSceneManager(AbstractSceneManager):
                 Slider(
                     (CONTROLS_GAP1 * 3 + 0.41 + 0.01 * 2, CONTROLS_GAP1 * 2 + CONTROLS_HEIGHT),
                     (0.25, CONTROLS_HEIGHT),
-                    on_change = self.set_zoom
+                    on_change = self.set_zoom,
+                    id = 'zoom_slider'
                 ),
                 Text(
                     (CONTROLS_GAP1 * 3 + 0.66 + 0.01 * 3, CONTROLS_GAP1 * 2 + CONTROLS_HEIGHT),
@@ -128,7 +128,6 @@ class GameSceneManager(AbstractSceneManager):
                     (CONTROLS_GAP1, CONTROLS_GAP1 * 3 + CONTROLS_HEIGHT * 2), 
                     (0.2, CONTROLS_HEIGHT), 
                     text = "helpers:",
-                    background_color = GUI_COLORS['background2']
                 ),
                 
                 RadioButton(
@@ -155,7 +154,7 @@ class GameSceneManager(AbstractSceneManager):
                 Button(
                     (CONTROLS_GAP1 * 3 + 0.41 + 0.01 * 2, CONTROLS_GAP1 * 3 + CONTROLS_HEIGHT * 2),
                     (0.25, CONTROLS_HEIGHT),
-                    text = 'end_game',
+                    text = 'back to simulation run',
                     color = (0, 0, 255),
                     on_click = scene_functions['simulation']
                 ),
@@ -198,6 +197,8 @@ class GameSceneManager(AbstractSceneManager):
     def update_game_speed_info(self):
         actual_game_speed = self.scene.get_info('game_renderer', 'game_speed')
         self.scene.send_info('game_speed_info', 'text', f'{actual_game_speed:.2f}')
+        game_speed_slider_update_func = self.scene.get_info('game_speed_slider', 'update_slider_pos')
+        game_speed_slider_update_func(actual_game_speed ** (1 / SPEED_CONTROL_SLIDER_MULT) - 0.5)
 
     def increase_zoom(self):
         actual_zoom = self.scene.get_info('game_renderer', 'zoom')
@@ -217,6 +218,8 @@ class GameSceneManager(AbstractSceneManager):
     def update_zoom_info(self):
         actual_zoom = self.scene.get_info('game_renderer', 'zoom')
         self.scene.send_info('zoom_info', 'text', f'{actual_zoom:.2f}')
+        zoom_slider_update_func = self.scene.get_info('zoom_slider', 'update_slider_pos')
+        zoom_slider_update_func(actual_zoom ** (1 / ZOOM_CONTROL_SLIDER_MULT) - 1.4)
 
     def update_dict(self):
         return self.scene.get_info('game_renderer', 'game_stats')

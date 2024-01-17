@@ -19,19 +19,17 @@ class Particle:
         fading = True if not 'fading' in kwargs else kwargs['fading']
         texture = None if not 'texture' in kwargs else kwargs['texture']
 
-
         self.__texture = texture
         self.__pos = pos.copy()
         self.__color = color
         self.__max_opacity = color.a
         self.__size = randint(1, size)
         self.__fading = fading
-        self.__direction = direction + Vector2(randint(-PDP, PDP) / PDP, randint(-PDP, PDP) / PDP)
-        self.__speed = speed
-        self.__tick = 0
+        self.__direction = (direction + Vector2(randint(-PDP, PDP) / PDP, randint(-PDP, PDP) / PDP)).normalize()
+        self.__speed = randint(int(0.8 * PDP), PDP) / PDP * speed
         self.__time = randint(1, time)
         self.__max_time = time
-        self.__acc = acc
+        self.__acc = randint(int(0.8 * PDP), PDP) / PDP * acc
 
     def is_alive(self) -> bool:
         '''Returns True when particle should be displayed.
@@ -52,10 +50,7 @@ class Particle:
         Refreshes once per frame.
         '''
 
-        self.__tick += dt * game_speed
-        if self.__tick > FRAMERATE / 10:
-            self.__time -= 1
-            self.__tick = 0
+        self.__time -= dt * game_speed
         self.__speed *= self.__acc * dt
         self.__pos += self.__direction * self.__speed * dt
         if self.__fading:
@@ -69,8 +64,8 @@ class DamageInfoParticle(Particle):
         super().__init__(
             pos, Color(255, 0, 0, 200),
             direction = kwargs['direction'],
-            speed = 3,
-            time = 15,
+            speed = 6,
+            time = 100,
             acc = 0.9,
             texture = Font(f'./assets/font.ttf', 8).render(str(kwargs['value']), False, kwargs['text_color'])
 
@@ -82,8 +77,8 @@ class BloodParticle(Particle):
             pos, Color(255, 0, 0, 200),
             direction = kwargs['direction'],
             size = 4,
-            speed = 5,
-            time = 15,
+            speed = 9,
+            time = 100,
             acc = 0.8
         )
 

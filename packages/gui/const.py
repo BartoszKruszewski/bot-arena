@@ -1,5 +1,3 @@
-from pygame import Vector2
-
 SCREEN_SIZE = (SCREEN_SIZE_X, SCREEN_SIZE_Y) = (1280, 720)
 FRAMERATE = 60
 TILE_SIZE = 64
