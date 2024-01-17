@@ -10,6 +10,7 @@ class List(Window):
         button_size = self.properties.get('button_size', (0.9, 0.1))
         gap = self.properties.get('gap', (0.05, 0.01))
         self.properties['max_active'] = kwargs.get('max_active', len(objects_in_list))
+        self.properties['add_element'] = self.add_element
         self.sub_objects = [
             RadioButton(
                 (gap[0], i * (button_size[1] + gap[1])), (button_size[0], button_size[1]),
@@ -47,6 +48,21 @@ class List(Window):
             for button in self.sub_objects:
                 button.properties['blocked'] = False
         return active_buttons
+    
+    def add_element(self, name):
+        i = len(self.sub_objects)
+        button_size = self.properties.get('button_size', (0.9, 0.1))
+        gap = self.properties.get('gap', (0.05, 0.01))
+        self.sub_objects.append(
+            RadioButton(
+                (gap[0], i * (button_size[1] + gap[1])), (button_size[0], button_size[1]),
+                background_color = self.properties.get('element_color', GUI_COLORS['none']),
+                active_color=self.properties.get('active_element_color', GUI_COLORS['active']),
+                on_click = lambda: self.properties.get('on_click', lambda: None)(self.get_active()),
+                text = name,
+            )
+        )
+        self.calc_pos()
         
 
 

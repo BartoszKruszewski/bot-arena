@@ -25,7 +25,10 @@ class Particle:
         self.__max_opacity = color.a
         self.__size = randint(1, size)
         self.__fading = fading
-        self.__direction = (direction + Vector2(randint(-PDP, PDP) / PDP, randint(-PDP, PDP) / PDP)).normalize()
+        new_direction = (direction + Vector2(randint(-PDP, PDP) / PDP, randint(-PDP, PDP) / PDP))
+        if new_direction.x != 0 and new_direction.y != 0:
+            new_direction.normalize_ip()
+        self.__direction = new_direction
         self.__speed = randint(int(0.8 * PDP), PDP) / PDP * speed
         self.__time = randint(1, time)
         self.__max_time = time

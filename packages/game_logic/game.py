@@ -25,8 +25,9 @@ ErrorCode = {
 }
 
 class Game:
-    def __init__(self, map_path) -> None:
-        self._map = Map(f'{MAPS_DIRECTORY}\\{map_path}')
+    def __init__(self, map_path = None) -> None:
+        map_path = f'{MAPS_DIRECTORY}\\{map_path}' if map_path is not None else None
+        self._map = Map(map_path)
 
         self.turrets = {
             'left': Turrets(self._map.path),
@@ -211,6 +212,9 @@ class Game:
     
     def get_income(self) -> dict[str, int]:
         return self.income.copy()
+
+    def generate_random_map(self, map_path, size_x = 10, size_y = 10) -> None:
+        self._map.generate_random_map(map_path, size_x, size_y)
 
     def display(self) -> None:
         for turret in self.turrets['left'].turrets:

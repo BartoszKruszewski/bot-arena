@@ -5,34 +5,75 @@ from packages import MAPS_DIRECTORY, BOTS_DIRECTORY
 from packages.simulator.api import play
 from threading import Thread
 from packages.gui.const import GUI_COLORS
+from packages.game_logic.game import Game
 
 PROPORTION1 = 0.6
 PROPORTION2 = 0.6
+PROPORTION3 = 0.7
 
 CONTROLS_GAP1 = 0.02
 CONTROLS_GAP2 = 0.06
+CONTROLS_GAP3 = 0.1
 
 class SimulationSceneManager(AbstractSceneManager):
     def load_scene(self, scene_functions):
         return Scene([
-                List(
+                Window([
+                    List(
                     listdir(BOTS_DIRECTORY),
-                    (0, 0), (PROPORTION1 / 2, 1),
-                    name = 'bots',
+                    (0, 0), (1, 1),
                     on_click = self.add_bot,
                     max_active = 2,
                     element_color = (0, 0, 0, 0),
-                    icon='bot'
-                ),
-                List(
+                )
+                ], (0, 0), (PROPORTION1 / 2, 1), name = 'bots', icon='bot'),
+                Window([
+                    List(
                     listdir(MAPS_DIRECTORY),
-                    (PROPORTION1 / 2, 0), (PROPORTION1 / 2, 1),
-                    name = 'maps',
+                    (0.01, 0), (0.99, 1),
                     on_click = self.add_map,
                     max_active = 1,
                     element_color = (0, 0, 0, 0),
-                    icon='map'
+                    id = 'map_list'
                 ),
+                ], (PROPORTION1 / 2, 0), (PROPORTION1 / 2, PROPORTION3),
+                    name = 'maps', icon='map'),
+                Window([
+                    Text((0.05, CONTROLS_GAP3), (0.5, 0.2), text = "Map size X:", background_color = GUI_COLORS['blocked']),
+                    NumberField(
+                        (0.6, CONTROLS_GAP3), (0.35, 0.2),
+                        id='map_size_x',
+                        minimum = 5,
+                        maximum = 30,
+                        default = 10,
+                    ),
+                    Text((0.05, CONTROLS_GAP3 * 2 + 0.2), (0.5, 0.2), text = "Map size Y:", background_color = GUI_COLORS['blocked']),
+                    NumberField(
+                        (0.6, CONTROLS_GAP3 * 2 + 0.2), (0.35, 0.2),
+                        id='map_size_y',
+                        minimum = 5,
+                        maximum = 30,
+                        default = 10,
+                    ),
+                    InputField(
+                        (0.05, CONTROLS_GAP3 * 3 + 0.4), (0.5, 0.2), 
+                        default = "enter map name...", 
+                        background_color = GUI_COLORS['blocked'],
+                        text_color = GUI_COLORS['button'],
+                        id = 'map_name_input',
+                        when_type = self.update_generate_map_button
+                    ),
+                    Button(
+                        (0.6, CONTROLS_GAP3 * 3 + 0.4), (0.35, 0.2),
+                        on_click = self.generate_map,
+                        text = 'generate map',
+                        blocked = True,
+                        id='generate_map_button',
+                    ),
+                ], 
+                (PROPORTION1 / 2, PROPORTION3), (PROPORTION1 / 2, 1 - PROPORTION3),
+                name = 'Add random map',
+                icon = 'controls'),
                 Window([
                         Text((0.05, CONTROLS_GAP1), (0.2, 0.1), text = "bot1:", background_color = GUI_COLORS['blocked']),
                         Text(
@@ -224,6 +265,17 @@ class SimulationSceneManager(AbstractSceneManager):
             map == "none",
             " " in log_name
         )))
+
+    def update_generate_map_button(self):
+        map_name = self.scene.get_info('map_name_input', 'text')
+        self.scene.send_info('generate_map_button', 'blocked', " " in map_name)
+
+    def generate_map(self):
+        size_x = int(self.scene.get_info('map_size_x', 'text'))
+        size_y = int(self.scene.get_info('map_size_y', 'text'))
+        map_name = self.scene.get_info('map_name_input', 'text')
+        Game().generate_random_map(f'{MAPS_DIRECTORY}/{map_name}.json', size_x, size_y)
+        self.scene.get_info('map_list', 'add_element')(f'{map_name}.json')
 
     def simulation_complete(self, log_name):
         self.scene.send_info('start_view_button', 'args', (log_name,)) 

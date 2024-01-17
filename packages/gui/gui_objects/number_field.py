@@ -6,11 +6,10 @@ from packages.gui.const import GUI_COLORS
 
 class NumberField(Window):
     def __init__(self, pos: tuple[float, float], size: tuple[float, float], **kwargs):
-        ratio = size[1] / size[0]
         super().__init__(
             [
                 Button(
-                    (0, 0.1), (ratio * 0.8, 0.8),
+                    (0, 0.1), (0.2, 0.8),
                     background_color = GUI_COLORS['button'],
                     on_click = self.decrement,
                     rounded = 20,
@@ -19,7 +18,7 @@ class NumberField(Window):
 
                 ),
                 InputField(
-                    (ratio * 0.8 + 0.05, 0), (1 - 2 * ratio * 0.8 - 0.1, 1),
+                    (0.2 + 0.05, 0), (1 - 2 * 0.2 - 0.1, 1),
                     default = str(kwargs.get('default', 0)),
                     filter = self.number_filter,
                     id = str(self),
@@ -27,7 +26,7 @@ class NumberField(Window):
                     background_color = GUI_COLORS['background2'],
                 ),
                 Button(
-                    (1 - ratio * 0.8, 0.1), (ratio * 0.8, 0.8),
+                    (1 - 0.2, 0.1), (0.2, 0.8),
                     background_color = GUI_COLORS['button'],
                     on_click = self.increment,
                     rounded = 20,
