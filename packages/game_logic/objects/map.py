@@ -73,7 +73,6 @@ class Map():
 
     def __generate_path(self, pos) -> None:
         self.path.append(pos)
-        print(pos)
         if pos != self._end:
             if pos[0] == self.MAP_SIZE_X - 1:
                 v = (0, 1)

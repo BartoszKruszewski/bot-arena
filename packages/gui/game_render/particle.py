@@ -32,7 +32,7 @@ class Particle:
         self.__speed = randint(int(0.8 * PDP), PDP) / PDP * speed
         self.__time = randint(1, time)
         self.__max_time = time
-        self.__acc = randint(int(0.8 * PDP), PDP) / PDP * acc
+        self.__acc = randint(int(0.9 * PDP), PDP) / PDP * acc
 
     def is_alive(self) -> bool:
         '''Returns True when particle should be displayed.
@@ -54,7 +54,7 @@ class Particle:
         '''
 
         self.__time -= dt * game_speed
-        self.__speed *= self.__acc * dt
+        self.__speed *= self.__acc / dt
         self.__pos += self.__direction * self.__speed * dt
         if self.__fading:
             self.__color.a = min(max(int(self.__max_opacity  * self.__time / self.__max_time), 0), 255)
@@ -67,7 +67,7 @@ class DamageInfoParticle(Particle):
         super().__init__(
             pos, Color(255, 0, 0, 200),
             direction = kwargs['direction'],
-            speed = 6,
+            speed = 9,
             time = 100,
             acc = 0.9,
             texture = Font(f'./assets/font.ttf', 8).render(str(kwargs['value']), False, kwargs['text_color'])
@@ -80,9 +80,9 @@ class BloodParticle(Particle):
             pos, Color(255, 0, 0, 200),
             direction = kwargs['direction'],
             size = 4,
-            speed = 9,
+            speed = 11,
             time = 100,
-            acc = 0.8
+            acc = 0.95
         )
 
 class ParticleController:
