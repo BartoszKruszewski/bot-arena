@@ -4,16 +4,19 @@ from packages.gui.gui_objects.list import List
 from packages.file_manager import FileManager
 from packages.gui.const import GUI_COLORS, FRAMERATE, MAX_HOVER_TIME
 from packages import LOGS_DIRECTORY
-from os import listdir
+from os import listdir, path
 
 def ease(x):
     return 1 - (1 - x) * (1 - x)
 
 class LogList(List):
     def __init__(self, pos: tuple[float, float], size: tuple[float, float], log_name: str, get_game_speed, **kwargs):
-        file_name = listdir(f'{LOGS_DIRECTORY}/{log_name}')[-1]
+        # file_name = listdir(f'{LOGS_DIRECTORY}/{log_name}')[-1]
+        file_name = listdir(path.join(LOGS_DIRECTORY, log_name))[-1]    
+
         manager = FileManager("LOGS")
-        log = manager.read_file(f'{log_name}/{file_name}').splitlines()[1:]
+        # log = manager.read_file(f'{log_name}/{file_name}').splitlines()[1:]
+        log = manager.read_file(path.join(LOGS_DIRECTORY, log_name, file_name)).splitlines()[1:]
         super().__init__(log, pos, size, **kwargs)
         self.properties["log"] = log
         self.get_game_speed = get_game_speed

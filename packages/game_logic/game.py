@@ -10,6 +10,8 @@ from .objects.turrets import Turrets, Turret
 from .objects.soldiers import Soldiers, Soldier
 from .objects.farms import Farms, Farm
 
+import os
+
 from packages import MAPS_DIRECTORY
 
 ErrorCode = {
@@ -26,7 +28,8 @@ ErrorCode = {
 
 class Game:
     def __init__(self, map_path = None) -> None:
-        map_path = f'{MAPS_DIRECTORY}\\{map_path}' if map_path is not None else None
+        map_path = os.path.join(MAPS_DIRECTORY, map_path) if map_path is not None else None
+        
         self._map = Map(map_path)
 
         self.turrets = {
