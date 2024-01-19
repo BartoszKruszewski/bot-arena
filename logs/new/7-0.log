@@ -1,0 +1,27 @@
+map:nowa_mapa.json
+W | F 3 6
+S archer | W
+W | F 8 7
+F 9 9 | W
+S archer | W
+W | W
+T 3 1 | W
+W | W
+S archer | F 7 4
+T 1 6 | W
+T 4 0 | W
+W | W
+W | W
+F 1 2 | W
+W | F 3 7
+W | W
+T 3 1 | W
+F 0 5 | W
+W | W
+W | W
+W | T 9 9
+W | W
+W | W
+W | W
+F 8 4 | W
+W | W

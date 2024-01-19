@@ -1,0 +1,86 @@
+map:sdfsfsd.json
+W | W
+W | S archer
+F 7 9 | T 1 5
+W | W
+W | W
+W | T 9 3
+F 5 5 | W
+S swordsman | F 5 1
+W | W
+W | W
+W | W
+W | S archer
+W | W
+W | W
+W | W
+W | W
+W | W
+F 2 6 | F 3 8
+W | T 0 0
+W | T 6 3
+W | W
+W | W
+W | W
+W | W
+W | T 0 4
+W | W
+W | W
+T 8 8 | W
+W | W
+W | T 8 2
+W | S swordsman
+W | S archer
+W | W
+S swordsman | S swordsman
+W | W
+W | W
+W | F 2 6
+W | W
+W | T 3 5
+S archer | W
+W | F 4 6
+S archer | W
+W | W
+W | W
+F 5 3 | W
+F 6 7 | W
+F 8 0 | W
+W | F 3 7
+T 4 3 | W
+W | W
+F 3 6 | W
+W | S archer
+W | W
+S swordsman | W
+W | T 5 0
+W | W
+W | W
+T 7 9 | F 6 8
+W | W
+W | W
+S archer | W
+W | W
+T 6 1 | W
+S swordsman | S archer
+S archer | W
+F 8 5 | W
+W | F 4 5
+T 7 7 | W
+W | W
+W | W
+W | W
+T 2 8 | W
+W | W
+F 9 4 | W
+W | W
+S swordsman | W
+W | T 7 0
+W | W
+W | W
+F 0 6 | W
+W | F 8 3
+W | W
+W | F 9 3
+W | W
+F 1 3 | W

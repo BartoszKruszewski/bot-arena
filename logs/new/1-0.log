@@ -1,0 +1,26 @@
+map:nowa_mapa.json
+S swordsman | W
+W | W
+S archer | W
+F 6 7 | T 3 5
+T 2 3 | W
+W | W
+F 6 8 | W
+T 1 0 | T 7 2
+T 9 9 | W
+S archer | W
+W | W
+W | F 5 3
+W | W
+W | W
+W | W
+W | W
+W | W
+T 1 9 | F 9 2
+W | F 8 2
+W | W
+W | F 4 9
+W | W
+W | F 1 7
+W | W
+F 4 8 | S archer

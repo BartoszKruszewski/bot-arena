@@ -11,12 +11,11 @@ def ease(x):
 
 class LogList(List):
     def __init__(self, pos: tuple[float, float], size: tuple[float, float], log_name: str, get_game_speed, **kwargs):
-        # file_name = listdir(f'{LOGS_DIRECTORY}/{log_name}')[-1]
-        file_name = listdir(path.join(LOGS_DIRECTORY, log_name))[-1]    
+        file_name = path.join(LOGS_DIRECTORY, log_name)    
 
         manager = FileManager("LOGS")
         # log = manager.read_file(f'{log_name}/{file_name}').splitlines()[1:]
-        log = manager.read_file(path.join(LOGS_DIRECTORY, log_name, file_name)).splitlines()[1:]
+        log = manager.read_file(path.join(LOGS_DIRECTORY, file_name)).splitlines()[1:]
         super().__init__(log, pos, size, **kwargs)
         self.properties["log"] = log
         self.get_game_speed = get_game_speed

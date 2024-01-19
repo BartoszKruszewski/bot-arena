@@ -1,5 +1,6 @@
 from packages.gui.scenes.game_scene import GameSceneManager
 from packages.gui.scenes.simulation_scene import SimulationSceneManager
+from packages.gui.scenes.log_select_scene import LogSelectSceneManager
 
 from .const import SCREEN_SIZE, FRAMERATE
 
@@ -21,7 +22,7 @@ class Main():
         self.clock = Clock()
         self.thread = None
 
-        self.load_simulation_scene()
+        self.load_log_select_scene()
 
         while self.is_running:
             self.is_running = not event_peek(WINDOWCLOSE)
@@ -35,10 +36,21 @@ class Main():
             display_update()
 
     def load_game_scene(self, log_name):
-        self.manager = GameSceneManager({'simulation': self.load_simulation_scene, 'log_name': log_name})
+        self.manager = GameSceneManager({
+            'log_select': self.load_log_select_scene,
+            'log_name': log_name
+        })
 
     def load_simulation_scene(self):
-        self.manager = SimulationSceneManager({'game': self.load_game_scene})
+        self.manager = SimulationSceneManager({
+            'log_select': self.load_log_select_scene,
+        })
+
+    def load_log_select_scene(self):
+        self.manager = LogSelectSceneManager({
+            'game': self.load_game_scene,
+            'simulation': self.load_simulation_scene,
+        })
 
     
 

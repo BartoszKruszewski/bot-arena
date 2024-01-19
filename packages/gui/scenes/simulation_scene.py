@@ -7,9 +7,11 @@ from threading import Thread
 from packages.gui.const import GUI_COLORS
 from packages.game_logic.game import Game
 
-PROPORTION1 = 0.6
+PROPORTION1 = 0.65
 PROPORTION2 = 0.6
 PROPORTION3 = 0.7
+
+SIDEBAR_SIZE = 0.05
 
 CONTROLS_GAP1 = 0.02
 CONTROLS_GAP2 = 0.06
@@ -19,6 +21,18 @@ class SimulationSceneManager(AbstractSceneManager):
     def load_scene(self, scene_functions):
         return Scene([
                 Window([
+                    Button(
+                        (0.1, 0.01), (0.8, SIDEBAR_SIZE * 0.8 * 16 / 9),
+                        on_click = scene_functions['log_select'],
+                        text = 'log',
+                    ),
+                    Button(
+                        (0.1, 0.1), (0.8, SIDEBAR_SIZE * 0.8 * 16 / 9),
+                        blocked = True,
+                        text = 'simulation',
+                    ),
+                ], (0, 0), (SIDEBAR_SIZE, 1), name = ""),
+                Window([
                     List(
                     listdir(BOTS_DIRECTORY),
                     (0, 0), (1, 1),
@@ -26,7 +40,7 @@ class SimulationSceneManager(AbstractSceneManager):
                     max_active = 2,
                     element_color = (0, 0, 0, 0),
                 )
-                ], (0, 0), (PROPORTION1 / 2, 1), name = 'bots', icon='bot'),
+                ], (SIDEBAR_SIZE, 0), ((PROPORTION1 - SIDEBAR_SIZE) / 2, 1), name = 'bots', icon='bot'),
                 Window([
                     List(
                     listdir(MAPS_DIRECTORY),
@@ -36,7 +50,7 @@ class SimulationSceneManager(AbstractSceneManager):
                     element_color = (0, 0, 0, 0),
                     id = 'map_list'
                 ),
-                ], (PROPORTION1 / 2, 0), (PROPORTION1 / 2, PROPORTION3),
+                ], (SIDEBAR_SIZE + (PROPORTION1 - SIDEBAR_SIZE) / 2, 0), ((PROPORTION1 - SIDEBAR_SIZE) / 2, PROPORTION3),
                     name = 'maps', icon='map'),
                 Window([
                     Text((0.05, CONTROLS_GAP3), (0.5, 0.2), text = "Map size X:", background_color = GUI_COLORS['blocked']),
@@ -71,7 +85,7 @@ class SimulationSceneManager(AbstractSceneManager):
                         id='generate_map_button',
                     ),
                 ], 
-                (PROPORTION1 / 2, PROPORTION3), (PROPORTION1 / 2, 1 - PROPORTION3),
+                (SIDEBAR_SIZE + (PROPORTION1 - SIDEBAR_SIZE) / 2, PROPORTION3), ((PROPORTION1 - SIDEBAR_SIZE) / 2, 1 - PROPORTION3),
                 name = 'Add random map',
                 icon = 'controls'),
                 Window([
@@ -156,29 +170,21 @@ class SimulationSceneManager(AbstractSceneManager):
                 ),
                 Window([
                         ProgressBar(
-                            (0.05, CONTROLS_GAP2), (0.9, 0.1 / PROPORTION2),
+                            (0.05, CONTROLS_GAP2), (0.9, 0.15 / PROPORTION2),
                             id = 'progress_bar',
                         ),
-                        Text((0.05, CONTROLS_GAP2 * 2 + 0.1 / PROPORTION2), (0.35, 0.1 / PROPORTION2), text = "bot1 won games:", background_color = GUI_COLORS['blocked']),
+                        Text((0.05, CONTROLS_GAP2 * 2 + 0.15 / PROPORTION2), (0.35, 0.15 / PROPORTION2), text = "bot1 won games:", background_color = GUI_COLORS['blocked']),
                         ProgressBar(
-                            (0.42, CONTROLS_GAP2 * 2 + 0.1 / PROPORTION2), (0.36, 0.1 / PROPORTION2),
+                            (0.42, CONTROLS_GAP2 * 2 + 0.15 / PROPORTION2), (0.36, 0.15 / PROPORTION2),
                             id = 'bot1_won_progress_bar',
                         ),
-                        Text((0.8, CONTROLS_GAP2 * 2 + 0.1 / PROPORTION2), (0.15, 0.1 / PROPORTION2), text = "0", background_color = GUI_COLORS['blocked'], id='bot1_wins'),
-                        Text((0.05, CONTROLS_GAP2 * 3 + 0.2 / PROPORTION2), (0.35, 0.1 / PROPORTION2), text = "bot2 won games:", background_color = GUI_COLORS['blocked']),
+                        Text((0.8, CONTROLS_GAP2 * 2 + 0.15 / PROPORTION2), (0.15, 0.15 / PROPORTION2), text = "0", background_color = GUI_COLORS['blocked'], id='bot1_wins'),
+                        Text((0.05, CONTROLS_GAP2 * 3 + 0.3 / PROPORTION2), (0.35, 0.15 / PROPORTION2), text = "bot2 won games:", background_color = GUI_COLORS['blocked']),
                         ProgressBar(
-                            (0.42, CONTROLS_GAP2 * 3 + 0.2 / PROPORTION2), (0.36, 0.1 / PROPORTION2),
+                            (0.42, CONTROLS_GAP2 * 3 + 0.3 / PROPORTION2), (0.36, 0.15 / PROPORTION2),
                             id = 'bot2_won_progress_bar',
                         ),
-                        Text((0.8, CONTROLS_GAP2 * 3 + 0.2 / PROPORTION2), (0.15, 0.1 / PROPORTION2), text = "0", background_color = GUI_COLORS['blocked'], id='bot2_wins'),
-                        Button(
-                            (0.25, CONTROLS_GAP2 * 4 + 0.3 / PROPORTION2), (0.5, 0.1 / PROPORTION2),
-                            on_click = scene_functions['game'],
-                            text = 'open last simulation view',
-                            args = (),
-                            blocked = True,
-                            id='start_view_button',
-                        ),
+                        Text((0.8, CONTROLS_GAP2 * 3 + 0.3 / PROPORTION2), (0.15, 0.15 / PROPORTION2), text = "0", background_color = GUI_COLORS['blocked'], id='bot2_wins'),
                     ], 
                     (PROPORTION1, PROPORTION2), (1 - PROPORTION1, 1 - PROPORTION2),
                     name = 'progress',
@@ -249,7 +255,6 @@ class SimulationSceneManager(AbstractSceneManager):
                     self.scene.send_info('bot2_wins', 'text', str(self.bot2_wins))
                     self.set_progress_bar_state(
                         'bot2_won_progress_bar', self.bot2_wins / number_of_games)
-            self.simulation_complete(log_name)
         
         thread = Thread(target = run_thread)
         thread.start()
@@ -276,8 +281,3 @@ class SimulationSceneManager(AbstractSceneManager):
         map_name = self.scene.get_info('map_name_input', 'text')
         Game().generate_random_map(f'{MAPS_DIRECTORY}/{map_name}.json', size_x, size_y)
         self.scene.get_info('map_list', 'add_element')(f'{map_name}.json')
-
-    def simulation_complete(self, log_name):
-        self.scene.send_info('start_view_button', 'args', (log_name,)) 
-        self.scene.send_info('start_view_button', 'blocked', False)
-

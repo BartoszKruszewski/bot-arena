@@ -28,7 +28,7 @@ class GameSceneManager(AbstractSceneManager):
                 GameRenderer(
                     (0, 0),
                     (1, 1),
-                    game_end_action = scene_functions['simulation'],
+                    game_end_action = scene_functions['log_select'],
                     id = 'game_renderer',
                     log_name = scene_functions['log_name']
                 )
@@ -154,9 +154,9 @@ class GameSceneManager(AbstractSceneManager):
                 Button(
                     (CONTROLS_GAP1 * 3 + 0.41 + 0.01 * 2, CONTROLS_GAP1 * 3 + CONTROLS_HEIGHT * 2),
                     (0.25, CONTROLS_HEIGHT),
-                    text = 'back to simulation run',
+                    text = 'close visualization',
                     color = (0, 0, 255),
-                    on_click = scene_functions['simulation']
+                    on_click = scene_functions['log_select']
                 ),
             ], 
             (PROPORTION2, 1 - PROPORTION1), (1 - PROPORTION2, PROPORTION1),

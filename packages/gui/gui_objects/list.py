@@ -7,10 +7,12 @@ from pygame import MOUSEWHEEL
 class List(Window):
     def __init__(self, objects_in_list: list[str], pos: tuple[float, float], size: tuple[float, float], **kwargs):
         super().__init__([], pos, size, **kwargs)
-        button_size = self.properties.get('button_size', (0.9, 0.1))
-        gap = self.properties.get('gap', (0.05, 0.01))
+        
         self.properties['max_active'] = kwargs.get('max_active', len(objects_in_list))
         self.properties['add_element'] = self.add_element
+        self.properties['set_elements'] = self.set_list_elements
+        button_size = self.properties.get('button_size', (0.9, 0.1))
+        gap = self.properties.get('gap', (0.05, 0.01))
         self.sub_objects = [
             RadioButton(
                 (gap[0], i * (button_size[1] + gap[1])), (button_size[0], button_size[1]),
@@ -62,6 +64,21 @@ class List(Window):
                 text = name,
             )
         )
+        self.calc_pos()
+
+    def set_list_elements(self, elements):
+        button_size = self.properties.get('button_size', (0.9, 0.1))
+        gap = self.properties.get('gap', (0.05, 0.01))
+        self.sub_objects = [
+            RadioButton(
+                (gap[0], i * (button_size[1] + gap[1])), (button_size[0], button_size[1]),
+                background_color = self.properties.get('element_color', GUI_COLORS['none']),
+                active_color=self.properties.get('active_element_color', GUI_COLORS['active']),
+                on_click = lambda: self.properties.get('on_click', lambda: None)(self.get_active()),
+                text = object,
+            )
+            for i, object in enumerate(elements)
+        ]
         self.calc_pos()
         
 

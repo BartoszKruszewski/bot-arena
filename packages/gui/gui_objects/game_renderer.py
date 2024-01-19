@@ -8,15 +8,14 @@ from packages.gui.const import FRAMERATE, ZOOM_INTERWAL, \
     MIN_ZOOM, MAX_ZOOM, TILE_SIZE
 from packages import LOGS_DIRECTORY
 from os import listdir
+from os import path
 
 class GameRenderer(GUIElement):
     def __init__(self, pos: tuple[float, float], size: tuple[float, float], **kwargs):
         super().__init__(pos, size, **kwargs)
-        log_name = self.properties.get('log_name', 'log')
-        file_name = listdir(f'{LOGS_DIRECTORY}/{log_name}')[-1]
         try:
             self.__log_interpreter = LogInterpreter(
-                f'{LOGS_DIRECTORY}/{log_name}/{file_name}'
+                path.join(LOGS_DIRECTORY, self.properties.get("log_name", "log")) 
             )
         except FileNotFoundError:
             print('No log!')
