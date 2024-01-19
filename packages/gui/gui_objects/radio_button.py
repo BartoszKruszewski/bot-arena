@@ -1,7 +1,11 @@
 from .gui_element import GUIElement
-from pygame import MOUSEBUTTONDOWN
+from pygame import MOUSEBUTTONDOWN, Vector2
 from pygame.event import Event as pgevent, Event
 from packages.gui.const import GUI_COLORS
+from pygame.image import load
+from pygame.transform import scale
+from packages import ASSETS_DIRECTORY
+
 
 def color_blend(c1, c2, w):
     if len(c1) == 3:
@@ -21,7 +25,11 @@ class RadioButton(GUIElement):
         self.properties['active'] = self.properties.get('active', False)
         self.properties['blocked'] = self.properties.get('blocked', False)
         self.on_click = self.properties.get('on_click', lambda: None)
-        self.standard_color = self.properties.get('background_color', GUI_COLORS['button'])      
+        self.standard_color = self.properties.get('background_color', GUI_COLORS['button'])
+        if 'button_image' in self.properties:
+            self.button_image = load(
+                f'{ASSETS_DIRECTORY}/textures/icons/{self.properties["button_image"]}.png'
+            )   
 
     def handle_event(self, event: Event) -> None:
         if not self.properties['blocked']:
@@ -46,4 +54,10 @@ class RadioButton(GUIElement):
                 self.standard_color, GUI_COLORS['button_hovered'], self.properties['hover_intense'])
             self.properties['text_color'] = color_blend(
                 GUI_COLORS['text'], self.standard_color, self.properties['hover_intense'])
+            
+    def render(self):
+        surf = super().render()
+        if 'button_image' in self.properties:
+            surf.blit(scale(self.button_image, self.real_size * 0.8), Vector2(self.real_size * 0.1))
+        return surf
 

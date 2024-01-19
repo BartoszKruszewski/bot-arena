@@ -24,12 +24,12 @@ class SimulationSceneManager(AbstractSceneManager):
                     Button(
                         (0.1, 0.01), (0.8, SIDEBAR_SIZE * 0.8 * 16 / 9),
                         on_click = scene_functions['log_select'],
-                        button_image = 'game',
+                        button_image = 'play',
                     ),
                     Button(
                         (0.1, 0.1), (0.8, SIDEBAR_SIZE * 0.8 * 16 / 9),
                         blocked = True,
-                        button_image = 'simulation',
+                        button_image = 'settings',
                     ),
                 ], (0, 0), (SIDEBAR_SIZE, 1), name = ""),
                 Window([

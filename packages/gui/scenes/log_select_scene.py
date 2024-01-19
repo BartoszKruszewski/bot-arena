@@ -4,7 +4,7 @@ from packages import LOGS_DIRECTORY
 from packages.gui.const import GUI_COLORS
 from os import listdir
 
-PROPORTION1 = 0.6
+PROPORTION1 = 0.65
 
 CONTROLS_GAP1 = 0.045
 CONTROLS_GAP2 = 0.06
@@ -19,12 +19,12 @@ class LogSelectSceneManager(AbstractSceneManager):
                 Button(
                     (0.1, 0.01), (0.8, SIDEBAR_SIZE * 0.8 * 16 / 9),
                     blocked = True,
-                    button_image = 'game',
+                    button_image = 'play',
                 ),
                 Button(
                     (0.1, 0.1), (0.8, SIDEBAR_SIZE * 0.8 * 16 / 9),
                     on_click = scene_functions['simulation'],
-                    button_image = 'simulation',
+                    button_image = 'settings',
                 ),
             ], (0, 0), (SIDEBAR_SIZE, 1), name = ""),
             Window([
@@ -36,7 +36,7 @@ class LogSelectSceneManager(AbstractSceneManager):
                     element_color = (0, 0, 0, 0),
                     id = 'simulations_list'
                 )
-            ], (SIDEBAR_SIZE, 0), ((PROPORTION1 - SIDEBAR_SIZE) / 2, 1), name = 'simulations', icon='bot'),
+            ], (SIDEBAR_SIZE, 0), ((PROPORTION1 - SIDEBAR_SIZE) / 2, 1), name = 'simulations', icon='folder'),
             Window([
                     List(
                     [],
@@ -47,7 +47,7 @@ class LogSelectSceneManager(AbstractSceneManager):
                     id = 'logs_list'
                 ),
             ], (SIDEBAR_SIZE + (PROPORTION1 - SIDEBAR_SIZE) / 2, 0), ((PROPORTION1 - SIDEBAR_SIZE) / 2, 1),
-                    name = 'logs', icon='map'),
+                    name = 'logs', icon='log'),
             Window([
                 Text((0.05, CONTROLS_GAP1), (0.2, 0.11), text = "name:", background_color = GUI_COLORS['blocked']),
                 Text(
@@ -92,7 +92,7 @@ class LogSelectSceneManager(AbstractSceneManager):
             
             ], (PROPORTION1, 0), (1 - PROPORTION1, 0.6),
                     name = 'simulation info',
-                    icon = 'simulation'
+                    icon = 'info'
             ),
             Window([
                 Text((0.05, CONTROLS_GAP2), (0.2, 0.17), text = "name:", background_color = GUI_COLORS['blocked']),
@@ -125,7 +125,7 @@ class LogSelectSceneManager(AbstractSceneManager):
                 ),
             ], (PROPORTION1, 0.6), (1 - PROPORTION1, 0.4),
                     name = 'log info',
-                    icon = 'simulation'
+                    icon = 'info'
             ),
         ])
     

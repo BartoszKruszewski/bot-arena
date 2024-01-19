@@ -10,6 +10,7 @@ PROPORTION2 = 0.4
 
 CONTROLS_GAP1 = 0.06
 CONTROLS_HEIGHT = 0.25
+CONTROLS_WIDTH = 0.25 / (1 - PROPORTION2) * PROPORTION1 / 16 * 9
 
 class GameSceneManager(AbstractSceneManager):
     def load_scene(self, scene_functions):
@@ -65,31 +66,31 @@ class GameSceneManager(AbstractSceneManager):
                 ),
                 Button(
                     (CONTROLS_GAP1 * 2 + 0.2, CONTROLS_GAP1),
-                    (0.07, CONTROLS_HEIGHT),
-                    text = '<<<',
-                    on_click = self.decrease_game_speed
+                    (CONTROLS_WIDTH, CONTROLS_HEIGHT),
+                    button_image = 'backward',
+                    on_click = self.decrease_game_speed,
                 ),
                 RadioButton(
-                    (CONTROLS_GAP1 * 2 + 0.27 + 0.01, CONTROLS_GAP1),
-                    (0.07, CONTROLS_HEIGHT),
-                    text = '||',
+                    (CONTROLS_GAP1 * 2 + 0.2 + CONTROLS_WIDTH + 0.01, CONTROLS_GAP1),
+                    (CONTROLS_WIDTH, CONTROLS_HEIGHT),
+                    button_image = 'pause',
                     on_click = self.freeze
                 ),
                 Button(
-                    (CONTROLS_GAP1 * 2 + 0.34 + 0.01 * 2, CONTROLS_GAP1),
-                    (0.07, CONTROLS_HEIGHT),
-                    text = '>>>',
+                    (CONTROLS_GAP1 * 2 + 0.2 + CONTROLS_WIDTH * 2 + 0.01 * 2, CONTROLS_GAP1),
+                    (CONTROLS_WIDTH, CONTROLS_HEIGHT),
+                    button_image = 'forward',
                     on_click = self.increase_game_speed
                 ),
                 Slider(
-                    (CONTROLS_GAP1 * 3 + 0.41 + 0.01 * 2, CONTROLS_GAP1),
+                    (CONTROLS_GAP1 * 3 + 0.2 + CONTROLS_WIDTH * 3 + 0.01 * 3, CONTROLS_GAP1),
                     (0.25, CONTROLS_HEIGHT),
                     on_change = self.set_game_speed,
                     id = 'game_speed_slider'
                 ),
                 Text(
-                    (CONTROLS_GAP1 * 3 + 0.66 + 0.01 * 3, CONTROLS_GAP1),
-                    (0.07, CONTROLS_HEIGHT),
+                    (CONTROLS_GAP1 * 3 + 0.45 + CONTROLS_WIDTH * 3 + 0.01 * 4, CONTROLS_GAP1),
+                    (CONTROLS_WIDTH, CONTROLS_HEIGHT),
                     text = "1",
                     background_color = GUI_COLORS['background2'],
                     id = 'game_speed_info'
@@ -100,26 +101,26 @@ class GameSceneManager(AbstractSceneManager):
                     text = "zoom:",
                 ),
                 Button(
-                    (CONTROLS_GAP1 * 2 + 0.235, CONTROLS_GAP1 * 2 + CONTROLS_HEIGHT),
-                    (0.07, CONTROLS_HEIGHT),
-                    text = '-',
+                    (CONTROLS_GAP1 * 2 + 0.2, CONTROLS_GAP1 * 2 + CONTROLS_HEIGHT),
+                    (CONTROLS_WIDTH, CONTROLS_HEIGHT),
+                    button_image = 'zoom_out',
                     on_click = self.decrease_zoom
                 ),
                 Button(
                     (CONTROLS_GAP1 * 2 + 0.305 + 0.01 * 2, CONTROLS_GAP1 * 2 + CONTROLS_HEIGHT),
-                    (0.07, CONTROLS_HEIGHT),
-                    text = '+',
+                    (CONTROLS_WIDTH, CONTROLS_HEIGHT),
+                    button_image = 'zoom_in',
                     on_click = self.increase_zoom
                 ),
                 Slider(
-                    (CONTROLS_GAP1 * 3 + 0.41 + 0.01 * 2, CONTROLS_GAP1 * 2 + CONTROLS_HEIGHT),
+                    (CONTROLS_GAP1 * 3 + 0.2 + CONTROLS_WIDTH * 3 + 0.01 * 3, CONTROLS_GAP1 * 2 + CONTROLS_HEIGHT),
                     (0.25, CONTROLS_HEIGHT),
                     on_change = self.set_zoom,
                     id = 'zoom_slider'
                 ),
                 Text(
-                    (CONTROLS_GAP1 * 3 + 0.66 + 0.01 * 3, CONTROLS_GAP1 * 2 + CONTROLS_HEIGHT),
-                    (0.07, CONTROLS_HEIGHT),
+                    (CONTROLS_GAP1 * 3 + 0.45 + CONTROLS_WIDTH * 3 + 0.01 * 4, CONTROLS_GAP1 * 2 + CONTROLS_HEIGHT),
+                    (CONTROLS_WIDTH, CONTROLS_HEIGHT),
                     text = "1",
                     background_color = GUI_COLORS['background2'],
                     id = 'zoom_info'
@@ -132,27 +133,27 @@ class GameSceneManager(AbstractSceneManager):
                 
                 RadioButton(
                     (CONTROLS_GAP1 * 2 + 0.2, CONTROLS_GAP1 * 3 + CONTROLS_HEIGHT * 2),
-                    (0.07, CONTROLS_HEIGHT),
-                    text = 'area',
+                    (CONTROLS_WIDTH, CONTROLS_HEIGHT),
+                    button_image = 'view',
                     color = (255, 0, 90),
                     on_click = self.toggle_helper('obstacles_area')
                 ),
                 RadioButton(
-                    (CONTROLS_GAP1 * 2 + 0.27 + 0.01, CONTROLS_GAP1 * 3 + CONTROLS_HEIGHT * 2),
-                    (0.07, CONTROLS_HEIGHT),
-                    text = 'pos',
+                    (CONTROLS_GAP1 * 2 + 0.2 + CONTROLS_WIDTH + 0.01, CONTROLS_GAP1 * 3 + CONTROLS_HEIGHT * 2),
+                    (CONTROLS_WIDTH, CONTROLS_HEIGHT),
+                    button_image = 'position',
                     color = (255, 155, 0),
                     on_click = self.toggle_helper('pos')
                 ),
                 RadioButton(
-                    (CONTROLS_GAP1 * 2 + 0.34 + 0.01 * 2, CONTROLS_GAP1 * 3 + CONTROLS_HEIGHT * 2),
-                    (0.07, CONTROLS_HEIGHT),
-                    text = 'grid',
+                    (CONTROLS_GAP1 * 2 + 0.2 + CONTROLS_WIDTH * 2 + 0.01 * 2, CONTROLS_GAP1 * 3 + CONTROLS_HEIGHT * 2),
+                    (CONTROLS_WIDTH, CONTROLS_HEIGHT),
+                    button_image = 'grid',
                     color = (255, 0, 0),
                     on_click = self.toggle_helper('grid')
                 ),
                 Button(
-                    (CONTROLS_GAP1 * 3 + 0.41 + 0.01 * 2, CONTROLS_GAP1 * 3 + CONTROLS_HEIGHT * 2),
+                    (CONTROLS_GAP1 * 3 + 0.2 + CONTROLS_WIDTH * 3 + 0.01 * 3, CONTROLS_GAP1 * 3 + CONTROLS_HEIGHT * 2),
                     (0.25, CONTROLS_HEIGHT),
                     text = 'close visualization',
                     color = (0, 0, 255),
