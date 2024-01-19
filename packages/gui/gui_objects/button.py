@@ -1,7 +1,10 @@
 from .gui_element import GUIElement
 from pygame.event import Event
 from packages.gui.const import GUI_COLORS
-from pygame import Color
+from pygame import Color, Vector2
+from pygame.image import load
+from pygame.transform import scale
+from packages import ASSETS_DIRECTORY
 
 def color_blend(c1, c2, w):
     return (
@@ -15,7 +18,11 @@ class Button(GUIElement):
         super().__init__(pos, size, **kwargs)
         self.on_click = self.properties.get('on_click', lambda: None)
         self.properties['blocked'] = self.properties.get('blocked', False)
-        self.standard_color = self.properties.get('background_color', GUI_COLORS['button']) 
+        self.standard_color = self.properties.get('background_color', GUI_COLORS['button'])
+        if 'button_image' in self.properties:
+            self.button_image = load(
+                f'{ASSETS_DIRECTORY}/textures/icons/{self.properties["button_image"]}.png'
+            )
 
     def handle_event(self, event: Event) -> None:
         if not self.properties.get('blocked', False):
@@ -34,4 +41,7 @@ class Button(GUIElement):
             )
             self.properties['text_color'] = color_blend(
                 GUI_COLORS['text'], self.standard_color, self.properties['hover_intense'])
-        return super().render()
+        surf = super().render()
+        if 'button_image' in self.properties:
+            surf.blit(scale(self.button_image, self.real_size * 0.8), Vector2(self.real_size * 0.1))
+        return surf
