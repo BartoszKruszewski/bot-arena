@@ -44,7 +44,10 @@ class NumberField(Window):
         return text.isnumeric() and int(text) < self.properties['maximum']
 
     def increment(self):
-        number = int(self.get_info(str(self), 'text')) + self.properties['interval']
+        text = self.get_info(str(self), 'text')
+        if text == '':
+            text = '0'
+        number = int(text) + self.properties['interval']
         if self.properties['minimum'] is not None:
             number = max(self.properties['minimum'], number)
         if self.properties['maximum'] is not None:
@@ -53,7 +56,10 @@ class NumberField(Window):
         self.send_info(str(self), 'active', False)
 
     def decrement(self):
-        number = int(self.get_info(str(self), 'text')) - self.properties['interval']
+        text = self.get_info(str(self), 'text')
+        if text == '':
+            text = '0'
+        number = int(text) - self.properties['interval']
         if self.properties['minimum'] is not None:
             number = max(self.properties['minimum'], number)
         if self.properties['maximum'] is not None:

@@ -118,7 +118,7 @@ class SimulationSceneManager(AbstractSceneManager):
                             (0.6, CONTROLS_GAP1 * 4 + 0.3), (0.35, 0.1),
                             id='number_of_games',
                             minimum = 1,
-                            maximum = 100,
+                            maximum = 9999,
                             default = 1,
                         ),
 
@@ -127,7 +127,7 @@ class SimulationSceneManager(AbstractSceneManager):
                             (0.6, CONTROLS_GAP1 * 5 + 0.4), (0.35, 0.1),
                             id='ready_timeout',
                             minimum = 1,
-                            maximum = 100,
+                            maximum = 999,
                             default = 10,
                         ),
 
@@ -136,7 +136,7 @@ class SimulationSceneManager(AbstractSceneManager):
                             (0.6, CONTROLS_GAP1 * 6 + 0.5), (0.35, 0.1),
                             id='move_timeout',
                             minimum = 1,
-                            maximum = 100,
+                            maximum = 999,
                             default = 10,
                         ),
 
@@ -145,7 +145,7 @@ class SimulationSceneManager(AbstractSceneManager):
                             (0.6, CONTROLS_GAP1 * 7 + 0.6), (0.35, 0.1),
                             id='game_timeout',
                             minimum = 1,
-                            maximum = 100,
+                            maximum = 999,
                             default = 60,
                         ),
                         InputField(
