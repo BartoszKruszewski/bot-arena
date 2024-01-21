@@ -2,7 +2,7 @@ from packages.gui.abstract_scene_manager import AbstractSceneManager
 from packages.gui.gui_objects import Window, Scene, Button, RadioButton, Text, Slider, List, ProgressBar
 from packages import LOGS_DIRECTORY
 from packages.gui.const import GUI_COLORS
-from os import listdir
+from os import listdir, path
 
 PROPORTION1 = 0.65
 
@@ -134,10 +134,10 @@ class LogSelectSceneManager(AbstractSceneManager):
 
     def simulation_select(self, active_buttons):
         if len(active_buttons) == 1:
-            logs = listdir(f'{LOGS_DIRECTORY}/{active_buttons[0]}')
+            logs = listdir(path.join(LOGS_DIRECTORY, active_buttons[0]))
             bot1_wins = 0
             bot2_wins = 0
-            with open(f'{LOGS_DIRECTORY}/{active_buttons[0]}/{logs[0]}') as f:
+            with open(path.join(LOGS_DIRECTORY, active_buttons[0], logs[0])) as f:
                 map, bot1, bot2 = tuple([l.rstrip() for l in f.readlines()[:3]])
             for log in logs:
                 if log[-5] == '0':
@@ -173,7 +173,7 @@ class LogSelectSceneManager(AbstractSceneManager):
     def log_select(self, active_buttons):
         if len(active_buttons) == 1:
             simulation = self.scene.get_info('simulation_name', 'text')
-            with open(f'{LOGS_DIRECTORY}/{simulation}/{active_buttons[0]}') as f:
+            with open(path.join(LOGS_DIRECTORY, simulation, active_buttons[0])) as f:
                 data = f.readlines()
                 map, bot1, bot2 = tuple([l.rstrip() for l in data[:3]])
             winner = bot1 if active_buttons[0][-5] == '0' else bot2

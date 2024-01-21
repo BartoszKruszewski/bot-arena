@@ -1,6 +1,6 @@
 from packages.gui.abstract_scene_manager import AbstractSceneManager
 from packages.gui.gui_objects import Scene, Button, Window, List, NumberField, Text, ProgressBar, RadioButton, InputField
-from os import listdir
+from os import listdir, path
 from packages import MAPS_DIRECTORY, BOTS_DIRECTORY
 from packages.simulator.api import play
 from threading import Thread
@@ -118,7 +118,7 @@ class SimulationSceneManager(AbstractSceneManager):
                             (0.6, CONTROLS_GAP1 * 4 + 0.3), (0.35, 0.1),
                             id='number_of_games',
                             minimum = 1,
-                            maximum = 100,
+                            maximum = 9999,
                             default = 1,
                         ),
 
@@ -127,7 +127,7 @@ class SimulationSceneManager(AbstractSceneManager):
                             (0.6, CONTROLS_GAP1 * 5 + 0.4), (0.35, 0.1),
                             id='ready_timeout',
                             minimum = 1,
-                            maximum = 100,
+                            maximum = 999,
                             default = 10,
                         ),
 
@@ -136,7 +136,7 @@ class SimulationSceneManager(AbstractSceneManager):
                             (0.6, CONTROLS_GAP1 * 6 + 0.5), (0.35, 0.1),
                             id='move_timeout',
                             minimum = 1,
-                            maximum = 100,
+                            maximum = 999,
                             default = 10,
                         ),
 
@@ -145,7 +145,7 @@ class SimulationSceneManager(AbstractSceneManager):
                             (0.6, CONTROLS_GAP1 * 7 + 0.6), (0.35, 0.1),
                             id='game_timeout',
                             minimum = 1,
-                            maximum = 100,
+                            maximum = 999,
                             default = 60,
                         ),
                         InputField(
@@ -279,5 +279,5 @@ class SimulationSceneManager(AbstractSceneManager):
         size_x = int(self.scene.get_info('map_size_x', 'text'))
         size_y = int(self.scene.get_info('map_size_y', 'text'))
         map_name = self.scene.get_info('map_name_input', 'text')
-        Game().generate_random_map(f'{MAPS_DIRECTORY}/{map_name}.json', size_x, size_y)
+        Game().generate_random_map(path.join(MAPS_DIRECTORY, map_name, '.json'), size_x, size_y)
         self.scene.get_info('map_list', 'add_element')(f'{map_name}.json')

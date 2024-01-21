@@ -32,6 +32,8 @@ class InputField(RadioButton):
         super().update(dt)
 
         if not self.properties['active']:
+            if self.properties['text'] == '':
+                self.properties['text'] = self.properties['default']
             if self.properties['text'] == self.properties['default']:
                 self.properties['text_color'] = self.properties.get('default_color', GUI_COLORS['button'])
             else:
