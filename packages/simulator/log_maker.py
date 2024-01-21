@@ -12,10 +12,15 @@ class LogMaker():
     def add_actions(self, action1, action2):
         self.actions.append(" | ".join([action1, action2]))
 
-    def save(self, winner, map_name):
+    def save(self, winner, 
+             map_name,
+             player1_name,
+             player2_name):
         self.path = self.path + f"-{winner}.log"
         with open(self.path, "w") as file:
             file.write("map:" + map_name + "\n")
+            file.write("player1:" + player1_name + "\n")
+            file.write("player2:" + player2_name + "\n")
             file.write("\n".join(self.actions))
 
     def clear(log_name):
@@ -25,3 +30,5 @@ class LogMaker():
                 os.remove(os.path.join(path, file))
         except FileNotFoundError:
             pass
+
+        

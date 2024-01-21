@@ -101,13 +101,13 @@ def play(name1, name2, num_games, map_name, log_name="logs",
                 response = game.update(action[p[0]], action[p[1]])
 
                 if response[0] == ErrorCode[1]:
-                    log_maker.save("0", map_name)
+                    log_maker.save("0", map_name, name1, name2)
                     return 0
                 elif response[0] == ErrorCode[2]:
-                    log_maker.save("1", map_name)
+                    log_maker.save("1", map_name, name1, name2)
                     return 1
                 elif "Tie" in response:
-                    log_maker.save("TIE", map_name)
+                    log_maker.save("TIE", map_name, name1, name2)
                     return 'TIE'
                 
                 game_data = Serializer.get(game)
