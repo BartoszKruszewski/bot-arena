@@ -173,8 +173,8 @@ class Game:
         self.gold['left'] += self.income['left']
         self.gold['right'] += self.income['right']
 
-        self.income['left'] += len(self.farms['left']) * 2
-        self.income['right'] += len(self.farms['right']) * 2
+        self.income['left'] = len(self.farms['left']) * 2 + PASSIVE_GOLD
+        self.income['right'] = len(self.farms['right']) * 2 + PASSIVE_GOLD
 
         WinLog = self.__is_win()
         if WinLog:

@@ -33,13 +33,14 @@ class LogInterpreter:
     def __parse_log(self):
         self.log = [line.strip().split() for line in self.log]
         action_log = []
+        
         self.map_name = self.log[0][0][4:]
         self.player1_name = self.log[1][0][8:]
         self.player2_name = self.log[2][0][8:]
-        print(self.player1_name, self.player2_name, "DUDEE")
+
         for line in self.log[3:]:
             if line[0] == "#": continue
-            
+
             left_side, right_side = line[:line.index("|")], line[line.index("|")+1:]
             left_action, right_action = left_side[0], right_side[0]
             left_args, right_args = ["left"] + left_side[1:], ["right"] + right_side[1:]

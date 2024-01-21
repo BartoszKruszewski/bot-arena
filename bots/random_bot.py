@@ -24,7 +24,7 @@ while True:
     settings = input()
     map = input()
 
-    print("READY", file=sys.stderr)
+    # print("READY", file=sys.stderr)
     print("READY")
 
     while True:
