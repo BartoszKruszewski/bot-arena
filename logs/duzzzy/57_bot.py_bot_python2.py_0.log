@@ -1,0 +1,70 @@
+map:duuuza.json
+player1:bot.py
+player2:bot_python2.py
+F 3 0 | W
+W | W
+W | W
+S swordsman | W
+S swordsman | W
+F 3 9 | T 3 3
+W | W
+W | W
+W | W
+W | W
+T 4 7 | F 2 0
+W | S swordsman
+W | F 7 3
+T 3 5 | W
+W | W
+W | W
+W | T 9 8
+W | W
+W | F 7 0
+W | W
+T 7 8 | W
+W | W
+S archer | W
+F 0 7 | W
+W | S swordsman
+W | W
+S archer | W
+W | W
+W | W
+W | F 1 3
+T 1 2 | F 2 5
+W | W
+W | W
+F 0 7 | W
+W | W
+W | F 4 5
+S swordsman | F 4 8
+W | W
+W | S archer
+W | W
+W | W
+W | W
+W | W
+W | W
+W | W
+W | F 5 1
+W | W
+S archer | W
+W | T 9 9
+W | S swordsman
+W | W
+S swordsman | W
+T 5 9 | F 4 2
+W | W
+W | W
+W | T 2 4
+W | F 3 4
+S swordsman | W
+W | W
+T 2 2 | T 8 6
+W | W
+W | W
+W | T 2 7
+W | W
+W | T 8 4
+W | W
+F 4 4 | T 3 3

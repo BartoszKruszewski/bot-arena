@@ -279,5 +279,5 @@ class SimulationSceneManager(AbstractSceneManager):
         size_x = int(self.scene.get_info('map_size_x', 'text'))
         size_y = int(self.scene.get_info('map_size_y', 'text'))
         map_name = self.scene.get_info('map_name_input', 'text')
-        Game().generate_random_map(path.join(MAPS_DIRECTORY, map_name, '.json'), size_x, size_y)
+        Game().generate_random_map(path.join(MAPS_DIRECTORY, f'{map_name}.json'), size_x, size_y)
         self.scene.get_info('map_list', 'add_element')(f'{map_name}.json')

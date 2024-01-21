@@ -87,8 +87,8 @@ class Map():
         def near_path(pos: tuple[int, int]) -> bool:
             return any([abs(pos[0] - x) <= 1 and abs(pos[1] - y) <= 1 for x, y in self.path])
 
-        not_path = [(x, y) for x in range(MAP_SIZE_X) 
-                    for y in range(MAP_SIZE_Y) 
+        not_path = [(x, y) for x in range(self.MAP_SIZE_X) 
+                    for y in range(self.MAP_SIZE_Y) 
                     if not near_path((x, y))]
         
         obstacles_cords = []
