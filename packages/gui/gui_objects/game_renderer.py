@@ -35,22 +35,21 @@ class GameRenderer(GUIElement):
         }
         self.properties['helpers'] = []
 
-    def __update_zoom(self):
-        zoom = self.properties.get('zoom', 1)
+    def handle_event(self, event):
+        
+        if event.type == MOUSEWHEEL:
+            if self.in_mouse_range():
+                zoom = self.properties.get('zoom', 1)
+                zoom += event.y * ZOOM_INTERWAL * zoom
 
-        if self.in_mouse_range():
-            e = get_event(MOUSEWHEEL)
-            if e:
-                zoom += e[0].y * ZOOM_INTERWAL * zoom
+                zoom = max(
+                    self.real_size.x / self.__game.get_map_size()[0] / TILE_SIZE,
+                    self.real_size.y / self.__game.get_map_size()[1] / TILE_SIZE,
+                    min(MAX_ZOOM, zoom),
+                    MIN_ZOOM
+                )
 
-        zoom = max(
-            self.real_size.x / self.__game.get_map_size()[0] / TILE_SIZE,
-            self.real_size.y / self.__game.get_map_size()[1] / TILE_SIZE,
-            min(MAX_ZOOM, zoom),
-            MIN_ZOOM
-        )
-
-        self.properties['zoom'] = zoom
+                self.properties['zoom'] = zoom
 
     def update(self, dt):
         self.__tick += dt * self.properties.get('game_speed', 1)
@@ -60,8 +59,7 @@ class GameRenderer(GUIElement):
             if 'win' in game_output[0]:
                 self.properties.get('game_end_action', lambda: None)() 
             self.__tick %= FRAMERATE
-        
-        self.__update_zoom()
+    
         self.__dt = dt
         self.properties['log_index'] = self.__log_interpreter.get_index()
         self.properties['game_stats'] = {
