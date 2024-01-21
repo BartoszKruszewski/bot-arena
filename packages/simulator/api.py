@@ -66,13 +66,12 @@ def play(name1, name2, num_games, map_name, log_name="logs",
                 for player in p.values():
                     if not is_ready[player]:
                         response = player.get()
-                        # if response is not None:
-                            # print(response, file=sys.stderr)
                         if response == 'READY':
                             is_ready[player] = True
                 if all(is_ready.values()):
                     break
             else:
+                print(__name__, "end by ready timeout", file=sys.stderr)
                 return determine(is_ready)
                 
             while time.time() < game_end_time:
@@ -84,6 +83,7 @@ def play(name1, name2, num_games, map_name, log_name="logs",
                     if all(action.values()):
                         break
                 else:
+                    print(__name__, "end by move timeout", file=sys.stderr)
                     return determine(action)
                 
                 # print("RUCHY", action.values(), file=sys.stderr)
@@ -92,10 +92,12 @@ def play(name1, name2, num_games, map_name, log_name="logs",
                 try:
                     action[p[0]] = str_to_action(action[p[0]], 0)
                 except WrongMove:
+                    print(__name__, "end by wrong move", file=sys.stderr)
                     return 1
                 try:
                     action[p[1]] = str_to_action(action[p[1]], 1)
                 except WrongMove:
+                    print(__name__, "end by wrong move", file=sys.stderr)
                     return 0
                 
                 response = game.update(action[p[0]], action[p[1]])
