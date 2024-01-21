@@ -144,9 +144,9 @@ class LogSelectSceneManager(AbstractSceneManager):
                     bot1_wins += 1
                 else:
                     bot2_wins += 1
-            self.scene.send_info('map', 'text', map)
-            self.scene.send_info('bot1', 'text', bot1)
-            self.scene.send_info('bot2', 'text', bot2)
+            self.scene.send_info('map', 'text', map[4:])
+            self.scene.send_info('bot1', 'text', bot1[8:])
+            self.scene.send_info('bot2', 'text', bot2[8:])
             self.scene.send_info('bot1_wins', 'text', str(bot1_wins))
             self.scene.send_info('bot2_wins', 'text', str(bot2_wins))
             self.set_progress_bar_state('bot1_won_progress_bar', bot1_wins / (bot1_wins + bot2_wins))

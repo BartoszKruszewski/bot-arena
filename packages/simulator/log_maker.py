@@ -16,7 +16,7 @@ class LogMaker():
              map_name,
              player1_name,
              player2_name):
-        self.path = self.path + f"-{winner}.log"
+        self.path = self.path + f" {player1_name} vs {player2_name} {'0-1' if winner == '0' else '1-0' if winner == '1' else '0.5-0.5'}"
         with open(self.path, "w") as file:
             file.write("map:" + map_name + "\n")
             file.write("player1:" + player1_name + "\n")
