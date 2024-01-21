@@ -28,13 +28,14 @@ class List(Window):
         super().handle_event(event)
         if event.type == MOUSEWHEEL and self.in_mouse_range():
             move = event.y * LIST_SCROLL_MULT
-            if self.sub_objects[-1].pos[1] + self.sub_objects[-1].size[1] + move < 1:
-                move = 1 - self.sub_objects[-1].pos[1] - self.sub_objects[-1].size[1] 
-            if self.sub_objects[0].pos[1] + move > 0:
-                move = -self.sub_objects[0].pos[1]
-            for object in self.sub_objects:
-                object.pos[1] += move
-            self.calc_pos()
+            if self.sub_objects:
+                if self.sub_objects[-1].pos[1] + self.sub_objects[-1].size[1] + move < 1:
+                    move = 1 - self.sub_objects[-1].pos[1] - self.sub_objects[-1].size[1] 
+                if self.sub_objects[0].pos[1] + move > 0:
+                    move = -self.sub_objects[0].pos[1]
+                for object in self.sub_objects:
+                    object.pos[1] += move
+                self.calc_pos()
 
     def get_active(self):
         active_buttons = [

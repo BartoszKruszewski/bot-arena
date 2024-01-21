@@ -137,10 +137,10 @@ class LogSelectSceneManager(AbstractSceneManager):
             logs = listdir(f'{LOGS_DIRECTORY}/{active_buttons[0]}')
             bot1_wins = 0
             bot2_wins = 0
+            with open(f'{LOGS_DIRECTORY}/{active_buttons[0]}/{logs[0]}') as f:
+                map, bot1, bot2 = tuple([l.rstrip() for l in f.readlines()[:3]])
             for log in logs:
-                with open(f'{LOGS_DIRECTORY}/{active_buttons[0]}/{log}') as f:
-                    map, bot1, bot2, winner = tuple([l.rstrip() for l in f.readlines()[:4]])
-                if winner == '0':
+                if log[-5] == '0':
                     bot1_wins += 1
                 else:
                     bot2_wins += 1
@@ -175,10 +175,11 @@ class LogSelectSceneManager(AbstractSceneManager):
             simulation = self.scene.get_info('simulation_name', 'text')
             with open(f'{LOGS_DIRECTORY}/{simulation}/{active_buttons[0]}') as f:
                 data = f.readlines()
-                map, bot1, bot2, winner = tuple([l.rstrip() for l in data[:4]])
+                map, bot1, bot2 = tuple([l.rstrip() for l in data[:3]])
+            winner = bot1 if active_buttons[0][-5] == '0' else bot2
             self.scene.send_info('log_name', 'text', active_buttons[0])
             self.scene.send_info('run_button', 'blocked', False)
-            self.scene.send_info('winner', 'text', winner)
+            self.scene.send_info('winner', 'text', winner[8:])
             self.scene.send_info('length', 'text', str(len(data) - 4))
         else:
             self.scene.send_info('log_name', 'text', 'none')
