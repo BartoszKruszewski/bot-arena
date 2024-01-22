@@ -8,6 +8,9 @@ class Farm():
             "cords": self.cords,
             "id": self.id
         }
+    
+    def copy(self):
+        return Farm(self.cords, self.id)
 
 class Farms():
     def __init__(self, path) -> None:
@@ -26,3 +29,8 @@ class Farms():
     def __len__(self) -> int:
         return len(self.farms)
         
+    def copy(self):
+        farms_copy = Farms(self.path)
+        farms_copy.farms = [farm.copy() for farm in self.farms]
+        farms_copy.next_id = self.next_id
+        return farms_copy

@@ -115,9 +115,6 @@ class Game:
         left_error = check_spawn_soldier(self.action_left) if isinstance(self.action_left, SpawnSoldier) else left_error
         right_error = check_spawn_soldier(self.action_right) if isinstance(self.action_right, SpawnSoldier) else right_error
 
-        self.action_left = Wait('left') if left_error else self.action_left
-        self.action_right = Wait('right') if right_error else self.action_right
-
         return (left_error, right_error)
 
     def __execute_actions(self) -> None:
@@ -168,6 +165,9 @@ class Game:
         self.action_left = action_left
         self.action_right = action_right
         Error = self.__handle_actions_error()
+        self.action_left = Wait('left') if Error[0] else self.action_left
+        self.action_right = Wait('right') if Error[1] else self.action_right
+
         self.__execute_actions()
         
         self.gold['left'] += self.income['left']
@@ -246,3 +246,24 @@ class Game:
                         print('.', end='')
 
             print()
+
+    def copy(self):
+        game = Game()
+        game._map = self._map.copy()
+        game.turrets = {
+            'left': self.turrets['left'].copy(),
+            'right': self.turrets['right'].copy()
+        }
+        game.soldiers = {
+            'left': self.soldiers['left'].copy(),
+            'right': self.soldiers['right'].copy()
+        }
+        game.farms = {
+            'left': self.farms['left'].copy(),
+            'right': self.farms['right'].copy()
+        }
+        game.gold = self.gold.copy()
+        game.income = self.income.copy()
+        game.action_left = self.action_left
+        game.action_right = self.action_right
+        return game

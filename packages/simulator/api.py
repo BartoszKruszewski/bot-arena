@@ -36,8 +36,10 @@ def play(name1, name2, num_games, map_name, log_name="logs",
                 p[0] = Bot(name1)
                 p[1] = Bot(name2)
            
-            for player in p.values():
-                player.put(f'SETTINGS {game_timeout} {move_timeout} {ready_timeout} {player}')
+            for i, player in enumerate(p.values()):
+                # send settings to bots
+                player.put(f"{game_timeout} {move_timeout} {ready_timeout} {'left' if i == 0 else 'right'}")
+                player.put(map_name)
                 player.total_time = 0.0
 
         results = []
@@ -51,13 +53,9 @@ def play(name1, name2, num_games, map_name, log_name="logs",
                 return 0
 
         def play_game(log_name, log_number, map_name):
-            game = Game(map_name) # TODO: add map path
+            game = Game(map_name) 
             log_maker = LogMaker(log_name, log_number)
             reset()  
-
-            game_data = Serializer.get(game)
-            for player in p.values():
-                player.put(str(game_data))
 
             ready_end_time = time.time() + ready_timeout
             game_end_time = time.time() + game_timeout
@@ -72,6 +70,7 @@ def play(name1, name2, num_games, map_name, log_name="logs",
                     break
             else:
                 print(__name__, "end by ready timeout", file=sys.stderr)
+                log_maker.save("TIE", map_name, name1, name2)
                 return determine(is_ready)
                 
             while time.time() < game_end_time:
@@ -84,6 +83,7 @@ def play(name1, name2, num_games, map_name, log_name="logs",
                         break
                 else:
                     print(__name__, "end by move timeout", file=sys.stderr)
+                    log_maker.save("TIE", map_name, name1, name2)
                     return determine(action)
                 
                 # print("RUCHY", action.values(), file=sys.stderr)
@@ -110,12 +110,13 @@ def play(name1, name2, num_games, map_name, log_name="logs",
                     return 1
                 elif "Tie" in response:
                     log_maker.save("TIE", map_name, name1, name2)
+                    print(__name__, "end by tie", file=sys.stderr)
                     return 'TIE'
                 
                 game_data = Serializer.get(game)
+                actions = f"{action[p[0]]} | {action[p[1]]}"
                 for player in p.values():
-                    player.put(str(game_data))
-                # print("MAPA", file=sys.stderr)
+                    player.put(actions)
 
             return "TIE"
 

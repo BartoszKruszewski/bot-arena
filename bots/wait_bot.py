@@ -1,6 +1,5 @@
 import os
 import json
-import random
 
 class BOT():
     def __init__(self): 
@@ -39,22 +38,7 @@ class BOT():
         pass
 
     def make_move(self):
-        x = random.randint(0, self.map["MAP_SIZE_X"] - 1)
-        y = random.randint(0, self.map["MAP_SIZE_Y"] - 1)
-
-        move = random.choice(['W', 'T', 'F', 'S'])
-        import sys 
-        print("RAND", file=sys.stderr)
-        if move == 'W':
-            return f'W'
-        elif move == 'T':
-            return f'T {x} {y}'
-        elif move == 'F':
-            return f'F {x} {y}'
-        elif move == 'S':
-            return f'S {random.choice(["swordsman", "archer"])}'
-        else:
-            return f'W'
+        return "W"
 
 while True:
     BOT()

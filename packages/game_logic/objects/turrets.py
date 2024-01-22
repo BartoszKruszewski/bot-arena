@@ -5,7 +5,7 @@ class Turret():
         self.cords = cords
         self.attack = 10
         self.id = id
-        self.range = 5
+        self.range = 3
 
     def _is_in_range(self, cords: tuple[int, int]) -> bool:
         return abs(self.cords[0] - cords[0]) + abs(self.cords[1] - cords[1]) <= self.range
@@ -24,6 +24,9 @@ class Turret():
             "attack": self.attack,
             "range": self.range
         }
+    
+    def copy(self):
+        return Turret(self.cords, self.id)
 
 class Turrets():
     def __init__(self, path) -> None:
@@ -42,4 +45,10 @@ class Turrets():
     def __iter__(self) -> iter:
         for turret in self.turrets:
             yield turret.cords
+
+    def copy(self):
+        turrets_copy = Turrets(self.path)
+        turrets_copy.turrets = [turret.copy() for turret in self.turrets]
+        turrets_copy.next_id = self.next_id
+        return turrets_copy
         

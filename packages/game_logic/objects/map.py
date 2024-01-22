@@ -118,3 +118,12 @@ class Map():
                 'obstacles': [o for o in self.obstacles],
             }))
 
+    def copy(self):
+        map_copy = Map(None)
+        map_copy._start = self._start
+        map_copy._end = self._end
+        map_copy.path = self.path.copy()
+        map_copy.obstacles = self.obstacles.copy()
+        map_copy.MAP_SIZE_X = self.MAP_SIZE_X
+        map_copy.MAP_SIZE_Y = self.MAP_SIZE_Y
+        return map_copy

@@ -8,6 +8,9 @@ class Obstacle:
             "cords": self.cords,
             "id": self.id
         }
+    
+    def copy(self):
+        return Obstacle(self.cords, self.id)
 
 
 class Obstacles():
@@ -25,3 +28,9 @@ class Obstacles():
 
     def __len__(self) -> int:
         return len(self.obstacles)
+    
+    def copy(self):
+        obstacles_copy = Obstacles()
+        obstacles_copy.obstacles = [obstacle.copy() for obstacle in self.obstacles]
+        obstacles_copy.next_id = self.next_id
+        return obstacles_copy

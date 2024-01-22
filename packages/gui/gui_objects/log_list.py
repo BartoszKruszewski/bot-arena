@@ -15,7 +15,7 @@ class LogList(List):
 
         manager = FileManager("LOGS")
         # log = manager.read_file(f'{log_name}/{file_name}').splitlines()[1:]
-        log = manager.read_file(path.join(LOGS_DIRECTORY, file_name)).splitlines()[1:]
+        log = manager.read_file(path.join(LOGS_DIRECTORY, file_name)).splitlines()[3:]
         super().__init__(log, pos, size, **kwargs)
         self.properties["log"] = log
         self.get_game_speed = get_game_speed

@@ -22,6 +22,9 @@ class Soldier():
             "hp": self.hp,
             "position": self.position
         }
+    
+    def copy(self):
+        return Soldier(self.id, self.position, SOLDIERS_STATS[self.name], self.name)
 
 class Soldiers():
     def __init__(self, side, path) -> None:
@@ -123,4 +126,10 @@ class Soldiers():
         for soldier in self.soldiers:
             yield self.path[soldier.position]
 
+    def copy(self):
+        soldiers_copy = Soldiers(self.side, self.path)
+        soldiers_copy.soldiers = [soldier.copy() for soldier in self.soldiers]
+        soldiers_copy.next_id = self.next_id
+        soldiers_copy.is_win = self.is_win
+        return soldiers_copy
     

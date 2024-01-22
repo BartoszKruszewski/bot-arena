@@ -1,4 +1,5 @@
 from ..game_logic.game import Game
+import json
 
 class Serializer:
     def __init__(self):
@@ -8,12 +9,12 @@ class Serializer:
         game_data = {
             'arena': Serializer.serialize_arena(game),
             'players' : {
-                'leftPlayer': Serializer.serialize_player(game, 'left'),
-                'rightPlayer': Serializer.serialize_player(game, 'right')
+                'left': Serializer.serialize_player(game, 'left'),
+                'right': Serializer.serialize_player(game, 'right')
             }
         }
 
-        return game_data
+        return json.dumps(game_data)
 
     def serialize_arena(game: Game) -> dict[str, str]:
         # Arena data
@@ -34,14 +35,20 @@ class Serializer:
 
     def serialize_player(game: Game, player_side: str) -> dict[str, str]:
         turrets_data = game.get_turrets()[player_side]
+        farms_data = game.get_farms()[player_side]
 
         turrets_cords = []
+        farms_cords = []
 
         for turret in turrets_data:
             turrets_cords.append(turret.cords)
 
+        for farm in farms_data:
+            farms_cords.append(farm.cords)
+
         player_data = {
             'turrets': turrets_cords,
+            'farms': farms_cords,
             'gold': game.get_gold()[player_side]
         }
         return player_data
