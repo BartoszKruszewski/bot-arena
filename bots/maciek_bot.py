@@ -7,8 +7,6 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 from packages.game_logic.actions import str_to_actions, str_to_action, Wait
 from packages.game_logic.game import Game, ErrorCode
 
-DEPTH = 1
-
 class BOT():
     def __init__(self): 
         game_timeout, move_timeout, ready_timeout, side = input().split()
@@ -69,20 +67,25 @@ class BOT():
         enemy_soldiers = self.game.get_soldiers()["left" if self.side == "right" else "right"] 
         my_soldiers = self.game.get_soldiers()[self.side]
 
-        MY_BASE = 1 if self.side == 'left' else len(self.path) - 2
+        MY_BASE = 2 if self.side == 'left' else len(self.path) - 3
         if any(soldier.position == MY_BASE for soldier in enemy_soldiers):
-            if len(my_soldiers) == 0:
+            if len(my_soldiers) < 3:
                 return "S swordsman"
             
-        if len(self.tower_cords) > 0:
-            x, y = self.tower_cords[0]
-            self.tower_cords = self.tower_cords[1:]
-            return f"T {x} {y}"
+        my_gold = self.game.get_gold()[self.side]
+        if my_gold <= 250:
+            return "W"
 
         if len(self.farm_cords) > 0:
             x, y = self.farm_cords[0]
             self.farm_cords = self.farm_cords[1:]
             return f"F {x} {y}"
+    
+        if len(self.tower_cords) > 0:
+            x, y = self.tower_cords[0]
+            self.tower_cords = self.tower_cords[1:]
+            return f"T {x} {y}"
+
 
         return "S swordsman"            
         

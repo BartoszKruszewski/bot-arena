@@ -1,5 +1,5 @@
 from .stats import COST
-from .stats import START_GOLD, PASSIVE_GOLD
+from .stats import START_GOLD, PASSIVE_GOLD, FARM_GOLD
 from .stats import SOLDIERS_STATS
 
 from .actions import Action, BuildAction
@@ -173,8 +173,8 @@ class Game:
         self.gold['left'] += self.income['left']
         self.gold['right'] += self.income['right']
 
-        self.income['left'] = len(self.farms['left']) * 2 + PASSIVE_GOLD
-        self.income['right'] = len(self.farms['right']) * 2 + PASSIVE_GOLD
+        self.income['left'] = len(self.farms['left']) * FARM_GOLD + PASSIVE_GOLD
+        self.income['right'] = len(self.farms['right']) * FARM_GOLD + PASSIVE_GOLD
 
         WinLog = self.__is_win()
         if WinLog:

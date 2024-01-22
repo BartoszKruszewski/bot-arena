@@ -1,0 +1,529 @@
+map:duuuza.json
+player1:maciek_bot.py
+player2:spawn_bot.py
+F 0 4 | S swordsman
+F 0 5 | S swordsman
+F 0 6 | S swordsman
+F 0 7 | S swordsman
+F 0 8 | S swordsman
+F 0 9 | S swordsman
+F 0 10 | S swordsman
+F 0 11 | S swordsman
+F 0 12 | S swordsman
+F 0 13 | S swordsman
+F 0 14 | S swordsman
+F 0 15 | S swordsman
+F 0 16 | S swordsman
+F 0 17 | S swordsman
+F 0 18 | S swordsman
+F 0 19 | S swordsman
+F 1 4 | S swordsman
+F 1 5 | S swordsman
+F 1 6 | S swordsman
+F 1 7 | S swordsman
+F 1 8 | S swordsman
+F 1 9 | S swordsman
+F 1 10 | S swordsman
+F 1 11 | S swordsman
+F 1 12 | S swordsman
+F 1 13 | S swordsman
+F 1 14 | S swordsman
+F 1 15 | S swordsman
+F 1 16 | S swordsman
+F 1 17 | S swordsman
+F 1 18 | S swordsman
+F 1 19 | S swordsman
+F 2 5 | S swordsman
+F 2 6 | S swordsman
+F 2 7 | S swordsman
+F 2 8 | S swordsman
+F 2 9 | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+F 2 10 | S swordsman
+F 2 11 | S swordsman
+F 2 12 | S swordsman
+F 2 13 | S swordsman
+F 2 14 | S swordsman
+F 2 15 | S swordsman
+F 2 16 | S swordsman
+F 2 17 | S swordsman
+F 2 18 | S swordsman
+F 2 19 | S swordsman
+F 3 6 | S swordsman
+F 3 7 | S swordsman
+F 3 8 | S swordsman
+F 3 9 | S swordsman
+F 3 10 | S swordsman
+F 3 11 | S swordsman
+F 3 12 | S swordsman
+F 3 13 | S swordsman
+F 3 14 | S swordsman
+F 3 15 | S swordsman
+F 3 16 | S swordsman
+F 3 17 | S swordsman
+F 3 18 | S swordsman
+F 3 19 | S swordsman
+F 4 7 | S swordsman
+F 4 8 | S swordsman
+S swordsman | S swordsman
+F 4 9 | S swordsman
+F 4 10 | S swordsman
+F 4 11 | S swordsman
+F 4 12 | S swordsman
+F 4 13 | S swordsman
+F 4 14 | S swordsman
+F 4 15 | S swordsman
+F 4 16 | S swordsman
+F 4 17 | S swordsman
+S swordsman | S swordsman
+F 4 18 | S swordsman
+F 4 19 | S swordsman
+F 5 8 | S swordsman
+F 5 9 | S swordsman
+F 5 10 | S swordsman
+F 5 11 | S swordsman
+F 5 12 | S swordsman
+F 5 13 | S swordsman
+F 5 14 | S swordsman
+S swordsman | S swordsman
+F 5 15 | S swordsman
+F 5 16 | S swordsman
+F 5 17 | S swordsman
+F 5 18 | S swordsman
+F 5 19 | S swordsman
+F 6 8 | S swordsman
+F 6 9 | S swordsman
+F 6 10 | S swordsman
+F 6 11 | S swordsman
+S swordsman | S swordsman
+F 6 12 | S swordsman
+F 6 13 | S swordsman
+F 6 14 | S swordsman
+F 6 15 | S swordsman
+F 6 16 | S swordsman
+F 6 17 | S swordsman
+F 6 18 | S swordsman
+F 6 19 | S swordsman
+F 7 0 | S swordsman
+S swordsman | S swordsman
+F 7 8 | S swordsman
+F 7 9 | S swordsman
+F 7 10 | S swordsman
+F 7 11 | S swordsman
+F 7 12 | S swordsman
+F 7 13 | S swordsman
+F 7 14 | S swordsman
+F 7 15 | S swordsman
+F 7 16 | S swordsman
+S swordsman | S swordsman
+F 7 17 | S swordsman
+F 7 18 | S swordsman
+F 7 19 | S swordsman
+F 8 0 | S swordsman
+F 8 8 | S swordsman
+F 8 9 | S swordsman
+F 8 10 | S swordsman
+F 8 11 | S swordsman
+F 8 12 | S swordsman
+S swordsman | S swordsman
+F 8 13 | S swordsman
+F 8 14 | S swordsman
+F 8 15 | S swordsman
+F 8 16 | S swordsman
+F 8 17 | S swordsman
+F 8 18 | S swordsman
+F 8 19 | S swordsman
+F 9 0 | S swordsman
+F 9 8 | S swordsman
+S swordsman | S swordsman
+F 9 9 | S swordsman
+F 9 10 | S swordsman
+F 9 11 | S swordsman
+F 9 12 | S swordsman
+F 9 13 | S swordsman
+F 9 14 | S swordsman
+F 9 15 | S swordsman
+F 9 16 | S swordsman
+F 9 17 | S swordsman
+S swordsman | S swordsman
+F 9 18 | S swordsman
+F 9 19 | S swordsman
+F 10 0 | S swordsman
+F 10 8 | S swordsman
+F 10 9 | S swordsman
+F 10 10 | S swordsman
+F 10 11 | S swordsman
+F 10 12 | S swordsman
+F 10 13 | S swordsman
+S swordsman | S swordsman
+F 10 14 | S swordsman
+F 10 15 | S swordsman
+F 10 16 | S swordsman
+F 10 17 | S swordsman
+F 10 18 | S swordsman
+F 10 19 | S swordsman
+F 11 0 | S swordsman
+F 11 9 | S swordsman
+F 11 10 | S swordsman
+S swordsman | S swordsman
+F 11 11 | S swordsman
+F 11 12 | S swordsman
+F 11 13 | S swordsman
+F 11 14 | S swordsman
+F 11 15 | S swordsman
+F 11 16 | S swordsman
+F 11 17 | S swordsman
+F 11 18 | S swordsman
+F 11 19 | S swordsman
+S swordsman | S swordsman
+F 12 0 | S swordsman
+F 12 1 | S swordsman
+F 12 10 | S swordsman
+F 12 11 | S swordsman
+F 12 12 | S swordsman
+F 12 13 | S swordsman
+F 12 14 | S swordsman
+F 12 15 | S swordsman
+F 12 16 | S swordsman
+S swordsman | S swordsman
+F 12 17 | S swordsman
+F 12 18 | S swordsman
+F 12 19 | S swordsman
+F 13 0 | S swordsman
+F 13 1 | S swordsman
+F 13 2 | S swordsman
+F 13 10 | S swordsman
+F 13 11 | S swordsman
+F 13 12 | S swordsman
+S swordsman | S swordsman
+F 13 13 | S swordsman
+F 13 14 | S swordsman
+F 13 15 | S swordsman
+F 13 16 | S swordsman
+F 13 17 | S swordsman
+F 13 18 | S swordsman
+F 13 19 | S swordsman
+F 14 0 | S swordsman
+F 14 1 | S swordsman
+S swordsman | S swordsman
+F 14 2 | S swordsman
+F 14 10 | S swordsman
+F 14 11 | S swordsman
+F 14 12 | S swordsman
+F 14 13 | S swordsman
+F 14 14 | S swordsman
+F 14 15 | S swordsman
+F 14 16 | S swordsman
+F 14 17 | S swordsman
+S swordsman | S swordsman
+F 14 18 | S swordsman
+F 14 19 | S swordsman
+F 15 0 | S swordsman
+F 15 1 | S swordsman
+F 15 2 | S swordsman
+F 15 18 | S swordsman
+F 15 19 | S swordsman
+F 16 0 | S swordsman
+F 16 1 | S swordsman
+S swordsman | S swordsman
+F 16 2 | S swordsman
+F 17 0 | S swordsman
+F 17 1 | S swordsman
+F 17 2 | S swordsman
+F 18 0 | S swordsman
+F 18 1 | S swordsman
+F 18 2 | S swordsman
+F 18 3 | S swordsman
+F 19 0 | S swordsman
+S swordsman | S swordsman
+F 19 1 | S swordsman
+F 19 2 | S swordsman
+F 19 3 | S swordsman
+F 19 4 | S swordsman
+T 0 0 | S swordsman
+T 0 1 | S swordsman
+T 1 0 | S swordsman
+T 0 2 | S swordsman
+T 1 1 | S swordsman
+S swordsman | S swordsman
+T 2 0 | S swordsman
+T 0 3 | S swordsman
+T 1 2 | S swordsman
+T 2 1 | S swordsman
+T 3 0 | S swordsman
+T 1 3 | S swordsman
+T 2 2 | S swordsman
+T 3 1 | S swordsman
+T 4 0 | S swordsman
+T 2 3 | S swordsman
+S swordsman | S swordsman
+T 3 2 | S swordsman
+T 4 1 | S swordsman
+T 5 0 | S swordsman
+T 2 4 | S swordsman
+T 3 3 | S swordsman
+T 4 2 | S swordsman
+T 5 1 | S swordsman
+T 6 0 | S swordsman
+T 3 4 | S swordsman
+T 4 3 | S swordsman
+T 5 2 | S swordsman
+T 6 1 | S swordsman
+T 3 5 | S swordsman
+T 4 4 | S swordsman
+T 5 3 | S swordsman
+T 6 2 | S swordsman
+T 7 1 | S swordsman
+T 4 5 | S swordsman
+T 5 4 | S swordsman
+T 6 3 | S swordsman
+T 7 2 | S swordsman
+T 8 1 | S swordsman
+T 4 6 | S swordsman
+T 5 5 | S swordsman
+T 6 4 | S swordsman
+T 7 3 | S swordsman
+T 8 2 | S swordsman
+T 9 1 | S swordsman
+T 5 6 | S swordsman
+T 6 5 | S swordsman
+T 7 4 | S swordsman
+T 8 3 | S swordsman
+T 9 2 | S swordsman
+T 10 1 | S swordsman
+T 5 7 | S swordsman
+T 6 6 | S swordsman
+T 7 5 | S swordsman
+T 8 4 | S swordsman
+T 9 3 | S swordsman
+T 10 2 | S swordsman
+T 11 1 | S swordsman
+T 6 7 | S swordsman
+T 7 6 | S swordsman
+T 8 5 | S swordsman
+T 9 4 | S swordsman
+T 10 3 | S swordsman
+T 11 2 | S swordsman
+T 7 7 | S swordsman
+T 8 6 | S swordsman
+T 9 5 | S swordsman
+T 10 4 | S swordsman
+T 11 3 | S swordsman
+T 12 2 | S swordsman
+T 8 7 | S swordsman
+T 9 6 | S swordsman
+T 10 5 | S swordsman
+T 11 4 | S swordsman
+T 12 3 | S swordsman
+T 9 7 | S swordsman
+T 10 6 | S swordsman
+T 11 5 | S swordsman
+T 12 4 | S swordsman
+T 13 3 | S swordsman
+T 10 7 | S swordsman
+T 11 6 | S swordsman
+T 12 5 | S swordsman
+T 13 4 | S swordsman
+T 14 3 | S swordsman
+T 11 7 | S swordsman
+T 12 6 | S swordsman
+T 13 5 | S swordsman
+T 14 4 | S swordsman
+T 15 3 | S swordsman
+T 11 8 | S swordsman
+T 12 7 | S swordsman
+T 13 6 | S swordsman
+T 14 5 | S swordsman
+T 15 4 | S swordsman
+T 16 3 | S swordsman
+T 12 8 | S swordsman
+T 13 7 | S swordsman
+T 14 6 | S swordsman
+T 15 5 | S swordsman
+T 16 4 | S swordsman
+T 17 3 | S swordsman
+T 12 9 | S swordsman
+T 13 8 | S swordsman
+T 14 7 | S swordsman
+T 15 6 | S swordsman
+T 16 5 | S swordsman
+T 17 4 | S swordsman
+T 13 9 | S swordsman
+T 14 8 | S swordsman
+T 15 7 | S swordsman
+T 16 6 | S swordsman
+T 17 5 | S swordsman
+T 18 4 | S swordsman
+T 14 9 | S swordsman
+T 15 8 | S swordsman
+T 16 7 | S swordsman
+T 17 6 | S swordsman
+T 18 5 | S swordsman
+T 15 9 | S swordsman
+T 16 8 | S swordsman
+T 17 7 | S swordsman
+T 18 6 | S swordsman
+T 19 5 | S swordsman
+T 15 10 | S swordsman
+T 16 9 | S swordsman
+T 17 8 | S swordsman
+T 18 7 | S swordsman
+T 19 6 | S swordsman
+T 15 11 | S swordsman
+T 16 10 | S swordsman
+T 17 9 | S swordsman
+T 18 8 | S swordsman
+T 19 7 | S swordsman
+T 15 12 | S swordsman
+T 16 11 | S swordsman
+T 17 10 | S swordsman
+T 18 9 | S swordsman
+T 19 8 | S swordsman
+T 15 13 | S swordsman
+T 16 12 | S swordsman
+T 17 11 | S swordsman
+T 18 10 | S swordsman
+T 19 9 | S swordsman
+T 15 14 | S swordsman
+T 16 13 | S swordsman
+T 17 12 | S swordsman
+T 18 11 | S swordsman
+T 19 10 | S swordsman
+T 15 15 | S swordsman
+T 16 14 | S swordsman
+T 17 13 | S swordsman
+T 18 12 | S swordsman
+T 19 11 | S swordsman
+T 15 16 | S swordsman
+T 16 15 | S swordsman
+T 17 14 | S swordsman
+T 18 13 | S swordsman
+T 19 12 | S swordsman
+T 15 17 | S swordsman
+T 16 16 | S swordsman
+T 17 15 | S swordsman
+T 18 14 | S swordsman
+T 19 13 | S swordsman
+T 16 17 | S swordsman
+T 17 16 | S swordsman
+T 18 15 | S swordsman
+T 19 14 | S swordsman
+T 16 18 | S swordsman
+T 17 17 | S swordsman
+T 18 16 | S swordsman
+T 19 15 | S swordsman
+T 16 19 | S swordsman
+T 17 18 | S swordsman
+T 18 17 | S swordsman
+T 19 16 | S swordsman
+T 17 19 | S swordsman
+T 18 18 | S swordsman
+T 19 17 | S swordsman
+T 18 19 | S swordsman
+T 19 18 | S swordsman
+T 19 19 | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
