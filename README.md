@@ -1,5 +1,9 @@
 # <b> BOT ARENA </b>
 
+<p align="center">
+  <img src="ReadmeAssets/Logo.gif" alt="Image unavailable">
+</p>
+
 ## Contents
 - [Few words about project](#few-words-about-project)
 - [How to use?](#how-to-use)
