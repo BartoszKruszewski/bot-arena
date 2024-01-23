@@ -3,7 +3,7 @@ from packages.gui.gui_objects import Window, Scene, GameRenderer, Button, RadioB
 from packages.gui.gui_objects.stats_display import StatsDisplay
 from packages.gui.gui_objects.log_list import LogList
 from packages.gui.const import GUI_COLORS, SPEED_CONTROL_STEP, SPEED_CONTROL_SLIDER_MULT, \
-    ZOOM_CONTROL_STEP, ZOOM_CONTROL_SLIDER_MULT
+    ZOOM_CONTROL_STEP, ZOOM_CONTROL_SLIDER_MULT, MIN_ZOOM, MAX_ZOOM, MIN_GAME_SPEED, MAX_GAME_SPEED
 
 PROPORTION1 = 0.22
 PROPORTION2 = 0.4
@@ -11,6 +11,9 @@ PROPORTION2 = 0.4
 CONTROLS_GAP1 = 0.06
 CONTROLS_HEIGHT = 0.25
 CONTROLS_WIDTH = 0.25 / (1 - PROPORTION2) * PROPORTION1 / 16 * 9
+
+def interval_mapping(x, a, b, c, d):
+    return c + (x - a) * (d - c) / (b - a)
 
 class GameSceneManager(AbstractSceneManager):
     def load_scene(self, scene_functions):
@@ -171,56 +174,57 @@ class GameSceneManager(AbstractSceneManager):
     def increase_game_speed(self):
         actual_game_speed = self.scene.get_info('game_renderer', 'game_speed')
         if actual_game_speed > 0:
-            self.scene.send_info('game_renderer', 'game_speed', actual_game_speed + SPEED_CONTROL_STEP)
+            new_game_speed = actual_game_speed + SPEED_CONTROL_STEP
+            self.scene.get_info('game_renderer', 'set_game_speed')(new_game_speed)
             self.update_game_speed_info()
 
     def decrease_game_speed(self):
         actual_game_speed = self.scene.get_info('game_renderer', 'game_speed')
         if actual_game_speed > 0:
-            self.scene.send_info('game_renderer', 'game_speed', actual_game_speed - SPEED_CONTROL_STEP)
+            new_game_speed = actual_game_speed - SPEED_CONTROL_STEP
+            self.scene.get_info('game_renderer', 'set_game_speed')(new_game_speed)
             self.update_game_speed_info()
 
     def set_game_speed(self, value):
         actual_game_speed = self.scene.get_info('game_renderer', 'game_speed')
         if actual_game_speed > 0:
-            self.scene.send_info('game_renderer', 'game_speed', (value + 0.5) ** SPEED_CONTROL_SLIDER_MULT)
-            self.update_game_speed_info()
+            new_game_speed = interval_mapping(value, 0, 0.953, MIN_GAME_SPEED, MAX_GAME_SPEED)
+            self.scene.get_info('game_renderer', 'set_game_speed')(new_game_speed)
+        self.update_game_speed_info()
 
     def freeze(self):
-        actual_game_speed = self.scene.get_info('game_renderer', 'game_speed')
-        if actual_game_speed == 0:
-            self.scene.send_info('game_renderer', 'game_speed', self.last_game_speed)
-        else:
-            self.last_game_speed = self.scene.get_info('game_renderer', 'game_speed')
-            self.scene.send_info('game_renderer', 'game_speed', 0)
+        self.scene.get_info('game_renderer', 'toogle_freeze')()
         self.update_game_speed_info()
 
     def update_game_speed_info(self):
         actual_game_speed = self.scene.get_info('game_renderer', 'game_speed')
         self.scene.send_info('game_speed_info', 'text', f'{actual_game_speed:.2f}')
         game_speed_slider_update_func = self.scene.get_info('game_speed_slider', 'update_slider_pos')
-        game_speed_slider_update_func(actual_game_speed ** (1 / SPEED_CONTROL_SLIDER_MULT) - 0.5)
+        game_speed_slider_update_func(
+            interval_mapping(actual_game_speed, MIN_GAME_SPEED, MAX_GAME_SPEED, 0, 0.953))
 
     def increase_zoom(self):
         actual_zoom = self.scene.get_info('game_renderer', 'zoom')
-        self.scene.send_info('game_renderer', 'zoom', actual_zoom + ZOOM_CONTROL_STEP)
+        zoom = actual_zoom + ZOOM_CONTROL_STEP
+        self.scene.get_info('game_renderer', 'set_zoom')(zoom)
         self.update_zoom_info()
 
     def decrease_zoom(self):
         actual_zoom = self.scene.get_info('game_renderer', 'zoom')
-        self.scene.send_info('game_renderer', 'zoom', actual_zoom - ZOOM_CONTROL_STEP)
+        zoom = actual_zoom - ZOOM_CONTROL_STEP
+        self.scene.get_info('game_renderer', 'set_zoom')(zoom)
         self.update_zoom_info()
 
     def set_zoom(self, value):
-        actual_zoom = self.scene.get_info('game_renderer', 'zoom')
-        self.scene.send_info('game_renderer', 'zoom', (value + 1.4) ** ZOOM_CONTROL_SLIDER_MULT)
+        zoom = interval_mapping(value, 0, 0.953, MIN_ZOOM, MAX_ZOOM)
+        self.scene.get_info('game_renderer', 'set_zoom')(zoom)
         self.update_zoom_info()
 
     def update_zoom_info(self):
         actual_zoom = self.scene.get_info('game_renderer', 'zoom')
         self.scene.send_info('zoom_info', 'text', f'{actual_zoom:.2f}')
         zoom_slider_update_func = self.scene.get_info('zoom_slider', 'update_slider_pos')
-        zoom_slider_update_func(actual_zoom ** (1 / ZOOM_CONTROL_SLIDER_MULT) - 1.4)
+        zoom_slider_update_func(interval_mapping(actual_zoom, MIN_ZOOM, MAX_ZOOM, 0, 0.953))
 
     def update_dict(self):
         return self.scene.get_info('game_renderer', 'game_stats')

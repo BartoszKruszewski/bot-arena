@@ -5,7 +5,7 @@ from packages.gui.gui_objects.gui_element import GUIElement
 from packages.game_logic.game import Game
 from packages.gui.game_render import LogInterpreter, Engine
 from packages.gui.const import FRAMERATE, ZOOM_INTERWAL, \
-    MIN_ZOOM, MAX_ZOOM, TILE_SIZE
+    MIN_ZOOM, MAX_ZOOM, TILE_SIZE, MIN_GAME_SPEED, MAX_GAME_SPEED
 from packages import LOGS_DIRECTORY
 from os import listdir
 from os import path
@@ -26,8 +26,13 @@ class GameRenderer(GUIElement):
         self.__tick = 0
         self.__dt = 0
         
+        self.__last_game_speed = 1
+
         self.properties['game_speed'] = 1
         self.properties['zoom'] = 1
+        self.properties['set_zoom'] = self.set_zoom
+        self.properties['set_game_speed'] = self.set_game_speed
+        self.properties['toogle_freeze'] = self.toogle_freeze
         self.properties['log_index'] = self.__log_interpreter.get_index()
         self.properties['game_stats'] = {
             "gold": self.__game.get_gold(), 
@@ -36,20 +41,31 @@ class GameRenderer(GUIElement):
         self.properties['helpers'] = []
 
     def handle_event(self, event):
-        
         if event.type == MOUSEWHEEL:
             if self.in_mouse_range():
                 zoom = self.properties.get('zoom', 1)
                 zoom += event.y * ZOOM_INTERWAL * zoom
+                self.set_zoom(zoom)
 
-                zoom = max(
-                    self.real_size.x / self.__game.get_map_size()[0] / TILE_SIZE,
-                    self.real_size.y / self.__game.get_map_size()[1] / TILE_SIZE,
-                    min(MAX_ZOOM, zoom),
-                    MIN_ZOOM
-                )
+    def set_zoom(self, value):
+        self.properties['zoom'] = max(
+            self.real_size.x / self.__game.get_map_size()[0] / TILE_SIZE,
+            self.real_size.y / self.__game.get_map_size()[1] / TILE_SIZE,
+            min(MAX_ZOOM, value),
+            MIN_ZOOM
+        )
 
-                self.properties['zoom'] = zoom
+    def set_game_speed(self, value):
+        self.properties['game_speed'] = max(
+            min(MAX_GAME_SPEED, value),
+            MIN_GAME_SPEED
+        )
+
+    def toogle_freeze(self):
+        if self.properties['game_speed'] == 0:
+            self.properties['game_speed'] = self.__last_game_speed
+        else:
+            self.properties['game_speed'] = 0
 
     def update(self, dt):
         self.__tick += dt * self.properties.get('game_speed', 1)
