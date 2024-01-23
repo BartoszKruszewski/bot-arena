@@ -1,5 +1,8 @@
-from ..game_logic.game import Game
+import sys
+import os
+
 import json
+from packages.game_logic.game import Game
 
 class Serializer:
     def __init__(self):
@@ -8,26 +11,27 @@ class Serializer:
     def get(game: Game) -> dict[dict[str, str], dict[dict[str, str], dict[str, str]]]:
         game_data = {
             'arena': Serializer.serialize_arena(game),
-            'players' : {
+            'players': {
                 'left': Serializer.serialize_player(game, 'left'),
                 'right': Serializer.serialize_player(game, 'right')
             }
         }
-
-        return json.dumps(game_data)
+        return game_data
 
     def serialize_arena(game: Game) -> dict[str, str]:
         # Arena data
         path = game.get_path()
-        start = path[0]
-        end = path[-1]
+        base_left = path[0]
+        base_right = path[-1]
 
         map_size = game.get_map_size()
         obstacles = [obs.cords for obs in game.get_obstacles()]
 
         return {
-            'start': start,
-            'end': end,
+            'base': {
+                    'left': base_left,
+                    'right': base_right
+                    },
             'path': path,
             'obstacles': obstacles,
             'map_size': map_size
@@ -37,14 +41,8 @@ class Serializer:
         turrets_data = game.get_turrets()[player_side]
         farms_data = game.get_farms()[player_side]
 
-        turrets_cords = []
-        farms_cords = []
-
-        for turret in turrets_data:
-            turrets_cords.append(turret.cords)
-
-        for farm in farms_data:
-            farms_cords.append(farm.cords)
+        turrets_cords = [turret.get_coordinates() for turret in turrets_data]
+        farms_cords = [farm.get_coordinates() for farm in farms_data]
 
         player_data = {
             'turrets': turrets_cords,
