@@ -1,0 +1,9 @@
+map:map.json
+S swordsman | W
+W | W
+F 5 0 | W
+W | W
+W | W
+T 6 4 | W
+W | T 3 0
+W | W

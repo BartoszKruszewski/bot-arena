@@ -1,0 +1,38 @@
+map:map.json
+player1:maciek_bot.py
+player2:random_bot.py
+T 0 0 | F 3 3
+T 0 1 | W
+T 1 0 | T 0 0
+T 0 2 | F 2 1
+T 1 1 | F 1 3
+T 2 0 | F 3 1
+T 0 3 | W
+T 1 2 | W
+T 2 1 | W
+T 3 0 | W
+T 1 3 | T 1 0
+T 2 2 | F 1 0
+T 3 1 | F 2 0
+T 2 3 | T 0 2
+T 3 2 | F 0 2
+T 3 3 | T 1 0
+S swordsman | S archer
+S swordsman | S swordsman
+W | S swordsman
+W | S archer
+W | T 0 3
+W | W
+W | S archer
+W | T 2 2
+W | S archer
+S swordsman | S archer
+S swordsman | T 0 2
+S swordsman | T 1 3
+S swordsman | S archer
+S swordsman | T 3 0
+S swordsman | W
+S swordsman | W
+S swordsman | T 3 1
+S swordsman | F 1 0
+S swordsman | W

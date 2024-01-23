@@ -1,0 +1,12 @@
+map:map.json
+W | W
+W | F 2 5
+F 1 5 | W
+W | S archer
+W | W
+T 4 3 | S archer
+T 4 5 | W
+W | W
+F 8 1 | W
+W | T 0 5
+W | W

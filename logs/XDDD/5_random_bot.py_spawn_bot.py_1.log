@@ -1,0 +1,29 @@
+map:map.json
+player1:random_bot.py
+player2:spawn_bot.py
+W | S swordsman
+S swordsman | S swordsman
+S swordsman | S swordsman
+F 2 1 | S swordsman
+T 0 1 | S swordsman
+T 2 2 | S swordsman
+S archer | S swordsman
+W | S swordsman
+T 2 3 | S swordsman
+F 2 2 | S swordsman
+T 1 2 | S swordsman
+W | S swordsman
+T 2 0 | S swordsman
+T 1 0 | S swordsman
+T 0 0 | S swordsman
+T 0 0 | S swordsman
+F 0 0 | S swordsman
+W | S swordsman
+W | S swordsman
+S archer | S swordsman
+W | S swordsman
+F 0 3 | S swordsman
+S archer | S swordsman
+F 3 0 | S swordsman
+T 2 3 | S swordsman
+W | S swordsman

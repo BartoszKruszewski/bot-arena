@@ -113,7 +113,7 @@ class SimulationSceneManager(AbstractSceneManager):
                             text_color = GUI_COLORS['button']
                         ),
 
-                        Text((0.05, CONTROLS_GAP1 * 4 + 0.3), (0.5, 0.1), text = "number of simulations:", background_color = GUI_COLORS['blocked']),
+                        Text((0.05, CONTROLS_GAP1 * 4 + 0.3), (0.5, 0.1), text = "number of games:", background_color = GUI_COLORS['blocked']),
                         NumberField(
                             (0.6, CONTROLS_GAP1 * 4 + 0.3), (0.35, 0.1),
                             id='number_of_games',
@@ -150,7 +150,7 @@ class SimulationSceneManager(AbstractSceneManager):
                         ),
                         InputField(
                             (0.05, CONTROLS_GAP1 * 8 + 0.7), (0.5, 0.1), 
-                            default = "enter log name...", 
+                            default = "enter simulation name...", 
                             background_color = GUI_COLORS['blocked'],
                             text_color = GUI_COLORS['button'],
                             id = 'log_name_input',

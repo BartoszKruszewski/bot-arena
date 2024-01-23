@@ -1,0 +1,20 @@
+map:map.json
+W | T 9 6
+W | W
+S archer | T 2 1
+W | W
+W | W
+T 7 5 | W
+W | W
+W | W
+W | S archer
+W | T 4 1
+W | W
+W | S archer
+T 6 8 | W
+W | W
+T 5 5 | W
+W | T 9 6
+W | W
+W | W
+T 8 4 | W
