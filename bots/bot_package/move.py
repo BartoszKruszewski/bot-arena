@@ -32,5 +32,5 @@ class Move:
 
         @classmethod
         def Farm(cls, x: int = 0, y: int = 0):
-             """Returns the string representation of building a farm at the specified coordinates."""
+            """Returns the string representation of building a farm at the specified coordinates."""
             return f"{Move._FARM} {x} {y}"

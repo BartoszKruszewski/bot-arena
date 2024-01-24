@@ -1,7 +1,10 @@
 import json
 from typing import final
+import sys
+import os
 
-from move import Move
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from bot_package.move import Move
 
 class Bot():
     """
@@ -24,10 +27,6 @@ class Bot():
         self.side = None
         self.status = None
         self.arena_properties = None
-
-        # Receive initial game and arena properties
-        self.receive_game_properties()
-        self.receive_arena_properties()
     
 
     def preprocess(self) -> None:
@@ -73,9 +72,13 @@ class Bot():
         Note: This method is marked as @final, indicating that it should not be overridden
         in any subclasses. Changing its behavior in subclasses can result in errors.
         """
+        # Receive initial game and arena properties
+        self.receive_game_properties()
+        self.receive_arena_properties()
+
         # Initial preparation
         self.preprocess()
-        print("READY")
+        self.send_message("READY")
 
         while True:
             # Make a move and send it to the game
@@ -88,7 +91,7 @@ class Bot():
             # Check if the game has ended
             if status == "END":
                 break
-            
+
             # Receive and update arena properties after made moves by both sides    
             self.receive_arena_properties()
 
@@ -149,5 +152,16 @@ class Bot():
         in any subclasses. Changing its behavior in subclasses can result in errors.
         """
         # Print the move to standart output
-        print(move)
+        self.send_message(move)
+
+    @final
+    def send_message(self, message: str = '') -> None:
+        """
+        Sends the bot's message to the game.
+        ----------------------------------------------------------------------------------
+        Note: This method is marked as @final, indicating that it should not be overridden
+        in any subclasses. Changing its behavior in subclasses can result in errors.
+        """
+        # Print the move to standart output
+        print(message)
 
