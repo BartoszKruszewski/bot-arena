@@ -104,7 +104,27 @@ Allows user to analyze the performance of each bot based on the log that has bee
 ## Creating bots
 
 ## What is log?
-<!-- Typy pól:
-- spawn jednostek dla przeciwnika (S)
-- moja wieza (T)
-- farma waluty (F) -->
+Log is our handy way of keeping track what choice did each bot in every turn. So to answer the question log is a text file that in each line has information about a turn in played game. There is a convention to the name and content of a log file.
+### Naming convention
+index_bot1_bot2_win.log where:
+- index - index of log in the whole generated simulation
+- bot1, bot2 - names of the bots that played in this game
+- win - information about which bot won (0 - first bot won, 1 - second bot won)
+
+For example: "4_random_bot.py_spawn_bot.py_1.log"
+
+### Content convention
+In the first 3 lines the log keeps map, player1, player2 values which are names of the players and map that that where used in this log's game.
+
+The rest of the lines has a form as follows:
+Action_of_first_player | Action_of_second_player
+
+Player can make an action of 3 types:
+- Place a building
+    - F x y - builds farm at (x, y) coordinates.
+    - T x y - builds tower at (x, y) coordinates.
+- Spawn a soldier
+    - S swordsman - spawns a swordsman that is a melee unit.
+    - S archer - spawns an archer that is a ranged unit.
+- Skip turn
+    - W - don't do anything in this turn.
