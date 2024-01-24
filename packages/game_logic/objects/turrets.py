@@ -27,6 +27,9 @@ class Turret():
     
     def copy(self):
         return Turret(self.cords, self.id)
+    
+    def get_coordinates(self):
+        return self.cords
 
 class Turrets():
     def __init__(self, path) -> None:

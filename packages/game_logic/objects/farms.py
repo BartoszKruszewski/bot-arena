@@ -11,6 +11,9 @@ class Farm():
     
     def copy(self):
         return Farm(self.cords, self.id)
+    
+    def get_coordinates(self):
+        return self.cords
 
 class Farms():
     def __init__(self, path) -> None:
