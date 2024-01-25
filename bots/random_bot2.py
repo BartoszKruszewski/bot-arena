@@ -3,8 +3,8 @@ import sys
 import os
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from bots.bot_package.bot import Bot
-from bots.bot_package.move import Move
+from bot_package.bot import Bot
+from bot_package.move import Move
 
 class Random_Bot(Bot):
     def preprocess(self) -> None:

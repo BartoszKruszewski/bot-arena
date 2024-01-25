@@ -1,7 +1,7 @@
 import random
 
-from bots.bot_package.bot import Bot
-from bots.bot_package.move import Move
+from bot_package.bot import Bot
+from bot_package.move import Move
 
 class Spawn_bot(Bot):
     
