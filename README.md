@@ -100,6 +100,24 @@ Allows user to analyze the performance of each bot based on the log that has bee
     - [simulator](/packages/simulator) Module responsible for bot's logic.
 
 ## Creating maps
+The maps that bots can play thier games on are represented as json files with 4 attributes:
+- MAP_SIZE_X - value specifing the width of the map.
+- MAP_SIZE_Y - value specifing the height of the map.
+- path - list of ordered pairs (2-tuple) that specifies the path that the units will be walking on in the game.
+- obstacles - list of ordered pairs (2-tuple) that specifies
+placement of the objects that take up tiles to prevent placing buildings there
+
+The path has to:
+- start in point (0, 0)
+- end in point (X_SIZE - 1, Y_SIZE - 1)
+- have the next tile placed with it's side connected to the previous tile's in the path side.
+
+<div style="display: flex; align-items: center;">
+    <p align="left">
+  <img src="ReadmeAssets/Map info.png" alt="Image unavailable" width="100%">
+    <p align="right">
+  <img src="ReadmeAssets/Map Showcase.png" alt="Image unavailable" width="75%">
+</div>
 
 ## Creating bots
 

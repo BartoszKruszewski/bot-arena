@@ -1,0 +1,38 @@
+map:sample_map.json
+player1:random_bot.py
+player2:random_bot2.py
+W | T 7 6
+W | W
+T 12 0 | W
+S swordsman | F 4 6
+S archer | W
+T 10 0 | T 13 5
+W | S swordsman
+S archer | W
+F 14 4 | W
+W | F 7 0
+T 2 4 | W
+W | F 4 5
+F 9 8 | W
+S swordsman | T 6 8
+W | T 12 3
+W | W
+T 3 4 | F 9 0
+S archer | T 3 7
+T 14 3 | F 13 8
+W | S archer
+T 14 0 | F 10 5
+F 5 8 | T 15 2
+T 10 8 | S archer
+S archer | T 14 6
+S archer | F 6 1
+S swordsman | S swordsman
+T 6 2 | W
+T 4 3 | T 9 5
+W | F 12 8
+S swordsman | W
+T 15 5 | T 13 6
+W | T 9 4
+S swordsman | W
+S swordsman | W
+W | W
