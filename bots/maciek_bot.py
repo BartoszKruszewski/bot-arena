@@ -4,50 +4,22 @@ import os
 import json
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from packages.game_logic.actions import str_to_actions, str_to_action, Wait
-from packages.game_logic.game import Game, ErrorCode
+from bots.bot_package.bot import Bot
+from bots.bot_package.move import Move
 
-class BOT():
-    def __init__(self): 
-        game_timeout, move_timeout, ready_timeout, side = input().split()
-        self.game_timeout = game_timeout
-        self.move_timeout = move_timeout
-        self.ready_timeout = ready_timeout
-        self.side = side
-
-        self.map_name = input()
-        map = os.path.dirname(__file__)
-        map = os.path.dirname(map)
-        map = os.path.join(map, "maps", self.map_name)
-        map = json.load(open(map, "r"))
-        self.map = map
-
-        self.preprocess()
-
-        print("READY")
-
-        while True:
-            move = self.make_move()
-            print(move)
-            message = input()
-
-            if message == "END":
-                break
-
-            self.update(message)
-
-    # user defined functions  
+class Maciek_Bot(Bot):
     def preprocess(self):
         # setup game
-        self.game = Game(self.map_name)
-        map_x = self.map["MAP_SIZE_X"]
-        map_y = self.map["MAP_SIZE_Y"]
-        my_base = (0, 0) if self.side == "left" else (map_x - 1, map_y - 1)
-        all_cords = [(x, y) for x in range(map_x) for y in range(map_y)]
-        self.path = self.map.get("path", [])
-        self.obstacles = self.map.get("obstacles", [])
+        map = self.arena_properties["arena"]
+
+        self.map_size = map["map_size"]
+        self.my_base = map["base"][self.side]
+        self.path = map["path"]
+        self.obstacles = map["obstacles"]
+
+        all_cords = [(x, y) for x in range(self.map_size[0]) for y in range(self.map_size[1])]
         all_cords = list(filter(lambda x: x not in self.path and x not in self.obstacles, all_cords))
-        
+
         def near_path(cords):
             for x, y in self.path:
                 if abs(x - cords[0]) + abs(y - cords[1]) <= 3:
@@ -56,48 +28,40 @@ class BOT():
         
         self.tower_cords = list(filter(near_path, all_cords))
         self.farm_cords = list(filter(lambda x: not near_path(x), all_cords))
-        self.tower_cords.sort(key=lambda x: abs(x[0] - my_base[0]) + abs(x[1] - my_base[1]))
+        self.tower_cords.sort(key=lambda x: abs(x[0] - self.my_base[0]) + abs(x[1] - self.my_base[1]))
 
+        self.post_move_action()
 
-    def update(self, message):
-        left_action, right_action = str_to_actions(message)
-        self.game.update(left_action, right_action)
+        
+    def post_move_action(self) -> None:
+        self.enemy_soldiers = self.arena_properties["players"]["left" if self.side == "right" else "right"]["units"]
+        self.my_soldiers = self.arena_properties["players"][self.side]["units"]
+
+        self.my_gold = self.arena_properties["players"][self.side]["gold"]
 
     def make_move(self):
-        enemy_soldiers = self.game.get_soldiers()["left" if self.side == "right" else "right"] 
-        my_soldiers = self.game.get_soldiers()[self.side]
 
         MY_BASE = 2 if self.side == 'left' else len(self.path) - 3
-        if any(soldier.position == MY_BASE for soldier in enemy_soldiers):
-            if len(my_soldiers) < 3:
-                return "S swordsman"
+        if any(soldier_position == MY_BASE for soldier_position in self.enemy_soldiers):
+            if len(self.my_soldiers) < 3:
+                return Move.Spawn("swordsman")
             
-        my_gold = self.game.get_gold()[self.side]
-        if my_gold <= 250:
-            return "W"
+        if self.my_gold <= 250:
+            return Move.Wait()
 
         if len(self.farm_cords) > 0:
             x, y = self.farm_cords[0]
             self.farm_cords = self.farm_cords[1:]
-            return f"F {x} {y}"
+            return Move.Build.Farm(x, y)
     
         if len(self.tower_cords) > 0:
             x, y = self.tower_cords[0]
             self.tower_cords = self.tower_cords[1:]
-            return f"T {x} {y}"
+            return Move.Build.Turret(x, y)
 
 
-        return "S swordsman"            
+        return Move.Spawn("swordsman")          
         
         
-    
-        
-
-            
-                
-
-            
-
-
 while True:
-    BOT()
+    Maciek_Bot().run()
