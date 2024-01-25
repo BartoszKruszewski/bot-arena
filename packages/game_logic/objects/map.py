@@ -94,9 +94,10 @@ class Map():
         obstacles_cords = []
 
         for _ in range(OBSTACLES_AMOUNT):
-            new_obstacle = choice(not_path)
-            obstacles_cords.append(new_obstacle)
-            not_path.remove(new_obstacle)
+            if not_path:
+                new_obstacle = choice(not_path)
+                obstacles_cords.append(new_obstacle)
+                not_path.remove(new_obstacle)
 
         for cords in obstacles_cords:
             self.obstacles.spawn(cords)
