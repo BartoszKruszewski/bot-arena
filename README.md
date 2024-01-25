@@ -114,9 +114,11 @@ The path has to:
 
 <div style="display: flex; align-items: center;">
     <p align="left">
-  <img src="ReadmeAssets/Map info.png" alt="Image unavailable" width="47%">
+      <img src="ReadmeAssets/Map info.png" alt="Image unavailable" width="47%">
+    </p>
     <p align="right">
-  <img src="ReadmeAssets/Map Showcase.png" alt="Image unavailable" width="47%">
+      <img src="ReadmeAssets/Map Showcase.png" alt="Image unavailable" width="47%">
+    </p>
 </div>
 
 ## Creating bots
