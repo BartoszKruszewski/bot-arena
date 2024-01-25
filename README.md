@@ -112,14 +112,10 @@ The path has to:
 - end in point (X_SIZE - 1, Y_SIZE - 1)
 - have the next tile placed with it's side connected to the previous tile's in the path side.
 
-<div style="display: flex; align-items: center;">
-    <p align="left">
-      <img src="ReadmeAssets/Map info.png" alt="Image unavailable" width="47%">
-    </p>
-    <p align="right">
-      <img src="ReadmeAssets/Map Showcase.png" alt="Image unavailable" width="47%">
-    </p>
-</div>
+<p align="center">
+  <img src="ReadmeAssets/Map info.png" alt="Image unavailable" width="46%">
+  <img src="ReadmeAssets/Map Showcase.png" alt="Image unavailable" width="50%">
+</p>
 
 ## Creating bots
 
