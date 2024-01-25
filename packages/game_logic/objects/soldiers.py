@@ -26,6 +26,9 @@ class Soldier():
     def copy(self):
         return Soldier(self.id, self.position, SOLDIERS_STATS[self.name], self.name)
 
+    def get_position(self):
+        return self.position
+
 class Soldiers():
     def __init__(self, side, path) -> None:
         self.side = side

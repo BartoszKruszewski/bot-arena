@@ -1,5 +1,5 @@
 import json
-from packages.game_logic.game import Game
+
 from packages.game_logic.game import Game
 
 class Serializer:
@@ -28,7 +28,7 @@ class Serializer:
         base_right = path[-1]
 
         map_size = game.get_map_size()
-        obstacles = [obs.cords for obs in game.get_obstacles()]
+        obstacles = [obstacle.cords for obstacle in game.get_obstacles()]
 
         return {
             'base': {
@@ -40,21 +40,25 @@ class Serializer:
             'map_size': map_size
         }
 
+
     @staticmethod
     def serialize_player(game: Game, player_side: str) -> dict:
         turrets_data = game.get_turrets()[player_side]
         farms_data = game.get_farms()[player_side]
+        units_data = game.get_soldiers()[player_side]
 
-        turrets_cords = [turret.get_coordinates() for turret in turrets_data]
-        farms_cords = [farm.get_coordinates() for farm in farms_data]
+        turrets_serialized = [turret.get_coordinates() for turret in turrets_data]
+        farms_serialized = [farm.get_coordinates() for farm in farms_data]
+        units_serialized = [unit.get_position() for unit in units_data]
 
         player_data = {
             'buildings': {
-                'turrets': turrets_cords,
-                'farms': farms_cords
+                'turrets': turrets_serialized,
+                'farms': farms_serialized
             },
-            'units': "test",
-            'gold': game.get_gold()[player_side]
+            'units': units_serialized,
+            'gold': game.get_gold()[player_side],
+            'income': game.get_income()[player_side]
         }
         return player_data
 
