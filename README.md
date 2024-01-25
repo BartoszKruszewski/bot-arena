@@ -118,6 +118,9 @@ The path has to:
 </p>
 
 ## Creating bots
+### Bot Package Python
+To simplify the implementation of bots in Python for Bot Arena, a dedicated package is available. This package provides a class template, `Bot`, to create customized bots, enabling adaptation to various game strategies.
+Explore the Bot Package on [GitHub](https://github.com/BartoszKruszewski/bot-arena/tree/main/bot_package) for seamless bot implementation in Python for Bot Arena.
 
 ## What is log?
 Log is our handy way of keeping track what choice did each bot in every turn. So to answer the question log is a text file that in each line has information about a turn in played game. There is a convention to the name and content of a log file.
