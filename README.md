@@ -118,8 +118,9 @@ The path has to:
 </p>
 
 ## Creating bots
-### Bot Package Python
-To simplify the implementation of bots in Python for Bot Arena, a dedicated package is available. This package provides a class template, `Bot`, to create customized bots, enabling adaptation to various game strategies.
+### Bot standard
+#### Bot Package Python
+To simplify the implementation of bots in Python for Bot Arena, a dedicated package is available. This package provides a class template, `Bot`, to implement your own bo.
 Explore the Bot Package on [GitHub](https://github.com/BartoszKruszewski/bot-arena/tree/main/bot_package) for seamless bot implementation in Python for Bot Arena.
 
 ## What is log?
